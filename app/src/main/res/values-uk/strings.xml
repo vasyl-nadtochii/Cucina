@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cafe_on">Кафе на</string>
+    <string name="order_here">Замовити тут</string>
+    <string name="complain">Залишити скаргу</string>
+    <string name="tab_text_1">Готові меню</string>
+    <string name="tab_text_2">Самостійно</string>
+    <string name="reg_info_header"><u>Чому саме ми?</u></string>
+    <string name="settings">Налаштування</string>
+    <string name="theme">Світла</string>
+    <string name="choose_theme">Виберіть тему</string>
+    <string name="app">Застосунок</string>
+    <string name="account">Аккаунт</string>
+    <string name="enter_name">Введіть нове ім\'я</string>
+    <string name="change_name">Змінити ім\'я користувача</string>
+    <string name="enter_password">Введіть новий пароль</string>
+    <string name="change_password">Змінити пароль</string>
+    <string name="other">Інше</string>
+    <string name="bug_report">Звіт про помилки</string>
+    <string name="user_agreement">Угода користування</string>
+    <string name="version">Версія</string>
+    <string name="registration">Реєстрація</string>
+    <string name="your_name">Ваше ім\'я</string>
+    <string name="password">Пароль</string>
+    <string name="conf_password">Підтвердіть пароль</string>
+    <string name="accept_ut">Я приймаю умови угоди користування</string>
+    <string name="conf_register">Зареєструватися</string>
+    <string name="info1">Найтехнологічніша піцерія України</string>
+    <string name="info2">Найзручніша піцерія України</string>
+    <string name="info3">Найсмачніша піца України</string>
+    <string name="info4">Найзручніший застосунок піцерії в Україні</string>
+    <string name="info5">Найдемократичніші ціни України</string>
+    <string name="info6">Та й взагалі, ось йому\n буде самотньо без вас :(\n Невже ви хочете\n змусити його сумувати?</string>
+    <string name="info7">Поспішайте і приєднуйтесь до нашої дружної сім\'ї! Це займе не більш пари хвилин;)</string>
+    <string name="greeting">Привіт!\nДавай познайомимося</string>
+    <string name="auth">Авторизація</string>
+    <string name="forgot_password">Забули пароль?</string>
+    <string name="conf_auth">Авторизуватися</string>
+    <string name="light">Світла</string>
+    <string name="dark">Темна</string>
+    <string name="system">Системна</string>
+    <string name="theme_title">Тема</string>
+    <string name="order">Замовити</string>
+    <string name="nearby">Кафе поблизу</string>
+    <string name="news">Новини</string>
+    <string name="schedule">Графік роботи:\n<b>09:00 - 21:00</b>\nБез вихідних</string>
+    <string name="opened">Ми відчинені!</string>
+    <string name="closed">На жаль, ми зачинені</string>
+    <string name="press_again">Натисніть ще раз для виходу</string>
+    <string name="reg_link">Не зареєстровані?\n <font color="#1E88E5">Створіть аккаунт зараз!</font> </string>
+    <string name="gps_notification">Схоже, у вас відключено визначення місцезнаходження. \n\nБудь ласка, увімкніть його у налаштуваннях для продовження роботи програми.</string>
+    <string name="goto_sett">До налаштувань</string>
+    <string name="notify_changes">Зміни вступлять в силу після виходу з налаштувань</string>
+</resources>

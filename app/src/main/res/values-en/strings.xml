@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cafe_on">Cafe on</string>
+    <string name="order_here">Order here</string>
+    <string name="complain">Leave a complaint</string>
+    <string name="tab_text_1">Ready-made</string>
+    <string name="tab_text_2">Single choice</string>
+    <string name="reg_info_header"><u>This is who we are:</u></string>
+    <string name="settings">Settings</string>
+    <string name="theme">Light</string>
+    <string name="choose_theme">Choose the theme</string>
+    <string name="app">Application</string>
+    <string name="account">Account</string>
+    <string name="enter_name">Enter new username</string>
+    <string name="change_name">Change username</string>
+    <string name="enter_password">Enter new password</string>
+    <string name="change_password">Change password</string>
+    <string name="other">Other</string>
+    <string name="bug_report">Bug report</string>
+    <string name="user_agreement">User agreement</string>
+    <string name="version">Version</string>
+    <string name="registration">Registration</string>
+    <string name="your_name">Your Name</string>
+    <string name="password">Password</string>
+    <string name="conf_password">Confirm Password</string>
+    <string name="accept_ut">I agree with the user terms</string>
+    <string name="conf_register">Sign Up</string>
+    <string name="info1">The most advanced pizzeria in Ukraine</string>
+    <string name="info2">The most convenient pizzeria in Ukraine</string>
+    <string name="info3">The most delicious pizza in Ukraine</string>
+    <string name="info4">The most convenient pizzeria app in Ukraine</string>
+    <string name="info5">The most affordable prices in Ukraine</string>
+    <string name="info6">Moreover, he will be \n lonely without you :( \n Do you really want to make him sad?</string>
+    <string name="info7">Hurry up and join  our friendly family! It will take no more than a couple of minutes ;)</string>
+    <string name="greeting">Hello! \n And welcome!</string>
+    <string name="auth">Authorization</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="conf_auth">Sign In</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+    <string name="theme_title">Theme</string>
+    <string name="order">Order</string>
+    <string name="nearby">Cafes nearby</string>
+    <string name="news">Our news</string>
+    <string name="reg_link">Don`t have an account?\n <font color="#1E88E5">Create it now!</font></string>
+    <string name="schedule">Schedule: \n<b>09:00 - 21:00</b> \nSeven days a week</string>
+    <string name="opened">We are opened!</string>
+    <string name="closed">Sorry, but we`re closed</string>
+    <string name="press_again">Press again to exit</string>
+    <string name="gps_notification">It looks like you have GPS turned off. \n\nPlease turn it on in the settings to continue using the application.</string>
+    <string name="goto_sett">Open Settings</string>
+    <string name="notify_changes">Changes will be applied after closing the settings</string>
+</resources>

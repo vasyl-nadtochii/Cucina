@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name" translatable="false">Cucina</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    
+    <string name="cafe_on">"Кафе на "</string>
+    <string name="order_here">Заказать здесь</string>
+    <string name="complain">Оставить жалобу</string>
+    
+    <string name="tab_text_1">Готовые меню</string>
+    <string name="tab_text_2">Самостоятельно</string>
+    
+    <string name="reg_info_header"><u>Почему именно мы?</u></string>
+
+    <string name="settings">Настройки</string>
+    <string name="theme">Светлая</string>
+    <string name="choose_theme">Выберите тему</string>
+    <string name="app">Приложение</string>
+    <string name="account">Аккаунт</string>
+    <string name="enter_name">Введите новое имя</string>
+    <string name="change_name">Изменить имя пользователя</string>
+    <string name="enter_password">Введите новый пароль</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="other">Прочее</string>
+    <string name="bug_report">Отчёт об ошибках</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="version">Версия</string>
+
+    <string name="registration">Регистрация</string>
+    <string name="your_name">Ваше Имя</string>
+    <string name="e_mail" translatable="false">E-mail</string>
+    <string name="password">Пароль</string>
+    <string name="conf_password">Подтвердите Пароль</string>
+    <string name="accept_ut">Я принимаю условия пользовательского соглашения</string>
+    <string name="conf_register">Зарегистрироваться</string>
+
+    <string name="info1">Самая продвинутая пиццерия в Украине</string>
+    <string name="info2">Самая удобная пиццерия в Украине</string>
+    <string name="info3">Самая вкусная пицца в Украине</string>
+    <string name="info4">Самое удобное приложение пиццерии в Украине</string>
+    <string name="info5">Самые демократичные цены в Украине</string>
+    <string name="info6">Да и потом, вот ему\nбудет скучно без вас :(\nНеужели вы хотите заставить его грустить?</string>
+    <string name="greeting">Привет!\nДавай знакомиться</string>
+
+    <string name="auth">Авторизация</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="conf_auth">Войти</string>
+
+    <string name="light">Светлая</string>
+    <string name="dark">Тёмная</string>
+    <string name="system">Системная</string>
+    <string name="theme_title">Тема</string>
+
+    <string name="order">Заказать</string>
+    <string name="nearby">Кафе поблизости</string>
+    <string name="news">Новости</string>
+
+    <string name="reg_link">Не зарегистрированы?\n <font color="#1E88E5">Создайте аккаунт сейчас!</font> </string>
+
+    <string name="schedule">График работы:\n<b>09:00 - 21:00</b>\nБез выходных</string>
+    <string name="opened">Мы открыты!</string>
+    <string name="closed">Увы, заведение не работает</string>
+
+    <string name="press_again">Нажмите ещё раз для выхода</string>
+
+    <string name="goto_sett">В настройки</string>
+    <string name="gps_notification">Похоже, у вас отключено определение местоположения. \n\nПожалуйста, включите его в настройках для продолжения работы приложения.</string>
+
+    <string name="info7">Поспешите и присоединяйтесь к нашей дружной семье! Это займет не больше пары минут;)</string>
+
+    <string name="notify_changes">Изменения вступят в силу после закрытия настроек</string>
+
+    <string-array name="themes_arr">
+        <item>@string/light</item>
+        <item>@string/dark</item>
+        <item>@string/system</item>
+    </string-array>
+
+    <string-array
+        name="entry_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+</resources>

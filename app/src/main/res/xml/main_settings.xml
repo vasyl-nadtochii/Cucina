@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/app">
+
+        <ListPreference
+            android:dialogTitle="@string/choose_theme"
+            android:key="change_theme"
+            android:entries="@array/themes_arr"
+            android:defaultValue="0"
+            android:entryValues="@array/entry_values"
+            android:title="@string/theme_title"/>
+
+        <!--<ListPreference
+            android:dialogTitle="title"
+            android:key="test_pr"
+            android:entries="@array/themes_arr"
+            android:defaultValue="0"
+            android:entryValues="@array/entry_values"
+            android:title="Test"/>-->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/account">
+
+        <EditTextPreference
+            android:key="change_name"
+            android:summary="@string/enter_name"
+            android:title="@string/change_name" />
+
+        <EditTextPreference
+            android:key="change_password"
+            android:summary="@string/enter_password"
+            android:title="@string/change_password" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="expandable"
+        android:title="@string/other"
+        app:initialExpandedChildrenCount="0">
+
+        <Preference
+            android:key="bug_report"
+            android:title="@string/bug_report"/>
+
+        <Preference
+            android:key="user_agreement"
+            android:title="@string/user_agreement"/>
+
+        <Preference
+            android:key="version"
+            android:title="@string/version"
+            android:summary="@string/versionName"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

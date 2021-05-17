@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cafe_on">Kawiarnia na</string>
+    <string name="order_here">Zamów tutaj</string>
+    <string name="complain">Zostaw skargę</string>
+    <string name="tab_text_1">Gotowe menu</string>
+    <string name="tab_text_2">Samemu</string>
+    <string name="reg_info_header"><u>Dlaczego my?</u></string>
+    <string name="settings">Ustawienia</string>
+    <string name="theme">Jasny</string>
+    <string name="choose_theme">Wybierz temat</string>
+    <string name="app">Aplikacja</string>
+    <string name="account">Konto</string>
+    <string name="enter_name">Wpisz nową nazwę</string>
+    <string name="change_name">Zmień nazwę użytkownika</string>
+    <string name="enter_password">Wpisz nowe hasło</string>
+    <string name="change_password">Zmień hasło</string>
+    <string name="other">Inny</string>
+    <string name="bug_report">Zgłaszanie błędów</string>
+    <string name="user_agreement">Warunki korzystania</string>
+    <string name="version">Wersja</string>
+    <string name="registration">Zameldować się</string>
+    <string name="your_name">Twoje imię</string>
+    <string name="password">Hasło</string>
+    <string name="conf_password">Potwierdź hasło</string>
+    <string name="accept_ut">Akceptuję warunki umowy użytkowania</string>
+    <string name="conf_register">Zarejestrować</string>
+    <string name="info1">Najbardziej technologiczna pizzeria na Ukrainie</string>
+    <string name="info2">Najdogodniejsza pizzeria na Ukrainie</string>
+    <string name="info3">Najsmaczniejsza pizza na Ukrainie</string>
+    <string name="info4">Najwygodniejsza aplikacja pizzerii na Ukrainie</string>
+    <string name="info5">Najbardziej demokratyczne ceny na Ukrainie</string>
+    <string name="info6">I ogólnie będzie\n sam bez ciebie :(\n Czy naprawdę\n chcesz go zasmucić?</string>
+    <string name="info7">Pośpiesz się i dołącz do naszej przyjaznej rodziny! Zajmie to nie więcej niż kilka minut;)</string>
+    <string name="greeting">Cześć!\nSpotkajmy się?</string>
+    <string name="auth">Upoważnienie</string>
+    <string name="forgot_password">Zapomniałeś hasła?</string>
+    <string name="conf_auth">Zaloguj sie</string>
+    <string name="light">Jasny</string>
+    <string name="dark">Ciemny</string>
+    <string name="system">Systemowe</string>
+    <string name="theme_title">Temat</string>
+    <string name="order">Zamówienie</string>
+    <string name="nearby">Kawiarnia w pobliżu</string>
+    <string name="news">Aktualności</string>
+    <string name="schedule">Plan pracy:\n<b>09:00 - 21:00</b>\nBrak Dni wolnych</string>
+    <string name="opened">Jesteśmy otwarci!</string>
+    <string name="closed">Niestety jesteśmy nieczynni</string>
+    <string name="press_again">Naciśnij ponownie, aby wyjść</string>
+    <string name="reg_link">Nie zarejestrowany?\n <font color="#1E88E5">Utwórz konto teraz!</font> </string>
+    <string name="gps_notification">Wygląda na to, że masz wyłączone wykrywanie lokalizacji. \n\nWłącz ją w ustawieniach, aby kontynuować aplikację.</string>
+    <string name="goto_sett">Do ustawień</string>
+    <string name="notify_changes">Zmiany zaczną obowiązywać po zamknięciu ustawień</string>
+</resources>

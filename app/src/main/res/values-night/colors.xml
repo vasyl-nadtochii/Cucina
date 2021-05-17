@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#292929</color>
+    <color name="colorPrimaryDark">#1D1D1D</color>
+    <color name="colorAccent">#FB8C00</color>
+    <color name="red">#E53935</color>
+    <color name="green">#43A047</color>
+
+    <color name="layout_background">#323232</color>
+    <color name="header_strong">@android:color/white</color>
+    <color name="header_weak">#C1C1C1</color>
+    <color name="bg_auth_card">#4E4E4E</color>
+    <color name="pure">#000000</color>
+    <color name="start_bg">#1E1E1E</color>
+    <color name="card_bg">#4E4E4E</color>
+</resources>
