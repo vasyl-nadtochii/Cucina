@@ -15,9 +15,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.faint.cucina.R;
+import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.adapters.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class OrderFragment extends Fragment {
@@ -36,8 +39,12 @@ public class OrderFragment extends Fragment {
         sectPager = root.findViewById(R.id.view_pager);
         tabs = root.findViewById(R.id.tabs);
 
+        List<Fragment> pages = new ArrayList<>();
+        pages.add(new OrderPageFragment(MainActivity.rmGroups));
+        pages.add(new OrderPageFragment(MainActivity.scGroups));
+
         sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
-                requireActivity().getSupportFragmentManager());
+                requireActivity().getSupportFragmentManager(), pages);
         sectPager.setAdapter(sectionsPagerAdapter);
 
         tabs.setupWithViewPager(sectPager);

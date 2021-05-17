@@ -6,20 +6,12 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.PlaceholderFragment">
+    tools:context=".fragments.OrderPageFragment">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/list2"
-        android:dividerHeight="5dp"
-        android:paddingTop="10dp"
-        android:divider="@android:color/transparent" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/list1"
+        android:id="@+id/listView"
         android:dividerHeight="5dp"
         android:paddingTop="10dp"
         android:divider="@android:color/transparent" />
