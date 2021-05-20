@@ -21,4 +21,8 @@
         android:id="@+id/setts"
         android:title="@string/settings"/>
 
+    <item
+        android:id="@+id/login"
+        android:title="Auth. test"/>
+
 </menu>

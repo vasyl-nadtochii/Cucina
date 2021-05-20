@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.setts:
                 startActivity( new Intent(this, SettingsActivity.class) );
-                //startActivity( new Intent(this, AuthorizationActivity.class) ); // debug only
+                break;
+            case R.id.login:
+                startActivity( new Intent(this, AuthorizationActivity.class) ); // debug only
                 break;
         }
 
