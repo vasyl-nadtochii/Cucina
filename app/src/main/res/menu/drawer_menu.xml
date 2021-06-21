@@ -22,7 +22,7 @@
         android:title="@string/settings"/>
 
     <item
-        android:id="@+id/login"
-        android:title="Auth. test"/>
+        android:id="@+id/logout"
+        android:title="@string/logout"/>
 
 </menu>

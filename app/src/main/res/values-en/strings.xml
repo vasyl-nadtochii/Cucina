@@ -51,4 +51,16 @@
     <string name="gps_notification">It looks like you have GPS turned off. \n\nPlease turn it on in the settings to continue using the application.</string>
     <string name="goto_sett">Open Settings</string>
     <string name="notify_changes">Changes will be applied after closing the settings</string>
+    <string name="your_phone">Your phone</string>
+    <string-array
+        name="cities">
+        <item>Kyiv</item>
+        <item>Kharkiv</item>
+        <item>Lviv</item>
+        <item>Dnipro</item>
+        <item>Odesa</item>
+        <item>Ivano-Frankivsk</item>
+        <item>Kherson</item>
+    </string-array>
+    <string name="logout">Log out</string>
 </resources>

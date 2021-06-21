@@ -70,6 +70,8 @@
     <string name="info7">Поспешите и присоединяйтесь к нашей дружной семье! Это займет не больше пары минут;)</string>
 
     <string name="notify_changes">Изменения вступят в силу после закрытия настроек</string>
+    <string name="your_phone">Ваш телефон</string>
+    <string name="logout">Выйти</string>
 
     <string-array name="themes_arr">
         <item>@string/light</item>
@@ -82,6 +84,17 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array
+        name="cities">
+        <item>Киев</item>
+        <item>Харьков</item>
+        <item>Львов</item>
+        <item>Днепр</item>
+        <item>Одесса</item>
+        <item>Ивано-Франковск</item>
+        <item>Херсон</item>
     </string-array>
 
 </resources>

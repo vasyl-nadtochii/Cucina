@@ -15,15 +15,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Cafe;
 import com.faint.cucina.classes.DishGroup;
+import com.faint.cucina.classes.User;
 import com.faint.cucina.fragments.MapFragment;
 import com.faint.cucina.fragments.NewsFragment;
 import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     public static ArrayList<Announcement> eventList;
     public static ArrayList<Cafe> cafes;
     public static ArrayList<DishGroup> scGroups, rmGroups;
+
+    public static User user;
 
     DrawerLayout drawer;
 
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         themeCode = getIntent().getIntExtra("THEME", 0);
+
+        user = UserDataSP.getInstance(this).getUser();
 
         // getting ArrayList we passed via intent -- it`s available to Fragments !
         eventList = getIntent().getParcelableArrayListExtra("EVENT_LIST");
@@ -74,6 +82,15 @@ public class MainActivity extends AppCompatActivity
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        View navHeader = navigationView.getHeaderView(0);
+
+        TextView nameTxt = navHeader.findViewById(R.id.name_txt);
+        TextView phoneTxt = navHeader.findViewById(R.id.phone_txt);
+
+        nameTxt.setText(user.getName());
+        String phoneForm = "+" + user.getPhone();
+        phoneTxt.setText(phoneForm);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
@@ -143,8 +160,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.setts:
                 startActivity( new Intent(this, SettingsActivity.class) );
                 break;
-            case R.id.login:
-                startActivity( new Intent(this, AuthorizationActivity.class) ); // debug only
+            case R.id.logout:
+                UserDataSP.getInstance(getApplicationContext()).logout();
                 break;
         }
 

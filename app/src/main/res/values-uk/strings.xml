@@ -51,4 +51,16 @@
     <string name="gps_notification">Схоже, у вас відключено визначення місцезнаходження. \n\nБудь ласка, увімкніть його у налаштуваннях для продовження роботи програми.</string>
     <string name="goto_sett">До налаштувань</string>
     <string name="notify_changes">Зміни вступлять в силу після виходу з налаштувань</string>
+    <string name="your_phone">Ваш телефон</string>
+    <string-array
+        name="cities">
+        <item>Київ</item>
+        <item>Харків</item>
+        <item>Львів</item>
+        <item>Дніпро</item>
+        <item>Одеса</item>
+        <item>Івано-Франківськ</item>
+        <item>Херсон</item>
+    </string-array>
+    <string name="logout">Вийти</string>
 </resources>

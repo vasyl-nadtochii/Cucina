@@ -51,4 +51,16 @@
     <string name="gps_notification">Wygląda na to, że masz wyłączone wykrywanie lokalizacji. \n\nWłącz ją w ustawieniach, aby kontynuować aplikację.</string>
     <string name="goto_sett">Do ustawień</string>
     <string name="notify_changes">Zmiany zaczną obowiązywać po zamknięciu ustawień</string>
+    <string name="your_phone">Twój numer telefonu</string>
+    <string-array
+        name="cities">
+        <item>Kijów</item>
+        <item>Charków</item>
+        <item>Lwów</item>
+        <item>Dniepr</item>
+        <item>Odessa</item>
+        <item>Iwano-Frankiwsk</item>
+        <item>Chersoń</item>
+    </string-array>
+    <string name="logout">Wyloguj</string>
 </resources>
