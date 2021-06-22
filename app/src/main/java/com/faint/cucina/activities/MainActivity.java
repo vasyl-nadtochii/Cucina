@@ -1,23 +1,24 @@
 package com.faint.cucina.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.preference.PreferenceManager;
-
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Announcement;
@@ -31,8 +32,6 @@ import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-
-import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -161,7 +160,20 @@ public class MainActivity extends AppCompatActivity
                 startActivity( new Intent(this, SettingsActivity.class) );
                 break;
             case R.id.logout:
-                UserDataSP.getInstance(getApplicationContext()).logout();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setMessage("Вы уверены что хотите выйти из учётной записи?")
+                        .setCancelable(true)
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                UserDataSP.getInstance(getApplicationContext()).logout();
+                            }
+                        })
+                        .setNegativeButton("Нет", null);
+
+                final AlertDialog alert = builder.create();
+                alert.show();
+
                 break;
         }
 
