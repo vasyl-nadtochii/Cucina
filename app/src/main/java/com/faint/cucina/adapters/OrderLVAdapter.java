@@ -21,10 +21,11 @@ import com.faint.cucina.classes.DishGroup;
 import com.faint.cucina.interfaces.OrderInterface;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class OrderLVAdapter extends ArrayAdapter<DishGroup> {
 
-    private Context context;
+    private final Context context;
     ArrayList<DishGroup> categories;
 
     OrderVPAdapter vpAdapter;
@@ -53,6 +54,7 @@ public class OrderLVAdapter extends ArrayAdapter<DishGroup> {
         viewPager.setAdapter(vpAdapter);
 
         name.setText( categories.get(position).getName() );
+
 
         return view;
     }

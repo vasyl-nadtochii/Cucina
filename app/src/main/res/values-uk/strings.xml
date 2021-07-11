@@ -52,15 +52,25 @@
     <string name="goto_sett">До налаштувань</string>
     <string name="notify_changes">Зміни вступлять в силу після виходу з налаштувань</string>
     <string name="your_phone">Ваш телефон</string>
+    <string name="kyiv">Київ</string>
+    <string name="kharkiv">Харків</string>
+    <string name="lviv">Львів</string>
+    <string name="dnipro">Дніпро</string>
+    <string name="odesa">Одеса</string>
+    <string name="ivfr">Івано-Франківськ</string>
+    <string name="kherson">Херсон</string>
     <string-array
         name="cities">
-        <item>Київ</item>
-        <item>Харків</item>
-        <item>Львів</item>
-        <item>Дніпро</item>
-        <item>Одеса</item>
-        <item>Івано-Франківськ</item>
-        <item>Херсон</item>
+        <item>@string/kyiv</item>
+        <item>@string/kharkiv</item>
+        <item>@string/lviv</item>
+        <item>@string/dnipro</item>
+        <item>@string/odesa</item>
+        <item>@string/ivfr</item>
+        <item>@string/kherson</item>
     </string-array>
     <string name="logout">Вийти</string>
+    <string name="logout_conf">Ви впевнені, що хочете вийти з облікового запису?</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
 </resources>

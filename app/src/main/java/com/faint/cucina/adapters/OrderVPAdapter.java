@@ -14,11 +14,12 @@ import com.faint.cucina.R;
 import com.faint.cucina.classes.Dish;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class OrderVPAdapter extends PagerAdapter {
 
     private ArrayList<Dish> dishes;
-    private Context context;
+    private final Context context;
     View root;
 
     int[] counter;
@@ -69,6 +70,7 @@ public class OrderVPAdapter extends PagerAdapter {
         });
 
         name.setText(dishes.get(position).getName());
+
         imageView.setImageResource(dishes.get(position).getImg());
 
         container.addView(root, 0);

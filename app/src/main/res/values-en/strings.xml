@@ -52,15 +52,25 @@
     <string name="goto_sett">Open Settings</string>
     <string name="notify_changes">Changes will be applied after closing the settings</string>
     <string name="your_phone">Your phone</string>
+    <string name="kyiv">Kyiv</string>
+    <string name="kharkiv">Kharkiv</string>
+    <string name="lviv">Lviv</string>
+    <string name="dnipro">Dnipro</string>
+    <string name="odesa">Odesa</string>
+    <string name="ivfr">Ivano-Frankivsk</string>
+    <string name="kherson">Kherson</string>
     <string-array
         name="cities">
-        <item>Kyiv</item>
-        <item>Kharkiv</item>
-        <item>Lviv</item>
-        <item>Dnipro</item>
-        <item>Odesa</item>
-        <item>Ivano-Frankivsk</item>
-        <item>Kherson</item>
+        <item>@string/kyiv</item>
+        <item>@string/kharkiv</item>
+        <item>@string/lviv</item>
+        <item>@string/dnipro</item>
+        <item>@string/odesa</item>
+        <item>@string/ivfr</item>
+        <item>@string/kherson</item>
     </string-array>
     <string name="logout">Log out</string>
+    <string name="logout_conf">Are you sure you want to log out of your account?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

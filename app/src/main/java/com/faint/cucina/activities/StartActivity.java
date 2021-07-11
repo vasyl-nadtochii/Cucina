@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Announcement;
@@ -23,13 +21,23 @@ import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
 
+    int themeCode;
+    private boolean accExists;
+
+    Intent mainActIntent;
+    Intent loginIntent;
+
+    ArrayList<Cafe> cafes;
+    ArrayList<DishGroup> scGroups;
+    ArrayList<DishGroup> rmGroups;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int themeCode = Integer.parseInt(prefs.getString("change_theme", "0"));
+        themeCode = Integer.parseInt(prefs.getString("change_theme", "0"));
 
         switch(themeCode) {
             case 0:
@@ -48,42 +56,53 @@ public class StartActivity extends AppCompatActivity {
                 break;
         }
 
-        ArrayList<Announcement> eventList = new ArrayList<>();
-        ArrayList<Cafe> cafes = new ArrayList<>();
+        Thread initThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    initData();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if(accExists) {
+                        mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
 
-        ArrayList<DishGroup> scGroups = new ArrayList<>();
-        ArrayList<DishGroup> rmGroups = new ArrayList<>();
+                        // TODO: check if user is authorized or not
+                        mainActIntent
+                                .putParcelableArrayListExtra("CAFE_LIST", cafes) // passing list via intent to MainActivity
+                                .putParcelableArrayListExtra("ORDER_SC_LIST", scGroups)
+                                .putParcelableArrayListExtra("ORDER_RM_LIST", rmGroups)
+                                .putExtra("THEME", themeCode);
 
-        final Intent mainActIntent = new Intent(this, MainActivity.class);
-        final Intent loginIntent = new Intent(this, AuthorizationActivity.class);
+                        startActivity(mainActIntent);
+                    }
+                    else {
+                        loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);
+                        startActivity(loginIntent);
+                    }
+                    finish();
+                }
+            }
+        };
+        initThread.start();
+    }
 
-        final boolean accExists = UserDataSP.getInstance(this).isLoggedIn();
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void initData() {
+        cafes = new ArrayList<>();
+
+        scGroups = new ArrayList<>();
+        rmGroups = new ArrayList<>();
+
+        accExists = UserDataSP.getInstance(this).isLoggedIn();
         if(accExists) {
-
-            // TODO: replace manual insert with the automatic from DBs
-
-            eventList.add( new Announcement(R.drawable.pizza, Announcement.TYPE_GOOD_NEWS, "Спец-предложение! Только три дня!",
-                    "Не пропустите бесплатную пиццу \"Маргарита\" при заказе от 200 грн. Предложение действует до 07.02.2021!") );
-
-            eventList.add( new Announcement(R.drawable.kherson, Announcement.TYPE_NEW_LOCATION, "Мы открылись в г. Херсон!",
-                    "Присоединяйтесь к празднику по случаю открытия со скидками и весёлой атмосферой!") );
-
-            eventList.add( new Announcement(R.drawable.covid, Announcement.TYPE_WARNING,"Меры противодействия COVID-19",
-                    "В связи с ослаблением карантинных ограничений, завдения вновь могут работать в обычном режиме, " +
-                            "однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать " +
-                            "базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако " +
-                            "настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры " +
-                            "предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать " +
-                            "базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно просим " +
-                            "соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно" +
-                            " просим соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно" +
-                            " просим соблюдать базовые меры предосторожности!однако настоятельно просим соблюдать базовые меры предосторожности!однако настоятельно " +
-                            "просим соблюдать базовые меры предосторожности!") ); // just for testing scrollview
-
-            eventList.add( new Announcement(R.drawable.lviv, Announcement.TYPE_BAD_NEWS, "Ремонтные работы в г. Львов",
-                    "В период с 03.02.2021 по 07.02.2021 в заведении на ул. Степана Бандеры 7 будут проводиться технические работы. " +
-                            "Просим прощения за неудобства") );
-
             cafes.add( new Cafe(49.8247093178, 24.079084508121014, true, "ул. Садивныча 27"));
             cafes.add( new Cafe(49.828469, 24.07097015, true, "ул. Суворова 1"));
             cafes.add( new Cafe(49.8202077703, 24.07606299, true, "ул. Евгена Коновальца 1"));
@@ -95,13 +114,13 @@ public class StartActivity extends AppCompatActivity {
             scGroups.add( new DishGroup("Десерты", new ArrayList<Dish>()) );
             scGroups.add( new DishGroup("Напитки", new ArrayList<Dish>()) );
 
-            for(DishGroup group : scGroups) {
-                // TODO: in future fill subgroups from db
+            for (DishGroup group : scGroups) {
+                // TODO: fill subgroups from db in future
                 ArrayList<Dish> dishes = new ArrayList<>();
 
                 dishes.add(new Dish("Капричоза", R.drawable.pizza));
                 dishes.add(new Dish("Салат цезарь", R.drawable.bigtasty));
-                dishes.add(new Dish("Сoca-Cola", R.drawable.cola));
+                dishes.add(new Dish("Сoca-Cola",  R.drawable.cola));
 
                 group.setDishes(dishes);
             }
@@ -111,7 +130,7 @@ public class StartActivity extends AppCompatActivity {
             rmGroups.add( new DishGroup("Десерты", new ArrayList<Dish>()) );
             rmGroups.add( new DishGroup("Напитки", new ArrayList<Dish>()) );
 
-            for(DishGroup group : rmGroups) {
+            for (DishGroup group : rmGroups) {
                 // TODO: in future fill subgroups from db
                 ArrayList<Dish> dishes = new ArrayList<>();
 
@@ -121,26 +140,6 @@ public class StartActivity extends AppCompatActivity {
 
                 group.setDishes(dishes);
             }
-
-            // here we should try to retrieve data from server (if User is authorized)
-
-            // TODO: check if user is authorized or not
-            mainActIntent.putParcelableArrayListExtra("EVENT_LIST", eventList)
-                    .putParcelableArrayListExtra("CAFE_LIST", cafes) // passing list via intent to MainActivity
-                    .putParcelableArrayListExtra("ORDER_SC_LIST", scGroups) // change bitmap to int (id at first time)
-                    .putParcelableArrayListExtra("ORDER_RM_LIST", rmGroups)
-                    .putExtra("THEME", themeCode);
         }
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(accExists)
-                    startActivity(mainActIntent);
-                else
-                    startActivity(loginIntent);
-            }
-        }, 500); // Handler will be recursive (3-4? times), then app will notify user sth is wrong
     }
 }

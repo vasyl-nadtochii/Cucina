@@ -68,7 +68,6 @@ public class AuthorizationActivity extends AppCompatActivity
                         (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-
             view.clearFocus();
 
             return true;
@@ -113,9 +112,12 @@ public class AuthorizationActivity extends AppCompatActivity
                             //converting response to json object
                             JSONObject obj = new JSONObject(response);
 
+                            String msg;
                             //if no error in response
                             if (!obj.getBoolean("error")) {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                msg = "Авторизация прошла успешно";
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
                                 //getting the user from the response
                                 JSONObject userJson = obj.getJSONObject("user");
@@ -133,8 +135,15 @@ public class AuthorizationActivity extends AppCompatActivity
                                 //starting the profile activity
                                 finish();
                                 startActivity(new Intent(getApplicationContext(), StartActivity.class));
-                            } else {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                if ("11".equals(obj.getString("message"))) {
+                                    msg = "Неверно введён номер телефона или пароль";
+                                }
+                                else {
+                                    msg = "Unexpected error.";
+                                }
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

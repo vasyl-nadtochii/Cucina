@@ -12,4 +12,5 @@
     <color name="pure">#ffffff</color>
     <color name="start_bg">#ffffff</color>
     <color name="card_bg">@android:color/background_light</color>
+    <color name="cal_frame">#959595</color>
 </resources>

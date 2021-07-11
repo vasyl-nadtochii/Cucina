@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,60 +8,91 @@
     android:background="@color/layout_background"
     android:overScrollMode="never">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:src="@drawable/pizza"
-            android:id="@+id/img"/>
+            android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_marginTop="-20dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            android:backgroundTint="@color/layout_background"
-            android:layout_height="match_parent">
-
-            <LinearLayout
+            <ImageView
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:id="@+id/img"/>
 
-                <TextView
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_marginTop="-20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                android:backgroundTint="@color/layout_background"
+                android:layout_height="match_parent">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/title"
-                    android:textStyle="bold"
-                    android:textSize="26sp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="25dp"
-                    android:fontFamily="@font/gilroy_light"
-                    android:textAlignment="center"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:textColor="@color/header_strong"/>
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txt"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/gilroy_bold"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:textColor="@color/header_weak"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/title"
+                        android:textStyle="bold"
+                        android:textSize="26sp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="25dp"
+                        android:fontFamily="@font/gilroy_light"
+                        android:textAlignment="center"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:textColor="@color/header_strong"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:textColor="@color/header_weak"/>
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-    </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-</ScrollView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end">
+
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:id="@+id/fabProgressCircle"
+            android:layout_width="wrap_content"
+            app:reusable="true"
+            app:finalIcon="@drawable/ic_done"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:id="@+id/fabTranslate"
+                android:layout_margin="10dp"
+                app:borderWidth="0dp"
+                android:backgroundTint="@color/colorAccent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_translate"/>
+
+        </com.github.jorgecastilloprz.FABProgressCircle>
+
+    </RelativeLayout>
+
+</FrameLayout>

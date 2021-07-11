@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +21,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.faint.cucina.R;
-import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Cafe;
 import com.faint.cucina.classes.DishGroup;
 import com.faint.cucina.classes.User;
@@ -36,7 +38,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static ArrayList<Announcement> eventList;
     public static ArrayList<Cafe> cafes;
     public static ArrayList<DishGroup> scGroups, rmGroups;
 
@@ -47,8 +48,11 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences prefs;
 
     public static int themeCode;
-
     private boolean backPressedOnce = false;
+
+
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +63,10 @@ public class MainActivity extends AppCompatActivity
 
         themeCode = getIntent().getIntExtra("THEME", 0);
 
+        progressBar = findViewById(R.id.progressBar);
+
         user = UserDataSP.getInstance(this).getUser();
 
-        // getting ArrayList we passed via intent -- it`s available to Fragments !
-        eventList = getIntent().getParcelableArrayListExtra("EVENT_LIST");
         cafes = getIntent().getParcelableArrayListExtra("CAFE_LIST");
 
         scGroups = getIntent().getParcelableArrayListExtra("ORDER_SC_LIST");
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        int newTheme = Integer.parseInt(prefs.getString("change_theme", "NONE"));
+        int newTheme = Integer.parseInt(prefs.getString("change_theme", "0"));
 
         if(newTheme != themeCode) {
             Intent restartIntent = new Intent(this, StartActivity.class);
@@ -162,14 +166,14 @@ public class MainActivity extends AppCompatActivity
             case R.id.logout:
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setMessage("Вы уверены что хотите выйти из учётной записи?")
+                builder.setMessage(getString(R.string.logout_conf))
                         .setCancelable(true)
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
                                 UserDataSP.getInstance(getApplicationContext()).logout();
                             }
                         })
-                        .setNegativeButton("Нет", null);
+                        .setNegativeButton(getString(R.string.no), null);
 
                 final AlertDialog alert = builder.create();
                 alert.show();

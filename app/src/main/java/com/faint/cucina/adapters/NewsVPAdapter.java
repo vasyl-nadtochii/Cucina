@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.fragments.NewsFragment;
@@ -20,8 +23,8 @@ import java.util.List;
 
 public class NewsVPAdapter extends PagerAdapter {
 
-    private ArrayList<Announcement> events; // !!!
-    private Context context;
+    private final ArrayList<Announcement> events; // !!!
+    private final Context context;
 
     public NewsVPAdapter(ArrayList<Announcement> events, Context context) {
         this.events = events;
@@ -58,17 +61,23 @@ public class NewsVPAdapter extends PagerAdapter {
         title = view.findViewById(R.id.title);
         desc = view.findViewById(R.id.desc);
 
-        // filling UI elements with data
-        imageView.setImageResource( events.get(position).getImage() );
         title.setText( events.get(position).getTitle() );
         desc.setText( events.get(position).getDesc() );
+
+        // filling UI elements with data
+        Glide.with(context)
+                .load(events.get(position).getImageUrl())
+                .placeholder(R.drawable.load_bg)
+                .apply(new RequestOptions().override(800, 600))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
 
         // Item onClickListener
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // also transition with selected announcement
-                context.startActivity( NewsFragment.getNewsIntent(context, position) );
+                context.startActivity( NewsFragment.getNewsIntent(context, position, events) );
             }
         });
 

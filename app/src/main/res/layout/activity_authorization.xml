@@ -58,39 +58,11 @@
                         android:layout_marginStart="15dp"
                         android:hint="380XXXXXXXXX"
                         android:id="@+id/mail_et"
-                        android:inputType="textEmailAddress"
+                        android:inputType="phone"
                         android:layout_marginEnd="15dp"
                         android:layout_marginBottom="5dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-                <!--<EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginTop="15dp"
-                    android:singleLine="true"
-                    android:textColor="?attr/colorControlNormal"
-                    android:hint="@string/e_mail"
-                    android:id="@+id/mail_et"
-                    tools:ignore="Autofill"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:singleLine="true"
-                    android:textColor="?attr/colorControlNormal"
-                    android:inputType="textPassword"
-
-                    android:drawablePadding="2dp"
-                    android:hint="@string/password"
-                    android:id="@+id/pass_et"
-                    android:layout_height="wrap_content"
-                    tools:ignore="Autofill" />-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

@@ -13,4 +13,5 @@
     <color name="pure">#000000</color>
     <color name="start_bg">#1E1E1E</color>
     <color name="card_bg">#4E4E4E</color>
+    <color name="cal_frame">#6A6A6A</color>
 </resources>

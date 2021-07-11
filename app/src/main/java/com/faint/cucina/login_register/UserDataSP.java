@@ -1,5 +1,6 @@
 package com.faint.cucina.login_register;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,12 +9,16 @@ import com.faint.cucina.activities.AuthorizationActivity;
 import com.faint.cucina.classes.User;
 
 public class UserDataSP {
+
     private static final String SHARED_PREF_NAME = "volleyregisterlogin";
     private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_PHONE = "keyphone";
     private static final String KEY_CITY = "keycity";
     private static final String KEY_ID = "keyid";
+
+    @SuppressLint("StaticFieldLeak")
     private static UserDataSP mInstance;
+    @SuppressLint("StaticFieldLeak")
     private static Context ctx;
 
     private UserDataSP(Context context) {

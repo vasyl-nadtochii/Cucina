@@ -86,15 +86,27 @@
         <item>2</item>
     </string-array>
 
+    <string name="kyiv">Киев</string>
+    <string name="kharkiv">Харьков</string>
+    <string name="lviv">Львов</string>
+    <string name="dnipro">Днепр</string>
+    <string name="odesa">Одесса</string>
+    <string name="ivfr">Ивано-Франковск</string>
+    <string name="kherson">Херсон</string>
+
     <string-array
         name="cities">
-        <item>Киев</item>
-        <item>Харьков</item>
-        <item>Львов</item>
-        <item>Днепр</item>
-        <item>Одесса</item>
-        <item>Ивано-Франковск</item>
-        <item>Херсон</item>
+        <item>@string/kyiv</item>
+        <item>@string/kharkiv</item>
+        <item>@string/lviv</item>
+        <item>@string/dnipro</item>
+        <item>@string/odesa</item>
+        <item>@string/ivfr</item>
+        <item>@string/kherson</item>
     </string-array>
+
+    <string name="logout_conf">Вы уверены, что хотите выйти из учётной записи?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
 </resources>

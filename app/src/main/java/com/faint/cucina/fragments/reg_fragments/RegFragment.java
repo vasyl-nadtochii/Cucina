@@ -51,7 +51,7 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         root = inflater.inflate(R.layout.fragment_register,
                 container, false);
 
-        spinner = (Spinner) root.findViewById(R.id.spinner);
+        spinner = root.findViewById(R.id.spinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
                 .createFromResource(requireContext(), R.array.cities, android.R.layout.simple_spinner_item);
@@ -65,7 +65,7 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        regBtn = (Button) root.findViewById(R.id.regBtn);
+        regBtn = root.findViewById(R.id.regBtn);
         regBtn.setOnClickListener(this);
 
         checkBox = root.findViewById(R.id.checkbox);
@@ -75,7 +75,16 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        city = adapterView.getItemAtPosition(position).toString();
+        city = String.valueOf(position + 1);
+
+        /*  CITY CODES:
+            Kyiv - 1
+            Kharkiv - 2
+            Lviv - 3
+            Dnipro - 4
+            Odesa - 5
+            Iv-Fr - 6
+            Kherson - 7  */
     }
 
     @Override
@@ -135,8 +144,10 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                             //converting response to json object
                             JSONObject obj = new JSONObject(response);
                             //if no error in response
+                            String msg;
                             if (!obj.getBoolean("error")) {
-                                Toast.makeText(requireContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                msg = "Регистрация прошла успешно";
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
 
                                 //getting the user from the response
                                 JSONObject userJson = obj.getJSONObject("user");
@@ -155,8 +166,20 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                                 //starting the profile activity
                                 requireActivity().finish();
                                 startActivity(new Intent(requireContext(), StartActivity.class));
-                            } else {
-                                Toast.makeText(requireContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            else {    // if err occurred
+                                switch (obj.getString("message")) {
+                                    case "000":
+                                        msg = "Пользователь с такими данными уже зарегистрирован";
+                                        break;
+                                    case "010":
+                                        msg = "Запрашиваемые параметры недоступны. Повторите позже.";
+                                        break;
+                                    default:
+                                        msg = "Unexpected error.";
+                                        break;
+                                }
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -182,7 +205,6 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         };
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(stringRequest);
-        //Toast.makeText(requireContext(), username + "\n" + phone + "\n" + password + "\n" + city, Toast.LENGTH_SHORT).show();
     }
 
     @Override
