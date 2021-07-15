@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Dish;
 
@@ -18,7 +21,7 @@ import java.util.Locale;
 
 public class OrderVPAdapter extends PagerAdapter {
 
-    private ArrayList<Dish> dishes;
+    private final ArrayList<Dish> dishes;
     private final Context context;
     View root;
 
@@ -71,7 +74,12 @@ public class OrderVPAdapter extends PagerAdapter {
 
         name.setText(dishes.get(position).getName());
 
-        imageView.setImageResource(dishes.get(position).getImg());
+        Glide.with(context)
+                .load(dishes.get(position).getImgUrl())
+                .placeholder(R.drawable.load_bg)
+                .apply(new RequestOptions().override(500, 400))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
 
         container.addView(root, 0);
 

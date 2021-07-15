@@ -5,17 +5,18 @@ import android.os.Parcelable;
 
 public class Dish implements Parcelable {
 
-    String name;
-    int img;
+    String name, desc, imgUrl;
 
-    public Dish(String name, int img) {
+    public Dish(String name, String desc, String imgUrl) {
         this.name = name;
-        this.img = img;
+        this.desc = desc;
+        this.imgUrl = imgUrl;
     }
 
     protected Dish(Parcel in) {
         name = in.readString();
-        img = in.readInt();
+        desc = in.readString();
+        imgUrl = in.readString();
     }
 
     public static final Creator<Dish> CREATOR = new Creator<Dish>() {
@@ -38,8 +39,12 @@ public class Dish implements Parcelable {
         this.name = name;
     }
 
-    public int getImg() {
-        return img;
+    public String getDesc() {
+        return desc;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
     }
 
     @Override
@@ -50,6 +55,7 @@ public class Dish implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
-        parcel.writeInt(img);
+        parcel.writeString(desc);
+        parcel.writeString(imgUrl);
     }
 }

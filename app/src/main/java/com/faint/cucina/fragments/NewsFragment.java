@@ -28,7 +28,7 @@ import com.faint.cucina.adapters.NewsLVAdapter;
 import com.faint.cucina.adapters.NewsVPAdapter;
 import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.login_register.UserDataSP;
-import com.faint.cucina.login_register.VolleySingleton;
+import com.faint.cucina.custom.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,7 +87,6 @@ public class NewsFragment extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
 
         eventList = new ArrayList<>();
-
         getNews();
 
         refreshLayout = root.findViewById(R.id.refresh_layout);
@@ -116,9 +115,6 @@ public class NewsFragment extends Fragment {
     private String formatContent(String content) {
         String newContent = content;
 
-        if (newContent.contains("&quot;")) {
-            newContent = newContent.replaceAll("&quot;", "\"");
-        }
         if (newContent.contains("&quot;")) {
             newContent = newContent.replaceAll("&quot;", "\"");
         }

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class NewsVPAdapter extends PagerAdapter {
 
-    private final ArrayList<Announcement> events; // !!!
+    private final ArrayList<Announcement> events;
     private final Context context;
 
     public NewsVPAdapter(ArrayList<Announcement> events, Context context) {

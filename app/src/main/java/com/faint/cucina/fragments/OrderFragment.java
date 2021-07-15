@@ -1,10 +1,13 @@
 package com.faint.cucina.fragments;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.adapters.SectionsPagerAdapter;
+import com.faint.cucina.classes.DishGroup;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ public class OrderFragment extends Fragment {
 
     SectionsPagerAdapter sectionsPagerAdapter;
 
+    ArrayList<DishGroup> rmGroups, scGroups; // rm - ready-made, sc - self choice
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,8 +46,8 @@ public class OrderFragment extends Fragment {
         tabs = root.findViewById(R.id.tabs);
 
         List<Fragment> pages = new ArrayList<>();
-        pages.add(new OrderPageFragment(MainActivity.rmGroups));
-        pages.add(new OrderPageFragment(MainActivity.scGroups));
+        pages.add(new OrderPageFragment(1));
+        pages.add(new OrderPageFragment(2));
 
         sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
                 requireActivity().getSupportFragmentManager(), pages);

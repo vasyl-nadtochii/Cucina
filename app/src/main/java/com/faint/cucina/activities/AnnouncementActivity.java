@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.async.Translator;
@@ -46,6 +47,7 @@ public class AnnouncementActivity extends AppCompatActivity {
         if(event != null) {
             Glide.with(this)
                     .load(event.getImageUrl())
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .fitCenter()
                     .into(img);
 

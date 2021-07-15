@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,7 +23,7 @@ import com.faint.cucina.R;
 import com.faint.cucina.classes.User;
 import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
-import com.faint.cucina.login_register.VolleySingleton;
+import com.faint.cucina.custom.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;

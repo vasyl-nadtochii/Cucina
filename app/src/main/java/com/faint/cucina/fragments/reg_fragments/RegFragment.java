@@ -3,7 +3,6 @@ package com.faint.cucina.fragments.reg_fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,7 +25,7 @@ import com.faint.cucina.activities.StartActivity;
 import com.faint.cucina.classes.User;
 import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
-import com.faint.cucina.login_register.VolleySingleton;
+import com.faint.cucina.custom.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;

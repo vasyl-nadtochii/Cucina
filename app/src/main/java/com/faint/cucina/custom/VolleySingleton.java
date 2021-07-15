@@ -1,4 +1,4 @@
-package com.faint.cucina.login_register;
+package com.faint.cucina.custom;
 
 import android.content.Context;
 
