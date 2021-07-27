@@ -1,6 +1,8 @@
 package com.faint.cucina.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +10,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
+import com.faint.cucina.activities.DishDescActivity;
 import com.faint.cucina.classes.Dish;
+import com.faint.cucina.classes.OrderDish;
+import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.fragments.OrderPageFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,7 +56,12 @@ public class OrderVPAdapter extends PagerAdapter {
 
         TextView name = root.findViewById(R.id.name);
         final TextView counterView = root.findViewById(R.id.counter);
+        TextView price = root.findViewById(R.id.price_field);
+
         counterView.setText(String.valueOf(counter[position]));
+
+        CardView cardView = root.findViewById(R.id.card);
+        cardView.setBackgroundResource(R.drawable.ripple);
 
         Button plus, minus;
 
@@ -59,6 +71,12 @@ public class OrderVPAdapter extends PagerAdapter {
             public void onClick(View view) {
                 counter[position]++;
                 counterView.setText(String.valueOf(counter[position]));
+
+                OrderFragment.orderInterface.addDishToOrder(dishes.get(position));
+
+                if(OrderFragment.order.getOrderList().size() == 1) {
+                    OrderFragment.orderInterface.showHideFAB(true);
+                }
             }
         });
 
@@ -69,17 +87,36 @@ public class OrderVPAdapter extends PagerAdapter {
                 if (counter[position] > 0)
                     counter[position]--;
                 counterView.setText(String.valueOf(counter[position]));
+
+                OrderFragment.orderInterface.removeDishFromOrder(dishes.get(position));
+
+                if(OrderFragment.order.getOrderList().size() == 0) {
+                    OrderFragment.orderInterface.showHideFAB(false);
+                }
             }
         });
 
         name.setText(dishes.get(position).getName());
+        String priceStr = dishes.get(position).getPrice() + " UAH";
+        price.setText(priceStr);
 
         Glide.with(context)
                 .load(dishes.get(position).getImgUrl())
-                .placeholder(R.drawable.load_bg)
-                .apply(new RequestOptions().override(500, 400))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
+
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DishDescActivity.class);
+                intent.putExtra("name", dishes.get(position).getName())
+                        .putExtra("desc", dishes.get(position).getDesc())
+                        .putExtra("imgUrl", dishes.get(position).getImgUrl())
+                        .putExtra("price", dishes.get(position).getPrice());
+
+                context.startActivity(intent);
+            }
+        });
 
         container.addView(root, 0);
 

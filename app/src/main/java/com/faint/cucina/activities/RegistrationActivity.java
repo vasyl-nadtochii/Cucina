@@ -60,7 +60,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             viewPager.setCurrentItem(position);
 
             if(position == fragments.size() - 1)
-                btn.setVisibility(View.GONE);
+                btn.hide();
         }
     }
 }

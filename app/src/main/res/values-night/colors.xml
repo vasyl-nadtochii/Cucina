@@ -14,4 +14,7 @@
     <color name="start_bg">#1E1E1E</color>
     <color name="card_bg">#4E4E4E</color>
     <color name="cal_frame">#6A6A6A</color>
+
+    <color name="cardBgPrimary">#1B1B1B</color>
+    <color name="cardBgAccent">#CF7400</color>
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.order_conf_fragments.DescFragment"
+    android:padding="10dp"
+    android:background="@color/layout_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="0/600"
+        android:fontFamily="@font/gilroy_bold"
+        android:textSize="18sp"
+        android:id="@+id/counter"
+        android:textColor="@color/header_strong"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:text="Введите уточнения к заказу:"
+        android:textSize="18sp"
+        android:fontFamily="@font/gilroy_bold"
+        android:textColor="@color/header_strong"
+        android:textStyle="bold"
+        android:layout_margin="5dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="400"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/counter"
+        android:layout_marginTop="5dp"
+        app:hintEnabled="false">
+
+        <EditText
+            android:gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/order_et_style"
+            android:hint="Пишите здесь"
+            android:fontFamily="@font/gilroy_light"
+            android:maxLength="600"
+            android:padding="10dp"
+            android:textColor="@color/header_strong"
+            android:id="@+id/edit_text"
+            android:layout_margin="3dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</RelativeLayout>

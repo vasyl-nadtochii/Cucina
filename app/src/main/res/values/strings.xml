@@ -3,14 +3,14 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    
+
     <string name="cafe_on">"Кафе на "</string>
     <string name="order_here">Заказать здесь</string>
     <string name="complain">Оставить жалобу</string>
-    
+
     <string name="tab_text_1">Готовые меню</string>
     <string name="tab_text_2">Самостоятельно</string>
-    
+
     <string name="reg_info_header"><u>Почему именно мы?</u></string>
 
     <string name="settings">Настройки</string>
@@ -79,8 +79,7 @@
         <item>@string/system</item>
     </string-array>
 
-    <string-array
-        name="entry_values">
+    <string-array name="entry_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -94,8 +93,7 @@
     <string name="ivfr">Ивано-Франковск</string>
     <string name="kherson">Херсон</string>
 
-    <string-array
-        name="cities">
+    <string-array name="cities">
         <item>@string/kyiv</item>
         <item>@string/kharkiv</item>
         <item>@string/lviv</item>
@@ -108,5 +106,7 @@
     <string name="logout_conf">Вы уверены, что хотите выйти из учётной записи?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

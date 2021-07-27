@@ -47,7 +47,7 @@ public class DishGroup implements Parcelable {
     }
 
     public void addDish(Dish dish) {
-        this.dishes.add(dish);  // !!!
+        dishes.add(dish);  // !!!
     }
 
     @Override

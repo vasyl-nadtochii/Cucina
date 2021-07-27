@@ -1,41 +1,42 @@
 package com.faint.cucina.fragments;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
+import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.SectionsPagerAdapter;
-import com.faint.cucina.classes.DishGroup;
+import com.faint.cucina.classes.Dish;
+import com.faint.cucina.classes.Order;
+import com.faint.cucina.classes.OrderDish;
+import com.faint.cucina.classes.User;
+import com.faint.cucina.interfaces.OrderInterface;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OrderFragment extends Fragment {
 
     View root;
     TabLayout tabs;
     ViewPager sectPager;
+    FloatingActionButton fabNext;
 
     SectionsPagerAdapter sectionsPagerAdapter;
 
-    ArrayList<DishGroup> rmGroups, scGroups; // rm - ready-made, sc - self choice
+    public static Order order;
+    public static OrderInterface orderInterface;
 
     @Nullable
     @Override
@@ -44,16 +45,49 @@ public class OrderFragment extends Fragment {
 
         sectPager = root.findViewById(R.id.view_pager);
         tabs = root.findViewById(R.id.tabs);
+        fabNext = root.findViewById(R.id.fabNext);
 
         List<Fragment> pages = new ArrayList<>();
-        pages.add(new OrderPageFragment(1));
-        pages.add(new OrderPageFragment(2));
+        pages.add(new OrderPageFragment(1)); // 1 - ready-made
+        pages.add(new OrderPageFragment(2)); // 2 - self choice
 
         sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
                 requireActivity().getSupportFragmentManager(), pages);
         sectPager.setAdapter(sectionsPagerAdapter);
 
         tabs.setupWithViewPager(sectPager);
+
+        User user = MainActivity.user;
+        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "forTest", -1);
+
+        fabNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), OrderActivity.class);
+                intent.putExtra("ORDER", order);
+                startActivity(intent);
+            }
+        });
+
+        orderInterface = new OrderInterface() {
+            @Override
+            public void addDishToOrder(Dish dish) {
+                order.addDishToOrder(dish);
+            }
+
+            @Override
+            public void removeDishFromOrder(Dish dish) {
+                order.removeDish(dish);
+            }
+
+            @Override
+            public void showHideFAB(boolean show) {
+                if(show)
+                    fabNext.show();
+                else
+                    fabNext.hide();
+            }
+        };
 
         return root;
     }

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.CafeActivity;
 import com.faint.cucina.activities.MainActivity;
+import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.classes.Cafe;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -53,7 +55,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
     View root;
-    FloatingActionButton fab;
+    FloatingActionButton fab, fabNext;
+    TextView infoTV;
+    ViewGroup infoLayout;
 
     Location currentLocation;
     FusedLocationProviderClient providerClient;
@@ -70,6 +74,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private static final int REQUEST_CODE = 101;
     private boolean initialized = false;
+    private boolean markerOnceClicked = false;
+    boolean forOrder;
+
+    public MapFragment(boolean forOrder) {
+        this.forOrder = forOrder;
+    }
 
     @Nullable
     @Override
@@ -78,8 +88,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         root = inflater.inflate(R.layout.fragment_map, container, false);
 
+        infoTV = root.findViewById(R.id.cafe_info_tv);
+        infoLayout = root.findViewById(R.id.infoField);
+
+        if(forOrder)
+            infoLayout.setVisibility(View.VISIBLE);
+
         fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        fabNext = root.findViewById(R.id.fabNext);
+        fabNext.setOnClickListener(this);
 
         markers = new ArrayList<>();
 
@@ -97,7 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // here we`re getting perms for user`s location data
         assert getActivity() != null;
         if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED  &&
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat
                         .checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -239,6 +258,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             else
                 buildAlertMessageNoGps();
         }
+        else if(view.getId() == R.id.fabNext && initialized) {
+            OrderActivity.orderConfInterface.goToNext();
+            OrderActivity.orderConfInterface.showBtnNext(true);
+        }
     }
 
     @Override
@@ -273,18 +296,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(!marker.getTitle().equals("user_location")) {
-            final Intent intent = new Intent(getActivity(), CafeActivity.class);
+            Cafe chosenCafe = null;
 
             for (Cafe cafe : MainActivity.cafes) {
                 if(marker.getPosition().longitude == cafe.getLongitude() &&
-                    marker.getPosition().latitude == cafe.getLatitude()) {
+                        marker.getPosition().latitude == cafe.getLatitude()) {
 
-                    intent.putExtra("CAFE", cafe);
+                    chosenCafe = cafe;
                     break;
                 }
             }
 
-            startActivity(intent);
+            if(forOrder) {
+                assert chosenCafe != null;
+                OrderActivity.order.setCafeID(chosenCafe.getCafeID());
+
+                String info = "Выбрано: " + chosenCafe.getAddress();
+                infoTV.setText(info);
+
+                if(!markerOnceClicked) {
+                    markerOnceClicked = true;
+                    fabNext.show();
+                }
+            }
+            else {
+                Intent intent = new Intent(getActivity(), CafeActivity.class);
+                intent.putExtra("CAFE", chosenCafe);
+                startActivity(intent);
+            }
         }
 
         return true;

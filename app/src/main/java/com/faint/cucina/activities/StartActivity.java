@@ -15,6 +15,7 @@ import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Cafe;
 import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.DishGroup;
+import com.faint.cucina.fragments.NewsFragment;
 import com.faint.cucina.login_register.UserDataSP;
 
 import java.util.ArrayList;
@@ -96,11 +97,16 @@ public class StartActivity extends AppCompatActivity {
 
         accExists = UserDataSP.getInstance(this).isLoggedIn();
         if(accExists) {
-            cafes.add( new Cafe(49.8247093178, 24.079084508121014, true, "ул. Садивныча 27"));
-            cafes.add( new Cafe(49.828469, 24.07097015, true, "ул. Суворова 1"));
-            cafes.add( new Cafe(49.8202077703, 24.07606299, true, "ул. Евгена Коновальца 1"));
-            cafes.add( new Cafe(49.8252491899, 24.0738223493, true, "пл. Митна"));
-            cafes.add( new Cafe(49.8, 24, false, "ул. Степана Бандеры 7"));
+            cafes.add( new Cafe(49.8247093178, 24.079084508121014, true, "ул. Садивныча 27", 1));
+            cafes.add( new Cafe(46.6387464, 32.5679945, true, "ул. Суворова 1", 2));
+            cafes.add( new Cafe(49.8202077703, 24.07606299, true, "ул. Евгена Коновальца 1", 3));
+            cafes.add( new Cafe(49.8252491899, 24.0738223493, true, "пл. Митна", 4));
+            cafes.add( new Cafe(49.8, 24, false, "ул. Степана Бандеры 7", 5));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

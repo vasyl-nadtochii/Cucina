@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.order_conf_fragments.ConfFragment"
+    android:background="@color/layout_background"
+    android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Подтвердите заказ"
+            android:textColor="@color/header_strong"
+            android:fontFamily="@font/gilroy_bold"
+            android:textSize="24sp"
+            android:layout_margin="15dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cardBgAccent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:cardCornerRadius="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Адрес кафе: Не указано"
+                android:textColor="@color/header_strong"
+                android:fontFamily="@font/gilroy_light"
+                android:id="@+id/orderAddress"
+                android:textSize="20sp"
+                android:layout_margin="10dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cardBgPrimary"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:cardCornerRadius="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Уточнения к заказу: Не указано"
+                android:textColor="@color/header_strong"
+                android:fontFamily="@font/gilroy_light"
+                android:id="@+id/orderClar"
+                android:textSize="20sp"
+                android:layout_margin="10dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ваш заказ"
+            android:textColor="@color/header_strong"
+            android:fontFamily="@font/gilroy_bold"
+            android:textSize="22sp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/orderLV"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:layout_margin="10dp"/>
+
+</LinearLayout>

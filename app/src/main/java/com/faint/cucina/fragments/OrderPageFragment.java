@@ -95,22 +95,22 @@ public class OrderPageFragment extends Fragment {
                                 String group = object.getString("dish_group");
                                 String desc = object.getString("description");
                                 String imgUrl = object.getString("img_url");
+                                int price = object.getInt("price");
 
-                                Dish dish = new Dish(name, desc, imgUrl);
+                                Dish dish = new Dish(name, desc, imgUrl, price);
 
                                 boolean foundGroup = false;
                                 if(dishList.size() != 0) {
                                     for(DishGroup dishGroup : dishList) {
                                         if(dishGroup.getName().equals(group)) {
                                             foundGroup = true;
-
                                             dishGroup.addDish(dish);
                                         }
                                     }
                                 }
 
                                 if(!foundGroup) {
-                                    ArrayList<Dish> dishes = new ArrayList<Dish>();
+                                    ArrayList<Dish> dishes = new ArrayList<>();
                                     dishes.add(dish);
 
                                     DishGroup newDishGroup = new DishGroup(group, dishes);

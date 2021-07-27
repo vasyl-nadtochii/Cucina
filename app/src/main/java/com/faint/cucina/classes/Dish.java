@@ -6,17 +6,20 @@ import android.os.Parcelable;
 public class Dish implements Parcelable {
 
     String name, desc, imgUrl;
+    int price;
 
-    public Dish(String name, String desc, String imgUrl) {
+    public Dish(String name, String desc, String imgUrl, int price) {
         this.name = name;
         this.desc = desc;
         this.imgUrl = imgUrl;
+        this.price = price;
     }
 
     protected Dish(Parcel in) {
         name = in.readString();
         desc = in.readString();
         imgUrl = in.readString();
+        price = in.readInt();
     }
 
     public static final Creator<Dish> CREATOR = new Creator<Dish>() {
@@ -47,6 +50,10 @@ public class Dish implements Parcelable {
         return imgUrl;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -57,5 +64,6 @@ public class Dish implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(desc);
         parcel.writeString(imgUrl);
+        parcel.writeInt(price);
     }
 }

@@ -12,6 +12,7 @@
         android:layout_height="80dp"
         android:layout_margin="4dp"
         app:cardCornerRadius="15dp"
+        android:backgroundTint="@color/card_bg"
         android:layout_marginBottom="2dp"
         android:id="@+id/card">
 
@@ -22,7 +23,6 @@
             <ImageView
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/pizza"
                 android:scaleType="centerCrop"
                 android:layout_marginEnd="5dp"
                 android:layout_alignParentStart="true"
@@ -57,7 +57,8 @@
                     android:textColor="@color/header_weak"
                     android:gravity="center"
                     android:id="@+id/btn_minus"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent"
+                    tools:ignore="HardcodedText" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
@@ -87,7 +88,18 @@
                     android:textSize="22sp"
                     android:gravity="center"
                     android:id="@+id/btn_plus"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/header_weak"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:id="@+id/price_field"
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 

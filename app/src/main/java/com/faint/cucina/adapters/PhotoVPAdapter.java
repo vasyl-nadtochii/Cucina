@@ -16,8 +16,8 @@ import java.util.List;
 
 public class PhotoVPAdapter extends PagerAdapter {
 
-    private List<Drawable> photos;
-    private Context context;
+    private final List<Drawable> photos;
+    private final Context context;
 
     public PhotoVPAdapter(List<Drawable> photos, Context context) {
         this.photos = photos;

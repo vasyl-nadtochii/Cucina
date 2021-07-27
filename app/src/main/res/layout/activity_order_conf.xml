@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.RegistrationActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/layout_background">
 
     <com.faint.cucina.custom.CustomViewPager
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:layout_gravity="end|bottom"
         app:borderWidth="0dp"
+        android:visibility="gone"
         android:src="@drawable/ic_next"
         android:id="@+id/btn"/>
 

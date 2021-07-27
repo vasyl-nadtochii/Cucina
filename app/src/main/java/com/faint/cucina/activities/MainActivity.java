@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static ArrayList<Cafe> cafes;
-    public static ArrayList<DishGroup> scGroups, rmGroups;
 
     public static User user;
 
@@ -49,8 +48,6 @@ public class MainActivity extends AppCompatActivity
 
     public static int themeCode;
     private boolean backPressedOnce = false;
-
-
 
     ProgressBar progressBar;
 
@@ -62,15 +59,11 @@ public class MainActivity extends AppCompatActivity
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         themeCode = getIntent().getIntExtra("THEME", 0);
+        cafes = getIntent().getParcelableArrayListExtra("CAFE_LIST");
 
         progressBar = findViewById(R.id.progressBar);
 
         user = UserDataSP.getInstance(this).getUser();
-
-        cafes = getIntent().getParcelableArrayListExtra("CAFE_LIST");
-
-        scGroups = getIntent().getParcelableArrayListExtra("ORDER_SC_LIST");
-        rmGroups = getIntent().getParcelableArrayListExtra("ORDER_RM_LIST");
 
         drawer = findViewById(R.id.drawer_layout);
 
@@ -109,6 +102,7 @@ public class MainActivity extends AppCompatActivity
         int newTheme = Integer.parseInt(prefs.getString("change_theme", "0"));
 
         if(newTheme != themeCode) {
+
             Intent restartIntent = new Intent(this, StartActivity.class);
             startActivity(restartIntent);
         }
@@ -151,7 +145,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.map:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace( R.id.fragment_container, new MapFragment() )
+                        .replace( R.id.fragment_container, new MapFragment(false) )
                         .commit();
                 break;
             case R.id.news:

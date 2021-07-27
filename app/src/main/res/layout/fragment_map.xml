@@ -13,14 +13,67 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         map:cameraZoom="10"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoField"
+        android:orientation="vertical"
+        android:background="@color/layout_background"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Выберите кафе из доступных на карте"
+            android:textAlignment="center"
+            android:textColor="@color/header_strong"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/cafe_info_tv"
+            android:layout_height="wrap_content"
+            android:text="Выбрано: ничего"
+            android:textStyle="bold"
+            android:textColor="@color/header_weak"
+            android:textAlignment="center"
+            android:layout_marginBottom="2dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_my_location"
         android:layout_gravity="bottom|end"
-        android:layout_margin="12dp"
-        android:backgroundTint="@color/colorPrimary"
-        map:borderWidth="0dp"
-        android:id="@+id/fab"/>
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_next"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone"
+            android:backgroundTint="@color/colorPrimary"
+            map:borderWidth="0dp"
+            android:id="@+id/fabNext"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_location"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/colorPrimary"
+            map:borderWidth="0dp"
+            android:id="@+id/fab"/>
+
+    </LinearLayout>
 
 </FrameLayout>

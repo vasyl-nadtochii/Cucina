@@ -55,7 +55,6 @@ public class OrderLVAdapter extends ArrayAdapter<DishGroup> {
 
         name.setText( categories.get(position).getName() );
 
-
         return view;
     }
 }
