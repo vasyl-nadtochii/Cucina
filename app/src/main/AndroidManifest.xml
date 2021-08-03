@@ -19,7 +19,7 @@
         <activity
             android:name=".activities.OrderActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Universal"/>
+            android:theme="@style/AppTheme.ForPreLoadScr"/>
 
         <activity
             android:name=".activities.DishDescActivity"

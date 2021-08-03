@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.order_conf_fragments.ConfFragment"
-    android:background="@color/layout_background"
+    android:background="@color/start_bg"
     android:orientation="vertical">
 
         <TextView
@@ -15,7 +15,7 @@
             android:textColor="@color/header_strong"
             android:fontFamily="@font/gilroy_bold"
             android:textSize="24sp"
-            android:layout_margin="15dp"/>
+            android:layout_margin="12dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:textColor="@color/header_strong"
                 android:fontFamily="@font/gilroy_light"
                 android:id="@+id/orderAddress"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_margin="10dp"/>
 
         </androidx.cardview.widget.CardView>
@@ -54,7 +54,7 @@
                 android:textColor="@color/header_strong"
                 android:fontFamily="@font/gilroy_light"
                 android:id="@+id/orderClar"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_margin="10dp"/>
 
         </androidx.cardview.widget.CardView>

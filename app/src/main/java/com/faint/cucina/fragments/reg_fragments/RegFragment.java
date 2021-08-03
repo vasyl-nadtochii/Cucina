@@ -136,8 +136,6 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //progressBar.setVisibility(View.GONE);
-
                         try {
                             //converting response to json object
                             JSONObject obj = new JSONObject(response);

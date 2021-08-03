@@ -3,12 +3,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.order_conf_fragments.ResultFragment">
+    tools:context=".fragments.order_conf_fragments.ResultFragment"
+    android:paddingStart="10dp"
+    android:background="@color/start_bg"
+    android:paddingEnd="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/layout_success"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:src="@drawable/succ_sent"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:text="Ваш заказ успешно отправлен на обработку!"
+            android:textSize="22sp"
+            android:textColor="@color/cal_frame"
+            android:fontFamily="@font/gilroy_bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/layout_fail"
+        android:visibility="gone"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fail_icon"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:text="При отправке произошла ошибка, попытайтесь позже!"
+            android:textSize="22sp"
+            android:textColor="@color/cal_frame"
+            android:fontFamily="@font/gilroy_bold"/>
+
+    </LinearLayout>
 
 </FrameLayout>

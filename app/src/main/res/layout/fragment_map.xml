@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/infoField"
         android:orientation="vertical"
-        android:background="@color/layout_background"
+        android:background="@color/start_bg"
         android:visibility="gone">
 
         <TextView

@@ -14,6 +14,6 @@
     <color name="card_bg">@android:color/background_light</color>
     <color name="cal_frame">#959595</color>
 
-    <color name="cardBgPrimary">#FBD996</color>
-    <color name="cardBgAccent">#99C0E3</color>
+    <color name="cardBgPrimary">#FDEBC6</color>
+    <color name="cardBgAccent">#D5EBFF</color>
 </resources>
