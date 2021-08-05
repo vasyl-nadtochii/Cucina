@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +20,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.faint.cucina.R;
 import com.faint.cucina.classes.Cafe;
-import com.faint.cucina.classes.DishGroup;
 import com.faint.cucina.classes.User;
 import com.faint.cucina.fragments.MapFragment;
 import com.faint.cucina.fragments.NewsFragment;
@@ -39,17 +36,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static ArrayList<Cafe> cafes;
-
     public static User user;
 
     DrawerLayout drawer;
-
+    ProgressBar progressBar;
     SharedPreferences prefs;
 
     public static int themeCode;
     private boolean backPressedOnce = false;
-
-    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

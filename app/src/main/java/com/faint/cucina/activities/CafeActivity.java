@@ -67,7 +67,7 @@ public class CafeActivity extends AppCompatActivity {
         address.setSelected(true);
         address.setText(getResources().getString(R.string.cafe_on) + " " + cafe.getAddress());
 
-        if(cafe.isOpened()) {
+        if(cafe.getState() == 1) {
             state.setText(R.string.opened);
             state.setTextColor(getColor(R.color.green));
         }

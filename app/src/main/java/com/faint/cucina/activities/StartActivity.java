@@ -10,20 +10,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
-import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Cafe;
-import com.faint.cucina.classes.Dish;
-import com.faint.cucina.classes.DishGroup;
-import com.faint.cucina.fragments.NewsFragment;
+import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.login_register.UserDataSP;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StartActivity extends AppCompatActivity {
 
     int themeCode;
-    private boolean accExists;
+    String url = "http://192.168.1.8/cucina/getCafes.php";
+    String userCity;
 
     Intent mainActIntent;
     Intent loginIntent;
@@ -55,36 +62,8 @@ public class StartActivity extends AppCompatActivity {
                 break;
         }
 
-        Thread initThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    super.run();
-                    initData();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    if(accExists) {
-                        mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
-
-                        // TODO: check if user is authorized or not
-                        mainActIntent
-                                .putParcelableArrayListExtra("CAFE_LIST", cafes) // passing list via intent to MainActivity
-                                .putExtra("THEME", themeCode);
-
-                        startActivity(mainActIntent);
-                    }
-                    else {
-                        loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);
-                        startActivity(loginIntent);
-                    }
-                    finish();
-                }
-            }
-        };
-        initThread.start();
+        mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
+        initData();
     }
 
     @Override
@@ -95,13 +74,69 @@ public class StartActivity extends AppCompatActivity {
     private void initData() {
         cafes = new ArrayList<>();
 
-        accExists = UserDataSP.getInstance(this).isLoggedIn();
+        boolean accExists = UserDataSP.getInstance(this).isLoggedIn();
         if(accExists) {
-            cafes.add( new Cafe(49.8247093178, 24.079084508121014, true, "ул. Садивныча 27", 1));
-            cafes.add( new Cafe(46.6387464, 32.5679945, true, "ул. Суворова 1", 2));
-            cafes.add( new Cafe(49.8202077703, 24.07606299, true, "ул. Евгена Коновальца 1", 3));
-            cafes.add( new Cafe(49.8252491899, 24.0738223493, true, "пл. Митна", 4));
-            cafes.add( new Cafe(49.8, 24, false, "ул. Степана Бандеры 7", 5));
+            userCity = UserDataSP.getInstance(this).getUser().getCity();
+            Toast.makeText(getApplicationContext(), userCity, Toast.LENGTH_SHORT).show();
+
+            StringRequest request = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONArray array = new JSONArray(response);
+
+                                for (int i = 0; i < array.length(); i++) {
+                                    JSONObject object = array.getJSONObject(i);
+
+                                    int id = object.getInt("id");
+                                    double latitude = object.getDouble("latitude");
+                                    double longitude = object.getDouble("longitude");
+                                    int state = object.optInt("state");
+                                    String address = object.getString("address");
+
+                                    JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
+                                    ArrayList<String> urlList = new ArrayList<>();
+
+                                    for(int j = 0; j < jsonArray.length(); j++) {
+                                        urlList.add(jsonArray.getString(j));
+                                    }
+
+                                    Cafe cafe = new Cafe(latitude, longitude, state, address, id, urlList);
+                                    cafes.add(cafe);
+                                }
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            mainActIntent.putParcelableArrayListExtra("CAFE_LIST", cafes);
+                            mainActIntent.putExtra("THEME", themeCode);
+                            startActivity(mainActIntent);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("user_city", userCity);
+
+                    return params;
+                }
+            };
+
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        }
+        else {
+            loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);
+            startActivity(loginIntent);
         }
     }
 
