@@ -10,17 +10,20 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 
 import java.util.List;
 
 public class PhotoVPAdapter extends PagerAdapter {
 
-    private final List<Drawable> photos;
+    private final List<String> photos_urls;
     private final Context context;
 
-    public PhotoVPAdapter(List<Drawable> photos, Context context) {
-        this.photos = photos;
+    public PhotoVPAdapter(List<String> photos_urls, Context context) {
+        this.photos_urls = photos_urls;
         this.context = context;
     }
 
@@ -31,9 +34,12 @@ public class PhotoVPAdapter extends PagerAdapter {
 
         View view = layoutInflater.inflate(R.layout.photo_vp_item, container, false);
 
-        ImageView imageView;
-        imageView = view.findViewById(R.id.img);
-        imageView.setImageDrawable( photos.get(position) );
+        ImageView imageView = view.findViewById(R.id.img);
+        //imageView.setImageDrawable( photos.get(position) );
+        Glide.with(context)
+                .load(photos_urls.get(position))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
 
         container.addView(view, 0);
 
@@ -42,7 +48,7 @@ public class PhotoVPAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return photos.size();
+        return photos_urls.size();
     }
 
     @Override

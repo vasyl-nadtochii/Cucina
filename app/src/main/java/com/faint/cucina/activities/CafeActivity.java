@@ -79,20 +79,11 @@ public class CafeActivity extends AppCompatActivity {
             orderBtn.setVisibility(View.GONE);
         }
 
-        // just testing
-        ArrayList<Drawable> photos = new ArrayList<>();
-        photos.add(getDrawable(R.drawable.ph1));
-        photos.add(getDrawable(R.drawable.ph2));
-        photos.add(getDrawable(R.drawable.ph3));
-
-        photoVPAdapter = new PhotoVPAdapter(photos, CafeActivity.this);
-
+        photoVPAdapter = new PhotoVPAdapter(cafe.getImgUrls(), CafeActivity.this);
         viewPager = findViewById(R.id.viewPager);
-
         viewPager.setAdapter(photoVPAdapter);
 
         handler = new Handler();
-
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

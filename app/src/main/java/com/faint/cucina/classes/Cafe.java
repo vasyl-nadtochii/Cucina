@@ -70,6 +70,10 @@ public class Cafe implements Parcelable {
         return cafeID;
     }
 
+    public ArrayList<String> getImgUrls() {
+        return imgUrls;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeDouble(latitude);

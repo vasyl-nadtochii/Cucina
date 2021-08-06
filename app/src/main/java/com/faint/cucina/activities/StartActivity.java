@@ -77,7 +77,6 @@ public class StartActivity extends AppCompatActivity {
         boolean accExists = UserDataSP.getInstance(this).isLoggedIn();
         if(accExists) {
             userCity = UserDataSP.getInstance(this).getUser().getCity();
-            Toast.makeText(getApplicationContext(), userCity, Toast.LENGTH_SHORT).show();
 
             StringRequest request = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
