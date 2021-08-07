@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class NewsLVAdapter extends ArrayAdapter<Announcement> {
 
-    private ArrayList<Announcement> events;
-    private Context context;
+    private final ArrayList<Announcement> events;
+    private final Context context;
 
     public NewsLVAdapter(ArrayList<Announcement> events, Context context) {
         super(context, R.layout.lv_item, events);

@@ -9,15 +9,17 @@ public class Order implements Parcelable {
 
     public String name, phone, clarifications;
     public ArrayList<OrderDish> orderList;
-    public int cafeID;
+    public int cafeID, state, id;
 
     public Order(String name, String phone,
-                 ArrayList<OrderDish> orderList, String clarifications, int cafeID) {
+                 ArrayList<OrderDish> orderList, String clarifications, int cafeID, int state, int id) {
         this.name = name;
         this.phone = phone;
         this.orderList = orderList;
         this.clarifications = clarifications;
         this.cafeID = cafeID;
+        this.state = state;
+        this.id = id;
     }
 
     @SuppressWarnings("unchecked")
@@ -27,6 +29,8 @@ public class Order implements Parcelable {
         orderList = in.readArrayList(OrderDish.class.getClassLoader());
         clarifications = in.readString();
         cafeID = in.readInt();
+        state = in.readInt();
+        id = in.readInt();
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -69,6 +73,14 @@ public class Order implements Parcelable {
         return cafeID;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public void addDishToOrder(Dish dishToAdd) {
         boolean found = false;
 
@@ -82,7 +94,7 @@ public class Order implements Parcelable {
         }
 
         if(!found) {
-            orderList.add(new OrderDish(dishToAdd.getName(), 1));
+            orderList.add(new OrderDish(1, dishToAdd.getName()));
         }
     }
 
@@ -112,5 +124,7 @@ public class Order implements Parcelable {
         parcel.writeList(orderList);
         parcel.writeString(clarifications);
         parcel.writeInt(cafeID);
+        parcel.writeInt(state);
+        parcel.writeInt(id);
     }
 }

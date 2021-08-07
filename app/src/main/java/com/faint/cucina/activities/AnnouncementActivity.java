@@ -83,6 +83,14 @@ public class AnnouncementActivity extends AppCompatActivity {
                                 translatedTitle[0] = new Translator().execute("ru", currLang, translatedTitle[0]).get();
                                 translatedDesc[0] = new Translator().execute("ru", currLang, translatedDesc[0]).get();
 
+                                if (translatedTitle[0].contains("&quot;")) {
+                                    translatedTitle[0] = translatedTitle[0].replaceAll("&quot;", "\"");
+                                }
+
+                                if (translatedDesc[0].contains("&quot;")) {
+                                    translatedDesc[0] = translatedDesc[0].replaceAll("&quot;", "\"");
+                                }
+
                                 translated = true;
                             }
                             else {

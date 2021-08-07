@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 public class OrderDish implements Parcelable {
 
-    String name;
     int amount;
+    String name;
 
-    public OrderDish(String name, int amount) {
-        this.name = name;
+    public OrderDish(int amount, String name) {
         this.amount = amount;
+        this.name = name;
     }
 
     protected OrderDish(Parcel in) {
-        name = in.readString();
         amount = in.readInt();
+        name = in.readString();
     }
 
     public static final Creator<OrderDish> CREATOR = new Creator<OrderDish>() {
@@ -49,7 +49,7 @@ public class OrderDish implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
         parcel.writeInt(amount);
+        parcel.writeString(name);
     }
 }

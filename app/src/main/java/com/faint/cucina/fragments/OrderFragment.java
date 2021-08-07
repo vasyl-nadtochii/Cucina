@@ -58,7 +58,7 @@ public class OrderFragment extends Fragment {
         tabs.setupWithViewPager(sectPager);
 
         User user = MainActivity.user;
-        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "forTest", -1);
+        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "forTest", -1, 0, -1);
 
         fabNext.setOnClickListener(new View.OnClickListener() {
             @Override

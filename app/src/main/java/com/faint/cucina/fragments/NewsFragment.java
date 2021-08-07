@@ -51,8 +51,6 @@ public class NewsFragment extends Fragment {
     ListView listView;
     SwipeRefreshLayout refreshLayout;
 
-    String url = "http://192.168.1.8/cucina/getNews.php";
-
     ViewGroup content_layout, msg_layout, err_layout;
     ProgressBar progressBar;
 
@@ -135,6 +133,7 @@ public class NewsFragment extends Fragment {
             }
         }
 
+        String url = "http://192.168.1.8/cucina/getNews.php";
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

@@ -27,6 +27,7 @@ import com.faint.cucina.classes.User;
 import com.faint.cucina.fragments.MapFragment;
 import com.faint.cucina.fragments.NewsFragment;
 import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.fragments.UserOrdersFragment;
 import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.navigation.NavigationView;
 
@@ -146,6 +147,12 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace( R.id.fragment_container, new NewsFragment() )
+                        .commit();
+                break;
+            case R.id.user_orders:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace( R.id.fragment_container, new UserOrdersFragment() )
                         .commit();
                 break;
             case R.id.setts:

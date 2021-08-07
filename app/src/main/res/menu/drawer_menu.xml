@@ -13,6 +13,10 @@
             android:title="@string/nearby"/>
 
         <item
+            android:id="@+id/user_orders"
+            android:title="Мои заказы"/>
+
+        <item
             android:id="@+id/news"
             android:title="@string/news"/>
     </group>
