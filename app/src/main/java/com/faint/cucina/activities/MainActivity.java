@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity
     ProgressBar progressBar;
     SharedPreferences prefs;
 
+    private TextView nameTxt;
+
     public static int themeCode;
     private boolean backPressedOnce = false;
 
@@ -76,10 +78,10 @@ public class MainActivity extends AppCompatActivity
 
         View navHeader = navigationView.getHeaderView(0);
 
-        TextView nameTxt = navHeader.findViewById(R.id.name_txt);
-        TextView phoneTxt = navHeader.findViewById(R.id.phone_txt);
-
+        nameTxt = navHeader.findViewById(R.id.name_txt);
         nameTxt.setText(user.getName());
+
+        TextView phoneTxt = navHeader.findViewById(R.id.phone_txt);
         String phoneForm = "+" + user.getPhone();
         phoneTxt.setText(phoneForm);
 
@@ -97,9 +99,13 @@ public class MainActivity extends AppCompatActivity
         int newTheme = Integer.parseInt(prefs.getString("change_theme", "0"));
 
         if(newTheme != themeCode) {
-
             Intent restartIntent = new Intent(this, StartActivity.class);
             startActivity(restartIntent);
+        }
+
+        if(!user.getName().equals(UserDataSP.getInstance(this).getUser().getName())) {
+            user.setName(UserDataSP.getInstance(this).getUser().getName());
+            nameTxt.setText(user.getName());
         }
     }
 

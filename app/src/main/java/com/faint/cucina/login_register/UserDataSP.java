@@ -10,7 +10,7 @@ import com.faint.cucina.classes.User;
 
 public class UserDataSP {
 
-    private static final String SHARED_PREF_NAME = "volleyregisterlogin";
+    private static final String SHARED_PREF_NAME = "user_account";
     private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_PHONE = "keyphone";
     private static final String KEY_CITY = "keycity";
@@ -38,6 +38,14 @@ public class UserDataSP {
         editor.putString(KEY_USERNAME, user.getName());
         editor.putString(KEY_PHONE, user.getPhone());
         editor.putString(KEY_CITY, user.getCity());
+        editor.apply();
+    }
+
+    public void changeName(String newData) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_USERNAME, newData);
+
         editor.apply();
     }
 

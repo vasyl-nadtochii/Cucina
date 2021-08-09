@@ -45,7 +45,7 @@ import java.util.Map;
 
 public class UserOrdersFragment extends Fragment {
 
-    ListView listView;
+    private ListView listView;
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
 

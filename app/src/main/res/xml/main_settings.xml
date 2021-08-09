@@ -13,14 +13,6 @@
             android:entryValues="@array/entry_values"
             android:title="@string/theme_title"/>
 
-        <!--<ListPreference
-            android:dialogTitle="title"
-            android:key="test_pr"
-            android:entries="@array/themes_arr"
-            android:defaultValue="0"
-            android:entryValues="@array/entry_values"
-            android:title="Test"/>-->
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -33,8 +25,9 @@
 
         <EditTextPreference
             android:key="change_password"
+            android:inputType="textPassword"
             android:summary="@string/enter_password"
-            android:title="@string/change_password" />
+            android:title="@string/change_password"/>
 
     </PreferenceCategory>
 
