@@ -11,4 +11,5 @@ public class URLs {
     public static final String URL_CHANGE_ROOT = "http://192.168.1.8/cucina/changeUserData.php?apicall=";
     public static final String URL_CHANGE_NAME = URL_CHANGE_ROOT + "username";
     public static final String URL_CHANGE_PASSWORD = URL_CHANGE_ROOT + "password";
+    public static final String URL_CHANGE_CITY = URL_CHANGE_ROOT + "city";
 }

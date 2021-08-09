@@ -29,6 +29,15 @@
             android:summary="@string/enter_password"
             android:title="@string/change_password"/>
 
+        <ListPreference
+            android:dialogTitle="Выберите город"
+            android:key="change_city"
+            android:entries="@array/cities"
+            android:defaultValue="0"
+            android:entryValues="@array/city_entries"
+            android:title="Изменить город"
+            android:summary="Выберите новый город из списка"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

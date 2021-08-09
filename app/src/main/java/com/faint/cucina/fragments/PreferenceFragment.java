@@ -21,22 +21,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
-import com.faint.cucina.classes.Cafe;
+import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    ListPreference themePreference;
+    ListPreference themePref, citiesPref;
     EditTextPreference namePref, passwordPref;
     Preference userAgrPref;
 
@@ -56,15 +51,15 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                         .getString("change_theme", "NONE"));
 
         // init themePref and setting last theme in summary
-        themePreference = getPreferenceManager().findPreference("change_theme");
-        assert themePreference != null;
-        themePreference.setSummary(themes[posTheme]);
+        themePref = getPreferenceManager().findPreference("change_theme");
+        assert themePref != null;
+        themePref.setSummary(themes[posTheme]);
 
         // changing summary by interacting with preference
-        themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        themePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                themePreference.setSummary(themes[Integer.parseInt(newValue.toString())]);
+                themePref.setSummary(themes[Integer.parseInt(newValue.toString())]);
                 notifyAboutChanges();
 
                 return true;
@@ -75,6 +70,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         // change username pref
         namePref = getPreferenceManager().findPreference("change_name");
+        assert namePref != null;
         namePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getName());
         namePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -93,6 +89,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         passwordPref = getPreferenceManager().findPreference("change_password");
 
         // this code hides the password, because xml inputType doesn't work
+        assert passwordPref != null;
         passwordPref.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
             @Override
             public void onBindEditText(@NonNull EditText editText) {
@@ -119,7 +116,24 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 }
             }
         });
-        
+
+        // change city
+        citiesPref = getPreferenceManager().findPreference("change_city");
+        assert citiesPref != null;
+        citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
+        citiesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if(!newValue.toString().equals(UserDataSP.getInstance(requireContext()).getUser().getCity())) {
+                    updateCityInDB(newValue.toString());
+                    return true;
+                }
+                else
+                    return false;
+            }
+        });
+
+        // user agreement
         userAgrPref = getPreferenceManager().findPreference("user_agreement");
         assert userAgrPref != null;
         userAgrPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -142,7 +156,10 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                         try {
                             if(response.trim().equals("SUCCESS")) {
                                 namePref.setText(newValue);
-                                UserDataSP.getInstance(requireContext()).changeName(newValue);
+                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_USERNAME, newValue);
+
+                                MainActivity.user.setName(newValue);
+                                MainActivity.dataChanged = true;
 
                                 Toast.makeText(requireActivity(), "Имя успешно обновлено!", Toast.LENGTH_SHORT).show();
                             }
@@ -161,7 +178,6 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(requireActivity(),
                                 "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-
                     }
                 }
         ) {
@@ -202,7 +218,6 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(requireActivity(),
                                 "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-
                     }
                 }
         ) {
@@ -211,6 +226,50 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 Map<String, String> params = new HashMap<>();
                 params.put("phone", userPhone);
                 params.put("password", newValue);
+
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(requireActivity()).addToRequestQueue(request);
+    }
+
+    public void updateCityInDB(final String newValue) {
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_CITY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            if(response.trim().equals("SUCCESS")) {
+                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_CITY, newValue);
+
+                                MainActivity.user.setCity(newValue);
+                                MainActivity.dataChanged = true;
+
+                                Toast.makeText(requireActivity(), "Город успешно обновлён!", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(requireActivity(), response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(requireActivity(),
+                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("phone", userPhone);
+                params.put("city", newValue);
 
                 return params;
             }

@@ -43,16 +43,19 @@ public class MainActivity extends AppCompatActivity
     ProgressBar progressBar;
     SharedPreferences prefs;
 
-    private TextView nameTxt;
+    private TextView nameTxt, cityTxt;
 
     public static int themeCode;
     private boolean backPressedOnce = false;
+    public static boolean dataChanged;
+    private String[] themes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dataChanged = false;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         themeCode = getIntent().getIntExtra("THEME", 0);
@@ -81,6 +84,11 @@ public class MainActivity extends AppCompatActivity
         nameTxt = navHeader.findViewById(R.id.name_txt);
         nameTxt.setText(user.getName());
 
+        themes = getResources().getStringArray(R.array.cities);
+
+        cityTxt = navHeader.findViewById(R.id.city_txt);
+        cityTxt.setText(themes[Integer.parseInt(user.getCity()) - 1]);
+
         TextView phoneTxt = navHeader.findViewById(R.id.phone_txt);
         String phoneForm = "+" + user.getPhone();
         phoneTxt.setText(phoneForm);
@@ -102,10 +110,11 @@ public class MainActivity extends AppCompatActivity
             Intent restartIntent = new Intent(this, StartActivity.class);
             startActivity(restartIntent);
         }
-
-        if(!user.getName().equals(UserDataSP.getInstance(this).getUser().getName())) {
-            user.setName(UserDataSP.getInstance(this).getUser().getName());
+        else if(dataChanged) {
             nameTxt.setText(user.getName());
+            cityTxt.setText(themes[Integer.parseInt(user.getCity()) - 1]);
+
+            dataChanged = false;
         }
     }
 

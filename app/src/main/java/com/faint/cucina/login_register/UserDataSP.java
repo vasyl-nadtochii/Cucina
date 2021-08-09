@@ -11,9 +11,9 @@ import com.faint.cucina.classes.User;
 public class UserDataSP {
 
     private static final String SHARED_PREF_NAME = "user_account";
-    private static final String KEY_USERNAME = "keyusername";
-    private static final String KEY_PHONE = "keyphone";
-    private static final String KEY_CITY = "keycity";
+    public static final String KEY_USERNAME = "keyusername";
+    public static final String KEY_PHONE = "keyphone";
+    public static final String KEY_CITY = "keycity";
     private static final String KEY_ID = "keyid";
 
     @SuppressLint("StaticFieldLeak")
@@ -41,10 +41,10 @@ public class UserDataSP {
         editor.apply();
     }
 
-    public void changeName(String newData) {
+    public void changeData(String dataToChange, String newData) {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_USERNAME, newData);
+        editor.putString(dataToChange, newData);
 
         editor.apply();
     }

@@ -85,6 +85,16 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="city_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
     <string name="kyiv">Киев</string>
     <string name="kharkiv">Харьков</string>
     <string name="lviv">Львов</string>
@@ -106,7 +116,5 @@
     <string name="logout_conf">Вы уверены, что хотите выйти из учётной записи?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
