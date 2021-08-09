@@ -1,9 +1,11 @@
 package com.faint.cucina.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -28,14 +30,14 @@ import java.util.Map;
 
 public class StartActivity extends AppCompatActivity {
 
-    int themeCode;
-    String url = "http://192.168.1.8/cucina/getCafes.php";
-    String userCity;
+    private int themeCode;
+    private final String url = "http://192.168.1.8/cucina/getCafes.php";
+    private String userCity;
 
-    Intent mainActIntent;
-    Intent loginIntent;
+    private Intent mainActIntent;
 
-    ArrayList<Cafe> cafes;
+    private ArrayList<Cafe> cafes;
+    private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class StartActivity extends AppCompatActivity {
                 }
                 break;
         }
+
+        builder = new AlertDialog.Builder(this);
 
         mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
         initData();
@@ -117,8 +121,23 @@ public class StartActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(),
-                                    "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            builder.setMessage( "Не удалось установить интернет-соединение! Проверьте подключение к интернету и повторите попытку" )
+                                    .setCancelable(false)
+                                    .setPositiveButton("Повторить", new DialogInterface.OnClickListener() {
+                                        public void onClick(final DialogInterface dialog, final int id) {
+                                            initData();
+                                        }
+                                    })
+                                    .setNegativeButton("Выйти", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            finishAndRemoveTask();
+                                        }
+                                    });
+
+                            final AlertDialog alert = builder.create();
+                            alert.show();
                         }
                     }
             ) {
@@ -134,7 +153,7 @@ public class StartActivity extends AppCompatActivity {
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
         }
         else {
-            loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);
+            Intent loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);
             startActivity(loginIntent);
         }
     }
