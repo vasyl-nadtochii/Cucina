@@ -39,9 +39,8 @@ public class MainActivity extends AppCompatActivity
     public static ArrayList<Cafe> cafes;
     public static User user;
 
-    DrawerLayout drawer;
-    ProgressBar progressBar;
-    SharedPreferences prefs;
+    private DrawerLayout drawer;
+    private SharedPreferences prefs;
 
     private TextView nameTxt, cityTxt;
 
@@ -60,8 +59,6 @@ public class MainActivity extends AppCompatActivity
 
         themeCode = getIntent().getIntExtra("THEME", 0);
         cafes = getIntent().getParcelableArrayListExtra("CAFE_LIST");
-
-        progressBar = findViewById(R.id.progressBar);
 
         user = UserDataSP.getInstance(this).getUser();
 

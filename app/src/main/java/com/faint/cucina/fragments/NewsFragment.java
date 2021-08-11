@@ -35,31 +35,30 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NewsFragment extends Fragment {
 
-    View root;
-
     public static ArrayList<Announcement> eventList;
 
-    NewsVPAdapter newsVpAdapter;    //ViewPager adapter
-    NewsLVAdapter newsLvAdapter;    // ListView adapter
+    private NewsVPAdapter newsVpAdapter;    //ViewPager adapter
+    private NewsLVAdapter newsLvAdapter;    // ListView adapter
 
-    ViewPager viewPager;
-    ListView listView;
-    SwipeRefreshLayout refreshLayout;
+    private ViewPager viewPager;
+    private ListView listView;
+    private SwipeRefreshLayout refreshLayout;
 
-    ViewGroup content_layout, msg_layout, err_layout;
-    ProgressBar progressBar;
+    private ViewGroup content_layout, msg_layout, err_layout;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        root = inflater.inflate(R.layout.fragment_news, container, false);
+        View root = inflater.inflate(R.layout.fragment_news, container, false);
 
         // init views
         listView = root.findViewById(R.id.listView);
@@ -134,7 +133,7 @@ public class NewsFragment extends Fragment {
         }
 
         String url = "http://192.168.1.8/cucina/getNews.php";
-        StringRequest request = new StringRequest(Request.Method.GET, url,
+        StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -148,25 +147,16 @@ public class NewsFragment extends Fragment {
                                 String header = object.getString("header");
                                 String content = formatContent(object.getString("content"));
                                 String img_url = object.getString("img_url");
-                                String city = object.getString("city");
                                 String end_date = object.getString("end_date");
 
                                 Announcement announcement = new Announcement(img_url, type,
-                                        header, content, city, end_date);
+                                        header, content, end_date);
 
                                 eventList.add(announcement);
                             }
                         }
                         catch (Exception e) {
                             e.printStackTrace();
-                        }
-
-                        for (Iterator<Announcement> iterator = eventList.iterator(); iterator.hasNext(); ) {
-                            Announcement value = iterator.next();
-                            if (!value.getCity().contains(UserDataSP.getInstance(getContext()).getUser().getCity())
-                                    && !value.getCity().equals("all")) {
-                                iterator.remove();
-                            }
                         }
 
                         if(eventList.size() == 0) {
@@ -193,7 +183,6 @@ public class NewsFragment extends Fragment {
 
                             content_layout.setVisibility(View.VISIBLE);
                             msg_layout.setVisibility(View.GONE);
-
                         }
 
                         err_layout.setVisibility(View.GONE);
@@ -227,7 +216,15 @@ public class NewsFragment extends Fragment {
                         }
                     }
                 }
-        );
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("city", UserDataSP.getInstance(requireContext()).getUser().getCity());
+
+                return params;
+            }
+        };
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
     }

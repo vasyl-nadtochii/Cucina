@@ -18,8 +18,7 @@ import com.faint.cucina.activities.OrderActivity;
 
 public class DescFragment extends Fragment {
 
-    EditText editText;
-    TextView counterView;
+    private TextView counterView;
 
     public static String descText;
 
@@ -29,7 +28,7 @@ public class DescFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_desc, container, false);
 
-        editText = root.findViewById(R.id.edit_text);
+        EditText editText = root.findViewById(R.id.edit_text);
         counterView = root.findViewById(R.id.counter);
 
         TextWatcher mTextEditorWatcher = new TextWatcher() {

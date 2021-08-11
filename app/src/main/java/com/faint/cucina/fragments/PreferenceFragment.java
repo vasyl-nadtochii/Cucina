@@ -31,9 +31,8 @@ import java.util.Map;
 
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    ListPreference themePref, citiesPref;
-    EditTextPreference namePref, passwordPref;
-    Preference userAgrPref;
+    private ListPreference themePref;
+    private EditTextPreference namePref;
 
     private String userPhone;
 
@@ -86,7 +85,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
 
         // change the password pref
-        passwordPref = getPreferenceManager().findPreference("change_password");
+        EditTextPreference passwordPref = getPreferenceManager().findPreference("change_password");
 
         // this code hides the password, because xml inputType doesn't work
         assert passwordPref != null;
@@ -118,7 +117,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
 
         // change city
-        citiesPref = getPreferenceManager().findPreference("change_city");
+        ListPreference citiesPref = getPreferenceManager().findPreference("change_city");
         assert citiesPref != null;
         citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
         citiesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -134,7 +133,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
 
         // user agreement
-        userAgrPref = getPreferenceManager().findPreference("user_agreement");
+        Preference userAgrPref = getPreferenceManager().findPreference("user_agreement");
         assert userAgrPref != null;
         userAgrPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

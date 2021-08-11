@@ -9,8 +9,7 @@ public class Announcement implements Parcelable { // made it parcelable to pass 
     private final String image_url;
     private String title;
     private String desc;
-    private String end_date;
-    private final String city;
+    private final String end_date;
 
     // these are all types of news (for comfortable usage within project)
     public final static int TYPE_NEW_LOCATION = 0;
@@ -18,12 +17,11 @@ public class Announcement implements Parcelable { // made it parcelable to pass 
     public final static int TYPE_WARNING = 2;
     public final static int TYPE_BAD_NEWS = 3;
 
-    public Announcement(String image_url, int type, String title, String desc, String city, String end_date) {
+    public Announcement(String image_url, int type, String title, String desc, String end_date) {
         this.image_url = image_url;
         this.type = type;
         this.title = title;
         this.desc = desc;
-        this.city = city;
         this.end_date = end_date;
     }
 
@@ -32,7 +30,6 @@ public class Announcement implements Parcelable { // made it parcelable to pass 
         type = in.readInt();
         title = in.readString();
         desc = in.readString();
-        city = in.readString();
         end_date = in.readString();
     }
 
@@ -64,10 +61,6 @@ public class Announcement implements Parcelable { // made it parcelable to pass 
         return type;
     }
 
-    public String getCity() {
-        return city;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -87,7 +80,6 @@ public class Announcement implements Parcelable { // made it parcelable to pass 
         parcel.writeInt(type);
         parcel.writeString(title);
         parcel.writeString(desc);
-        parcel.writeString(city);
         parcel.writeString(end_date);
     }
 }
