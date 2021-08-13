@@ -43,13 +43,12 @@ public class NewsFragment extends Fragment {
 
     public static ArrayList<Announcement> eventList;
 
-    private NewsVPAdapter newsVpAdapter;    //ViewPager adapter
+    private NewsVPAdapter newsVpAdapter;     //ViewPager adapter
     private NewsLVAdapter newsLvAdapter;    // ListView adapter
 
     private ViewPager viewPager;
     private ListView listView;
     private SwipeRefreshLayout refreshLayout;
-
     private ViewGroup content_layout, msg_layout, err_layout;
     private ProgressBar progressBar;
 

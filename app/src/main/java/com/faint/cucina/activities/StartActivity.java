@@ -121,8 +121,7 @@ public class StartActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            //Toast.makeText(getApplicationContext(), "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-                            builder.setMessage( "Не удалось установить интернет-соединение! Проверьте подключение к интернету и повторите попытку" )
+                            builder.setMessage("Не удалось установить интернет-соединение! Проверьте подключение к интернету и повторите попытку")
                                     .setCancelable(false)
                                     .setPositiveButton("Повторить", new DialogInterface.OnClickListener() {
                                         public void onClick(final DialogInterface dialog, final int id) {

@@ -45,6 +45,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     int position = 0;
     private boolean showingBtn = false;
+    public static FragmentManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         viewPager = findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
+        viewPager.setOffscreenPageLimit(3);
 
-        FragmentManager manager = getSupportFragmentManager();
+        manager = getSupportFragmentManager();
 
         fragments = new ArrayList<>();
         fragments.add(new MapFragment(true));   // 0

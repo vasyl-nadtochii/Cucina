@@ -49,32 +49,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
-    View root;
-    FloatingActionButton fab, fabNext;
-    TextView infoTV;
-    ViewGroup infoLayout;
+    private FloatingActionButton fabNext;
+    private TextView infoTV;
 
-    Location currentLocation;
-    FusedLocationProviderClient providerClient;
-    SupportMapFragment supportMapFragment;
-    MarkerOptions markerOptions;
-    LatLng latLng;
-    GoogleMap myGmap;
-    LocationRequest locationRequest;
-    LocationCallback locationCallback;
-    LocationManager locationManager;
-    Marker userMarker;
-
-    ArrayList<Marker> markers;
+    private Location currentLocation;
+    private FusedLocationProviderClient providerClient;
+    private SupportMapFragment supportMapFragment;
+    private LatLng latLng;
+    private GoogleMap myGmap;
+    private LocationCallback locationCallback;
+    private LocationManager locationManager;
+    private Marker userMarker;
 
     private static final int REQUEST_CODE = 101;
     private boolean initialized = false;
-    private boolean markerOnceClicked = false;
     boolean forOrder;
 
     public MapFragment(boolean forOrder) {
@@ -83,36 +75,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater,
+                             @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
 
-        root = inflater.inflate(R.layout.fragment_map, container, false);
+        View root = inflater.inflate(R.layout.fragment_map, container, false);
 
         infoTV = root.findViewById(R.id.cafe_info_tv);
-        infoLayout = root.findViewById(R.id.infoField);
+        ViewGroup infoLayout = root.findViewById(R.id.infoField);
 
         if(forOrder)
             infoLayout.setVisibility(View.VISIBLE);
 
-        fab = root.findViewById(R.id.fab);
+        FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
         fabNext = root.findViewById(R.id.fabNext);
         fabNext.setOnClickListener(this);
 
-        markers = new ArrayList<>();
+        providerClient = LocationServices.getFusedLocationProviderClient( requireActivity() );
 
-        assert getActivity() != null;
-        providerClient = LocationServices.getFusedLocationProviderClient( getActivity() );
-
-        locationManager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+        locationManager = (LocationManager) requireActivity().getSystemService( Context.LOCATION_SERVICE );
         checkGPS();
 
         return root;
     }
 
     private void fetchLastLocation() {
-
         // here we`re getting perms for user`s location data
         assert getActivity() != null;
         if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -124,7 +112,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE);
         }
 
-        locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(20 * 1500);
         locationCallback = new LocationCallback() {
@@ -150,13 +138,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         };
 
-        providerClient.requestLocationUpdates( locationRequest, locationCallback, Looper.getMainLooper() );
+        providerClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper() );
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchLastLocation();
+
+        checkGPS();
     }
 
     private void buildAlertMessageNoGps() {
@@ -176,7 +165,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-
         myGmap = googleMap;
         googleMap.setOnMarkerClickListener(this);
 
@@ -216,7 +204,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.map_cafe_marker))
                         .title(cafe.getAddress());
 
-                markers.add(googleMap.addMarker(innerOptions));
+                myGmap.addMarker(innerOptions);
             }
 
             initialized = true;
@@ -227,7 +215,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     // method that moves user to his current location (gmap)
     public void updateLocation(boolean move) {
-        markerOptions = new MarkerOptions();
+        MarkerOptions markerOptions = new MarkerOptions();
 
         // user marker (it`s blue, when cafe static markers are yellow) !
         markerOptions.position(latLng).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.map_user_marker));
@@ -314,10 +302,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 String info = "Выбрано: " + chosenCafe.getAddress();
                 infoTV.setText(info);
 
-                if(!markerOnceClicked) {
-                    markerOnceClicked = true;
-                    fabNext.show();
-                }
+                fabNext.show();
             }
             else {
                 Intent intent = new Intent(getActivity(), CafeActivity.class);

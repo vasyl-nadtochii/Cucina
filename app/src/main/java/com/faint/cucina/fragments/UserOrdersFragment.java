@@ -48,6 +48,7 @@ public class UserOrdersFragment extends Fragment {
     private ListView listView;
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
+    private ViewGroup msg_layout, err_layout;
 
     private ArrayList<Order> orderList;
 
@@ -57,6 +58,8 @@ public class UserOrdersFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_user_orders, container, false);
 
         listView = root.findViewById(R.id.listView);
+        msg_layout = root.findViewById(R.id.message_layout);
+        err_layout = root.findViewById(R.id.error_layout);
         progressBar = root.findViewById(R.id.progressBar);
 
         orderList = new ArrayList<>();
@@ -118,10 +121,20 @@ public class UserOrdersFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        progressBar.setVisibility(View.GONE);
+                        if(orderList.size() == 0) {
+                            msg_layout.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        }
+                        else {
+                            UserOrdersLVAdapter adapter = new UserOrdersLVAdapter(requireContext(), orderList);
+                            listView.setAdapter(adapter);
 
-                        UserOrdersLVAdapter adapter = new UserOrdersLVAdapter(requireContext(), orderList);
-                        listView.setAdapter(adapter);
+                            listView.setVisibility(View.VISIBLE);
+                            msg_layout.setVisibility(View.GONE);
+                        }
+
+                        err_layout.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                     }
                 },
                 new Response.ErrorListener() {
@@ -132,6 +145,8 @@ public class UserOrdersFragment extends Fragment {
 
                         if(orderList.isEmpty()) {
                             progressBar.setVisibility(View.GONE);
+                            listView.setVisibility(View.GONE);
+                            err_layout.setVisibility(View.VISIBLE);
                         }
                     }
                 }

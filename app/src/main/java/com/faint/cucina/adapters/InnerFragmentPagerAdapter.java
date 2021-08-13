@@ -3,12 +3,12 @@ package com.faint.cucina.adapters;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 
-public class InnerFragmentPagerAdapter extends FragmentStatePagerAdapter {
+public class InnerFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragments;
     FragmentManager fm;
@@ -21,6 +21,13 @@ public class InnerFragmentPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        /*if(position == 0) {
+            return ((MapFragment) fragments.get(position)).newInstance();
+        }
+        else {
+
+        }*/
+
         return fragments.get(position);
     }
 
