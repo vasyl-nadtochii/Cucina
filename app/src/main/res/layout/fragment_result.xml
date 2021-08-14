@@ -60,4 +60,30 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/layout_limit"
+        android:visibility="gone"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:src="@drawable/pizza_sad"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:text="Вы достигли лимита в 5 активных заказов.\nПовторите попытку позже"
+            android:textSize="20sp"
+            android:textColor="@color/cal_frame"
+            android:fontFamily="@font/gilroy_bold"/>
+
+    </LinearLayout>
+
 </FrameLayout>

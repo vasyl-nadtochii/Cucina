@@ -141,9 +141,9 @@
                         <ImageView
                             android:layout_width="200dp"
                             android:layout_height="200dp"
-                            android:src="@drawable/pizza_sticker"
+                            android:src="@drawable/pizza_sad"
                             android:layout_gravity="center_horizontal"
-                            android:layout_margin="20dp"/>
+                            android:layout_margin="5dp"/>
 
                         <TextView
                             android:layout_width="match_parent"

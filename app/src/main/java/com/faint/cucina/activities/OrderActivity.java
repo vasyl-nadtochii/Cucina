@@ -133,6 +133,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 if(response.equals("1")) {
                                     ResultFragment.msgUI.showSuccessUI();
                                 }
+                                else if(response.equals("2")) {
+                                    ResultFragment.msgUI.showLimitLayout();
+                                }
                                 else {
                                     ResultFragment.msgUI.showFailUI();
                                 }

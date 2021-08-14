@@ -144,8 +144,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-
-        checkGPS();
+        fetchLastLocation();
     }
 
     private void buildAlertMessageNoGps() {
