@@ -1,9 +1,12 @@
 package com.faint.cucina.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -21,14 +24,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
-import com.faint.cucina.adapters.NewsLVAdapter;
-import com.faint.cucina.adapters.NewsVPAdapter;
 import com.faint.cucina.adapters.UserOrdersLVAdapter;
-import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Order;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.custom.VolleySingleton;
-import com.faint.cucina.login_register.UserDataSP;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,10 +36,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class UserOrdersFragment extends Fragment {
@@ -132,6 +128,31 @@ public class UserOrdersFragment extends Fragment {
                             listView.setVisibility(View.VISIBLE);
                             msg_layout.setVisibility(View.GONE);
                         }
+                        
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
+
+                                StringBuilder dishesStr = new StringBuilder();
+                                for(int i = 0; i < orderList.get(pos).getOrderList().size(); i++) {
+                                    OrderDish dish = orderList.get(pos).getOrderList().get(i);
+
+                                    dishesStr.append( dish.getName() ).append(" - ").append( dish.getAmount() );
+
+                                    if(i != orderList.get(pos).getOrderList().size() - 1)
+                                        dishesStr.append("\n");
+                                }
+
+                                builder.setTitle("Ваш заказ")
+                                        .setMessage(dishesStr)
+                                        .setCancelable(true)
+                                        .setPositiveButton("Ok", null);
+
+                                final AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        });
 
                         err_layout.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
