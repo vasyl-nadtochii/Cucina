@@ -104,13 +104,18 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         passwordPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(newValue.toString().trim().length() > 0
-                        && !newValue.toString().contains(" ")) {
-
+                if(newValue.toString().trim().length() > 0 &&
+                        newValue.toString().trim().matches("^[a-zA-Z0-9_]+$")) {
                     updatePasswordInDB(newValue.toString());
                     return true;
                 }
+                else if(newValue.toString().trim().length() == 0) {
+                    return false;
+                }
                 else {
+                    Toast.makeText(requireActivity(),
+                            "В пароле могут использоваться только латинские символы, цифры и подчеркивания",
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }

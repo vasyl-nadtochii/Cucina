@@ -35,21 +35,18 @@ import java.util.Map;
 
 public class RegFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    View root;
-    EditText editTextUsername, editTextPassword, editTextPhone, editTextConfPassword;
-    Spinner spinner;
-    String city;
-    Button regBtn;
-    CheckBox checkBox;
+    private EditText editTextUsername, editTextPassword, editTextPhone, editTextConfPassword;
+    private String city;
+    private CheckBox checkBox;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        root = inflater.inflate(R.layout.fragment_register,
+        View root = inflater.inflate(R.layout.fragment_register,
                 container, false);
 
-        spinner = root.findViewById(R.id.spinner);
+        Spinner spinner = root.findViewById(R.id.spinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
                 .createFromResource(requireContext(), R.array.cities, android.R.layout.simple_spinner_item);
@@ -63,7 +60,7 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        regBtn = root.findViewById(R.id.regBtn);
+        Button regBtn = root.findViewById(R.id.regBtn);
         regBtn.setOnClickListener(this);
 
         checkBox = root.findViewById(R.id.checkbox);
@@ -115,6 +112,13 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
 
         if (phone.length() < 12) {
             editTextPassword.setError("Введите корректный номер телефона!");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if(!password.matches("^[a-zA-Z0-9_]+$")) {
+            editTextPassword
+                    .setError("В пароле могут использоваться только латинские символы, цифры и подчеркивания");
             editTextPassword.requestFocus();
             return;
         }
