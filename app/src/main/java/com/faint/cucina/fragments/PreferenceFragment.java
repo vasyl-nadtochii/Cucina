@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    private ListPreference themePref;
+    private ListPreference themePref, citiesPref;
     private EditTextPreference namePref;
 
     private String userPhone;
@@ -122,7 +122,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
 
         // change city
-        ListPreference citiesPref = getPreferenceManager().findPreference("change_city");
+        citiesPref = getPreferenceManager().findPreference("change_city");
         assert citiesPref != null;
         citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
         citiesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -251,6 +251,13 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                                 MainActivity.dataChanged = true;
 
                                 Toast.makeText(requireActivity(), "Город успешно обновлён!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(response.trim().equals("ACTIVE_ORDERS")) {
+                                Toast.makeText(requireActivity(),
+                                        "Вы не можете изменить город пока у вас есть активные заказы!",
+                                        Toast.LENGTH_SHORT).show();
+
+                                citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
                             }
                             else {
                                 Toast.makeText(requireActivity(), response, Toast.LENGTH_SHORT).show();

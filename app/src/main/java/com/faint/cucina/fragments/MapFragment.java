@@ -49,7 +49,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -67,7 +66,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private static final int REQUEST_CODE = 101;
     private boolean initialized = false;
-    boolean forOrder;
+    private final boolean forOrder;
 
     public MapFragment(boolean forOrder) {
         this.forOrder = forOrder;
@@ -174,7 +173,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     .uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
             // customising gmap depending on user`s theme
-            if(currentNightMode == Configuration.UI_MODE_NIGHT_YES) {   // here we check user`s theme (experimental)
+            if(currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
                 boolean success = googleMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                                 requireActivity(), R.raw.map_style_dark));
@@ -188,7 +187,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Log.e("Google Map Style", "Can't find style. Error: ", e);
         }
 
-        latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()); // just testing !
+        latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
         // if this is a 1st launch of map, then it will move to the curr location,
         // but then it will only update it without moving
@@ -197,13 +196,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             // implementing static markers
             for (Cafe cafe : MainActivity.cafes) {
-                LatLng innerLatLng = new LatLng(cafe.getLatitude(), cafe.getLongitude());
-                MarkerOptions innerOptions = new MarkerOptions()
-                        .position(innerLatLng)
-                        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.map_cafe_marker))
-                        .title(cafe.getAddress());
+                if(cafe.getState() != 0) {
+                    int drawable;
 
-                myGmap.addMarker(innerOptions);
+                    if(cafe.getState() == 1) {
+                        drawable = R.drawable.map_cafe_open_marker;
+                    }
+                    else if(cafe.getState() == 2) {
+                        drawable = R.drawable.map_cafe_takeaway_marker;
+                    }
+                    else {
+                        drawable = R.drawable.map_cafe_closing_marker;
+                    }
+
+                    LatLng innerLatLng = new LatLng(cafe.getLatitude(), cafe.getLongitude());
+                    MarkerOptions innerOptions = new MarkerOptions()
+                            .position(innerLatLng)
+                            .icon(bitmapDescriptorFromVector(getActivity(), drawable))
+                            .title(cafe.getAddress());
+
+                    myGmap.addMarker(innerOptions);
+                }
             }
 
             initialized = true;
