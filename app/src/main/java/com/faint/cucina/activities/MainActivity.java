@@ -36,7 +36,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static ArrayList<Cafe> cafes;
     public static User user;
 
     private DrawerLayout drawer;
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         themeCode = getIntent().getIntExtra("THEME", 0);
-        cafes = getIntent().getParcelableArrayListExtra("CAFE_LIST");
-
         user = UserDataSP.getInstance(this).getUser();
 
         drawer = findViewById(R.id.drawer_layout);

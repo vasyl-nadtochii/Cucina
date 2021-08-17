@@ -28,12 +28,7 @@ import java.util.List;
 
 public class OrderFragment extends Fragment {
 
-    View root;
-    TabLayout tabs;
-    ViewPager sectPager;
-    FloatingActionButton fabNext;
-
-    SectionsPagerAdapter sectionsPagerAdapter;
+    private FloatingActionButton fabNext;
 
     public static Order order;
     public static OrderInterface orderInterface;
@@ -41,24 +36,24 @@ public class OrderFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_order, container, false);
+        View root = inflater.inflate(R.layout.fragment_order, container, false);
 
-        sectPager = root.findViewById(R.id.view_pager);
-        tabs = root.findViewById(R.id.tabs);
+        ViewPager sectPager = root.findViewById(R.id.view_pager);
+        TabLayout tabs = root.findViewById(R.id.tabs);
         fabNext = root.findViewById(R.id.fabNext);
 
         List<Fragment> pages = new ArrayList<>();
         pages.add(new OrderPageFragment(1)); // 1 - ready-made
         pages.add(new OrderPageFragment(2)); // 2 - self choice
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
                 requireActivity().getSupportFragmentManager(), pages);
         sectPager.setAdapter(sectionsPagerAdapter);
 
         tabs.setupWithViewPager(sectPager);
 
         User user = MainActivity.user;
-        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "forTest", -1, 0, -1);
+        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "", -1, 0, -1);
 
         fabNext.setOnClickListener(new View.OnClickListener() {
             @Override

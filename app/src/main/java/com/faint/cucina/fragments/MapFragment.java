@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +28,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.CafeActivity;
 import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.classes.Cafe;
+import com.faint.cucina.custom.VolleySingleton;
+import com.faint.cucina.login_register.URLs;
+import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,6 +56,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         View.OnClickListener, GoogleMap.OnMarkerClickListener {
@@ -192,37 +207,75 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         // if this is a 1st launch of map, then it will move to the curr location,
         // but then it will only update it without moving
         if(!initialized) {
+            getCafes();
+
             updateLocation(true);
-
-            // implementing static markers
-            for (Cafe cafe : MainActivity.cafes) {
-                if(cafe.getState() != 0) {
-                    int drawable;
-
-                    if(cafe.getState() == 1) {
-                        drawable = R.drawable.map_cafe_open_marker;
-                    }
-                    else if(cafe.getState() == 2) {
-                        drawable = R.drawable.map_cafe_takeaway_marker;
-                    }
-                    else {
-                        drawable = R.drawable.map_cafe_closing_marker;
-                    }
-
-                    LatLng innerLatLng = new LatLng(cafe.getLatitude(), cafe.getLongitude());
-                    MarkerOptions innerOptions = new MarkerOptions()
-                            .position(innerLatLng)
-                            .icon(bitmapDescriptorFromVector(getActivity(), drawable))
-                            .title(cafe.getAddress());
-
-                    myGmap.addMarker(innerOptions);
-                }
-            }
-
             initialized = true;
         }
         else
             updateLocation(false);
+    }
+
+    private void getCafes() {
+        final String userCity = UserDataSP.getInstance(requireContext()).getUser().getCity();
+
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFES,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray array = new JSONArray(response);
+
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject object = array.getJSONObject(i);
+
+                                double latitude = object.getDouble("latitude");
+                                double longitude = object.getDouble("longitude");
+                                int state = object.getInt("state");
+
+                                int drawable;
+
+                                if(state == 1) {
+                                    drawable = R.drawable.map_cafe_open_marker;
+                                }
+                                else if(state == 2) {
+                                    drawable = R.drawable.map_cafe_takeaway_marker;
+                                }
+                                else {
+                                    drawable = R.drawable.map_cafe_closing_marker;
+                                }
+
+                                LatLng innerLatLng = new LatLng(latitude, longitude);
+                                MarkerOptions innerOptions = new MarkerOptions()
+                                        .position(innerLatLng)
+                                        .icon(bitmapDescriptorFromVector(getActivity(), drawable))
+                                        .title("cafe");
+
+                                myGmap.addMarker(innerOptions);
+                            }
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_city", userCity);
+
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
     }
 
     // method that moves user to his current location (gmap)
@@ -296,31 +349,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(!marker.getTitle().equals("user_location")) {
-            Cafe chosenCafe = null;
+            final double latitude = marker.getPosition().latitude;
+            final double longitude = marker.getPosition().longitude;
 
-            for (Cafe cafe : MainActivity.cafes) {
-                if(marker.getPosition().longitude == cafe.getLongitude() &&
-                        marker.getPosition().latitude == cafe.getLatitude()) {
+            StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFE_BY_POS,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                if(!response.trim().equals("fail")) {
+                                    JSONObject object = new JSONObject(response);
 
-                    chosenCafe = cafe;
-                    break;
+                                    int state = object.getInt("state");
+                                    String address = object.getString("address");
+                                    int id = object.getInt("id");
+
+                                    JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
+                                    ArrayList<String> urlList = new ArrayList<>();
+
+                                    for(int j = 0; j < jsonArray.length(); j++) {
+                                        urlList.add(jsonArray.getString(j));
+                                    }
+
+                                    Cafe chosenCafe = new Cafe(latitude, longitude, state, address, id, urlList);
+
+                                    if(forOrder) {
+                                        OrderActivity.order.setCafeID(chosenCafe.getCafeID());
+                                        OrderActivity.address = chosenCafe.getAddress();
+
+                                        String info = "Выбрано: " + chosenCafe.getAddress();
+                                        infoTV.setText(info);
+
+                                        fabNext.show();
+                                    }
+                                    else {
+                                        Intent intent = new Intent(requireActivity(), CafeActivity.class);
+                                        intent.putExtra("CAFE", chosenCafe);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("lat", String.valueOf(latitude));
+                    params.put("lng", String.valueOf(longitude));
+
+                    return params;
                 }
-            }
+            };
 
-            if(forOrder) {
-                assert chosenCafe != null;
-                OrderActivity.order.setCafeID(chosenCafe.getCafeID());
-
-                String info = "Выбрано: " + chosenCafe.getAddress();
-                infoTV.setText(info);
-
-                fabNext.show();
-            }
-            else {
-                Intent intent = new Intent(getActivity(), CafeActivity.class);
-                intent.putExtra("CAFE", chosenCafe);
-                startActivity(intent);
-            }
+            VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
         }
 
         return true;

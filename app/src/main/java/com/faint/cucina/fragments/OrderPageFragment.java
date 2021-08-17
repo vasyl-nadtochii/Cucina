@@ -34,14 +34,13 @@ public class OrderPageFragment extends Fragment {
 
     private ArrayList<DishGroup> dishList;
 
-    ViewGroup errorLayout;
-    ProgressBar progressBar;
-    ListView listView;
+    private ViewGroup errorLayout;
+    private ProgressBar progressBar;
+    private ListView listView;
 
-    OrderLVAdapter listAdapter;
+    private OrderLVAdapter listAdapter;
 
-    String url = "http://192.168.1.8/cucina/getDishes.php";
-    int categoryCode;   // 1 - rm, 2 - sc (!)
+    private final int categoryCode;   // 1 - rm, 2 - sc (!)
 
     public OrderPageFragment(int categoryCode) {
         this.categoryCode = categoryCode;
@@ -78,6 +77,7 @@ public class OrderPageFragment extends Fragment {
             }
         }
 
+        String url = "http://192.168.1.8/cucina/getDishes.php";
         StringRequest request =
             new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override

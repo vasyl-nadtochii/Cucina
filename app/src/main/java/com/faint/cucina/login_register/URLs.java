@@ -7,6 +7,8 @@ public class URLs {
     public static final String URL_LOGIN = ROOT_URL + "login";
 
     public static final String URL_POST_ORDER = "http://192.168.1.8/cucina/postOrder.php";
+    public static final String URL_GET_CAFES = "http://192.168.1.8/cucina/getCafes.php";
+    public static final String URL_GET_CAFE_BY_POS = "http://192.168.1.8/cucina/getCafeByLatLng.php";
 
     public static final String URL_CHANGE_ROOT = "http://192.168.1.8/cucina/changeUserData.php?apicall=";
     public static final String URL_CHANGE_NAME = URL_CHANGE_ROOT + "username";

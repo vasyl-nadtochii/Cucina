@@ -22,15 +22,10 @@ import java.util.ArrayList;
 
 public class CafeActivity extends AppCompatActivity {
 
-    TextView address, schedule, state;
-    ViewPager viewPager;
-    Button orderBtn;
+    private ViewPager viewPager;
+    private PhotoVPAdapter photoVPAdapter;
 
     private Handler handler;
-
-    PhotoVPAdapter photoVPAdapter;
-
-    Cafe cafe;
 
     private int page = 0;
     private final int delay = 5000;
@@ -55,28 +50,31 @@ public class CafeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cafe);
 
-        address = findViewById(R.id.address);
-        schedule = findViewById(R.id.schedule);
-        state = findViewById(R.id.state);
+        TextView address = findViewById(R.id.address);
+        TextView state = findViewById(R.id.state);
 
-        orderBtn = findViewById(R.id.order_btn);
+        Button orderBtn = findViewById(R.id.order_btn);
 
-        cafe = getIntent().getParcelableExtra("CAFE");
+        Cafe cafe = getIntent().getParcelableExtra("CAFE");
 
         assert cafe != null;
         address.setSelected(true);
         address.setText(getResources().getString(R.string.cafe_on) + " " + cafe.getAddress());
 
-        if(cafe.getState() == 1) {
-            state.setText(R.string.opened);
-            state.setTextColor(getColor(R.color.green));
-        }
-        else {
-            state.setText(R.string.closed);
-            // TODO: here should be the reason why it`s not working
-            state.setTextColor(getColor(R.color.red));
-
-            orderBtn.setVisibility(View.GONE);
+        switch (cafe.getState()) {
+            case 1:
+                state.setText("◉" + R.string.opened);
+                state.setTextColor(getColor(R.color.green));
+                break;
+            case 2:
+                state.setText("◉ Работаем на вынос");
+                state.setTextColor(getColor(R.color.yellow));
+                break;
+            case 3:
+                state.setText("◉ Скоро закрываемся");
+                state.setTextColor(getColor(R.color.orange));
+                orderBtn.setVisibility(View.GONE);
+                break;
         }
 
         photoVPAdapter = new PhotoVPAdapter(cafe.getImgUrls(), CafeActivity.this);

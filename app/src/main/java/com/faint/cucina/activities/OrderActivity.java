@@ -40,12 +40,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     public static Order order;
 
+    public static FragmentManager manager;
     public static OrderConfInterface orderConfInterface;
-    InnerFragmentPagerAdapter adapter;
+    private InnerFragmentPagerAdapter adapter;
 
     int position = 0;
     private boolean showingBtn = false;
-    public static FragmentManager manager;
+    public static String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

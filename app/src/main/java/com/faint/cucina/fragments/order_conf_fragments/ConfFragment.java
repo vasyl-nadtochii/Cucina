@@ -33,15 +33,7 @@ public class ConfFragment extends Fragment {
 
         OrderConfLVAdapter adapter = new OrderConfLVAdapter(requireActivity(), OrderActivity.order.getOrderList());
 
-        String address = null;
-        for(Cafe cafe : MainActivity.cafes) {
-            if(cafe.getCafeID() == OrderActivity.order.getCafeID()) {
-                address = cafe.getAddress();
-                break;
-            }
-        }
-
-        String addressStr = "Адрес заказа: " + address;
+        String addressStr = "Адрес заказа: " + OrderActivity.address;
         addressTV.setText(addressStr);
 
         String clarStr = "Уточнения к заказу: " + OrderActivity.order.getClarifications();
