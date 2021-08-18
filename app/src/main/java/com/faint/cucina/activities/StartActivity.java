@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.faint.cucina.R;
 import com.faint.cucina.login_register.UserDataSP;
@@ -41,9 +42,16 @@ public class StartActivity extends AppCompatActivity {
 
         boolean accExists = UserDataSP.getInstance(this).isLoggedIn();
         if(accExists) {
-            Intent mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
+            final Intent mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
             mainActIntent.putExtra("THEME", themeCode);
-            startActivity(mainActIntent);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(mainActIntent);
+                }
+            }, 250);
         }
         else {
             Intent loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);

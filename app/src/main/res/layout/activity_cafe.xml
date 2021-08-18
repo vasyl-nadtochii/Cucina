@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:text="@string/complain"
             android:paddingTop="20dp"
+            android:id="@+id/complaint_btn"
             android:backgroundTint="@color/red"
             android:textColor="@android:color/white"
             android:paddingBottom="20dp"/>

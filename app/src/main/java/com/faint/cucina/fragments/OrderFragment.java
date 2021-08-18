@@ -20,6 +20,7 @@ import com.faint.cucina.classes.Order;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.classes.User;
 import com.faint.cucina.interfaces.OrderInterface;
+import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -52,7 +53,7 @@ public class OrderFragment extends Fragment {
 
         tabs.setupWithViewPager(sectPager);
 
-        User user = MainActivity.user;
+        User user = UserDataSP.getInstance(requireContext()).getUser();
         order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "", -1, 0, -1);
 
         fabNext.setOnClickListener(new View.OnClickListener() {

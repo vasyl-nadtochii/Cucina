@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.PhotoVPAdapter;
 import com.faint.cucina.classes.Cafe;
+import com.faint.cucina.login_register.UserDataSP;
 
 import java.util.ArrayList;
 
@@ -50,12 +52,25 @@ public class CafeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cafe);
 
+        final Cafe cafe = getIntent().getParcelableExtra("CAFE");
+
         TextView address = findViewById(R.id.address);
         TextView state = findViewById(R.id.state);
 
         Button orderBtn = findViewById(R.id.order_btn);
+        Button complaintBtn = findViewById(R.id.complaint_btn);
 
-        Cafe cafe = getIntent().getParcelableExtra("CAFE");
+        complaintBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ComplaintActivity.class);
+
+                intent.putExtra("CAFE_ID", cafe.getCafeID());
+                intent.putExtra("USER_NAME", UserDataSP.getInstance(getApplicationContext()).getUser().getName());
+
+                startActivity(intent);
+            }
+        });
 
         assert cafe != null;
         address.setSelected(true);

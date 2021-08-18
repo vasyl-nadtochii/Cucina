@@ -16,26 +16,25 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <activity android:name=".activities.ComplaintActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ForPreLoadScr"/>
         <activity
             android:name=".activities.OrderActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ForPreLoadScr"/>
-
+            android:theme="@style/AppTheme.ForPreLoadScr" />
         <activity
             android:name=".activities.DishDescActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
-
         <activity
             android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
-
         <activity
             android:name=".activities.RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ForReg" />
-
         <activity
             android:name=".activities.AuthorizationActivity"
             android:screenOrientation="portrait"
@@ -49,29 +48,23 @@
             android:name=".activities.CafeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
-
         <activity
             android:name=".activities.AnnouncementActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
-
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.StartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ForPreLoadScr">
-
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>
