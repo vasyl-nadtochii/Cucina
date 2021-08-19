@@ -65,6 +65,7 @@ public class CafeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ComplaintActivity.class);
 
+                assert cafe != null;
                 intent.putExtra("CAFE_ID", cafe.getCafeID());
                 intent.putExtra("USER_NAME", UserDataSP.getInstance(getApplicationContext()).getUser().getName());
 
@@ -78,7 +79,7 @@ public class CafeActivity extends AppCompatActivity {
 
         switch (cafe.getState()) {
             case 1:
-                state.setText("◉" + R.string.opened);
+                state.setText("◉ " + getString(R.string.opened));
                 state.setTextColor(getColor(R.color.green));
                 break;
             case 2:

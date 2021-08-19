@@ -1,6 +1,7 @@
 package com.faint.cucina.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -77,9 +78,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap myGmap;
     private LocationCallback locationCallback;
     private LocationManager locationManager;
-    private Marker userMarker;
 
-    private static final int REQUEST_CODE = 101;
+    private static final int REQUEST_CODE = 10001;
     private boolean initialized = false;
     private final boolean forOrder;
 
@@ -97,7 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         infoTV = root.findViewById(R.id.cafe_info_tv);
         ViewGroup infoLayout = root.findViewById(R.id.infoField);
 
-        if(forOrder)
+        if (forOrder)
             infoLayout.setVisibility(View.VISIBLE);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
@@ -106,9 +106,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         fabNext = root.findViewById(R.id.fabNext);
         fabNext.setOnClickListener(this);
 
-        providerClient = LocationServices.getFusedLocationProviderClient( requireActivity() );
+        providerClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        locationManager = (LocationManager) requireActivity().getSystemService( Context.LOCATION_SERVICE );
+        locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         checkGPS();
 
         return root;
@@ -123,7 +123,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         .checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         }
 
         LocationRequest locationRequest = LocationRequest.create();
@@ -140,7 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         currentLocation = location;
 
                         // init map fragment
-                        if(isAdded()) {
+                        if (isAdded()) {
                             supportMapFragment = (SupportMapFragment)
                                     getChildFragmentManager().findFragmentById(R.id.google_map);
                         }
@@ -152,7 +152,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         };
 
-        providerClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper() );
+        providerClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
     @Override
@@ -162,9 +162,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
+        final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
-        builder.setMessage( getString(R.string.gps_notification) )
+        builder.setMessage(getString(R.string.gps_notification))
                 .setCancelable(false)
                 .setPositiveButton(R.string.goto_sett, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
@@ -176,6 +176,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         alert.show();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         myGmap = googleMap;
@@ -202,6 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Log.e("Google Map Style", "Can't find style. Error: ", e);
         }
 
+        myGmap.setMyLocationEnabled(true);
         latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
         // if this is a 1st launch of map, then it will move to the curr location,
@@ -280,19 +282,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     // method that moves user to his current location (gmap)
     public void updateLocation(boolean move) {
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        // user marker (it`s blue, when cafe static markers are yellow) !
-        markerOptions.position(latLng).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.map_user_marker));
-        markerOptions.title("user_location");
-
-        if(userMarker != null)
-            userMarker.remove();
-
         if(move)
             myGmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
-
-        userMarker = myGmap.addMarker(markerOptions);
     }
 
     // checks if GPS is enabled or not

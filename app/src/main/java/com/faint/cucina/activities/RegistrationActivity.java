@@ -13,6 +13,7 @@ import com.faint.cucina.custom.CustomViewPager;
 import com.faint.cucina.fragments.reg_fragments.GreetingFragment;
 import com.faint.cucina.fragments.reg_fragments.InfoFragment;
 import com.faint.cucina.fragments.reg_fragments.RegFragment;
+import com.faint.cucina.interfaces.RegFragmentInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     List<Fragment> fragments;
 
     FloatingActionButton btn;
+    public static RegFragmentInterface fragmentInterface;
 
     int position = 0;
 
@@ -51,6 +53,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         viewPager.setAdapter(adapter);
 
         btn.setOnClickListener(this);
+
+        fragmentInterface = new RegFragmentInterface() {
+            @Override
+            public void hideBtn() {
+                btn.hide();
+            }
+
+            @Override
+            public void showBtn() {
+                btn.show();
+            }
+        };
     }
 
     @Override

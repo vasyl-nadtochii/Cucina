@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbarSize="0dp"
+    android:id="@+id/scrollView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.reg_fragments.InfoFragment"
     android:background="@color/colorPrimary">
@@ -176,4 +177,4 @@
 
     </FrameLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
