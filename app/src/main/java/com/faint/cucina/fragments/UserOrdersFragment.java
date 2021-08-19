@@ -2,7 +2,6 @@ package com.faint.cucina.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
@@ -28,6 +27,9 @@ import com.faint.cucina.adapters.UserOrdersLVAdapter;
 import com.faint.cucina.classes.Order;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.custom.VolleySingleton;
+import com.faint.cucina.login_register.URLs;
+import com.faint.cucina.login_register.UserDataSP;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,6 +47,8 @@ public class UserOrdersFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
     private ViewGroup msg_layout, err_layout;
+
+    private UserOrdersLVAdapter adapter;
 
     private ArrayList<Order> orderList;
 
@@ -67,6 +71,28 @@ public class UserOrdersFragment extends Fragment {
             public void onRefresh() {
                 getOrders();
                 refreshLayout.setRefreshing(false);
+            }
+        });
+
+        FloatingActionButton fab = root.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
+
+                builder.setTitle("Удалить отклонённые заказы")
+                        .setMessage("Вы уверены, что хотите удалить все отклонённые заказы?")
+                        .setCancelable(true)
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                removeOrders(-1, -1);
+                            }
+                        })
+                        .setNegativeButton("Нет", null);
+
+                final AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -122,7 +148,7 @@ public class UserOrdersFragment extends Fragment {
                             listView.setVisibility(View.GONE);
                         }
                         else {
-                            UserOrdersLVAdapter adapter = new UserOrdersLVAdapter(requireContext(), orderList);
+                            adapter = new UserOrdersLVAdapter(requireContext(), orderList);
                             listView.setAdapter(adapter);
 
                             listView.setVisibility(View.VISIBLE);
@@ -131,7 +157,7 @@ public class UserOrdersFragment extends Fragment {
                         
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                            public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
                                 final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
 
                                 StringBuilder dishesStr = new StringBuilder();
@@ -148,6 +174,15 @@ public class UserOrdersFragment extends Fragment {
                                         .setMessage(dishesStr)
                                         .setCancelable(true)
                                         .setPositiveButton("Ok", null);
+
+                                if(orderList.get(pos).getState() > 2) {
+                                    builder.setNegativeButton("Удалить", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            removeOrders(orderList.get(pos).getId(), pos);
+                                        }
+                                    });
+                                }
 
                                 final AlertDialog alert = builder.create();
                                 alert.show();
@@ -176,6 +211,57 @@ public class UserOrdersFragment extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_phone", MainActivity.user.getPhone());
+
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+    }
+
+    private void removeOrders(final int id, final int pos) {
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_REMOVE_ORDER,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if(response.trim().equals("1")) {
+                        Toast.makeText(requireActivity(), "Успешно удалено!", Toast.LENGTH_SHORT).show();
+
+                        if(pos != -1) {
+                            orderList.remove(pos);
+                        }
+                        else {
+                            for(int i = 0; i < orderList.size(); i++) {
+                                Order order = orderList.get(i);
+
+                                if(order.getState() > 2) {
+                                    orderList.remove(i);
+                                    i--;
+                                }
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                    else {
+                        Toast.makeText(requireActivity(), "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(requireActivity(),
+                            "Не удалось подключиться к серверу, проверьте интернет-соединение",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", String.valueOf(id));
+                params.put("phone", UserDataSP.getInstance(requireContext()).getUser().getPhone());
 
                 return params;
             }

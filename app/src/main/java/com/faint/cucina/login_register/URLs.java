@@ -12,6 +12,8 @@ public class URLs {
     public static final String URL_GET_CAFES = "http://192.168.1.8/cucina/getCafes.php";
     public static final String URL_GET_CAFE_BY_POS = "http://192.168.1.8/cucina/getCafeByLatLng.php";
 
+    public static final String URL_REMOVE_ORDER = "http://192.168.1.8/cucina/removeOrder.php";
+
     public static final String URL_CHANGE_ROOT = "http://192.168.1.8/cucina/changeUserData.php?apicall=";
     public static final String URL_CHANGE_NAME = URL_CHANGE_ROOT + "username";
     public static final String URL_CHANGE_PASSWORD = URL_CHANGE_ROOT + "password";

@@ -85,6 +85,15 @@
                 android:id="@+id/progressBar"
                 android:layout_gravity="center"/>
 
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_delete"
+                android:id="@+id/fab"/>
+
         </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
