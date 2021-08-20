@@ -21,13 +21,19 @@
         <EditTextPreference
             android:key="change_name"
             android:summary="@string/enter_name"
-            android:title="@string/change_name" />
+            android:title="@string/change_name"/>
 
         <EditTextPreference
             android:key="change_password"
             android:inputType="textPassword"
             android:summary="@string/enter_password"
             android:title="@string/change_password"/>
+
+        <EditTextPreference
+            android:key="change_phone"
+            android:inputType="phone"
+            android:summary="Введите новый номер телефона"
+            android:title="Изменить номер телефона"/>
 
         <ListPreference
             android:dialogTitle="Выберите город"

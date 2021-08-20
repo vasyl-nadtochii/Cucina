@@ -32,7 +32,7 @@ import java.util.Map;
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private ListPreference themePref, citiesPref;
-    private EditTextPreference namePref;
+    private EditTextPreference namePref, phonePref, passwordPref;
 
     private String userPhone;
 
@@ -85,10 +85,11 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
 
         // change the password pref
-        EditTextPreference passwordPref = getPreferenceManager().findPreference("change_password");
+        passwordPref = getPreferenceManager().findPreference("change_password");
 
         // this code hides the password, because xml inputType doesn't work
         assert passwordPref != null;
+        passwordPref.setText("");
         passwordPref.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
             @Override
             public void onBindEditText(@NonNull EditText editText) {
@@ -107,14 +108,47 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 if(newValue.toString().trim().length() > 0 &&
                         newValue.toString().trim().matches("^[a-zA-Z0-9_]+$")) {
                     updatePasswordInDB(newValue.toString());
-                    return true;
-                }
-                else if(newValue.toString().trim().length() == 0) {
-                    return false;
                 }
                 else {
                     Toast.makeText(requireActivity(),
                             "В пароле могут использоваться только латинские символы, цифры и подчеркивания",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+        phonePref = getPreferenceManager().findPreference("change_phone");
+        assert phonePref != null;
+
+        phonePref.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
+            @Override
+            public void onBindEditText(@NonNull EditText editText) {
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE);
+
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+            }
+        });
+
+        phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+
+        phonePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if(newValue.toString().trim().length() == 12) {
+                    updatePhoneInDB(newValue.toString());
+                    return true;
+                }
+                else if(newValue.toString().trim().length() < 12) {
+                    Toast.makeText(requireActivity(),
+                            "Проверьте корректность ввода номера телефона",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                else {
+                    Toast.makeText(requireActivity(),
+                            "В номере телефона могут использоваться только цифры",
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -254,8 +288,8 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                             }
                             else if(response.trim().equals("ACTIVE_ORDERS")) {
                                 Toast.makeText(requireActivity(),
-                                        "Вы не можете изменить город пока у вас есть активные заказы!",
-                                        Toast.LENGTH_SHORT).show();
+                                        "Вы не можете изменить город, пока у вас есть активные заказы!",
+                                        Toast.LENGTH_LONG).show();
 
                                 citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
                             }
@@ -281,6 +315,59 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 Map<String, String> params = new HashMap<>();
                 params.put("phone", userPhone);
                 params.put("city", newValue);
+
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(requireActivity()).addToRequestQueue(request);
+    }
+
+    private void updatePhoneInDB(final String newValue) {
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_PHONE,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            if(response.trim().equals("SUCCESS")) {
+                                phonePref.setText(newValue);
+                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_PHONE, newValue);
+
+                                MainActivity.user.setPhone(newValue);
+                                MainActivity.dataChanged = true;
+
+                                Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(response.trim().equals("ACTIVE_ORDERS")) {
+                                Toast.makeText(requireActivity(),
+                                        "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
+                                        Toast.LENGTH_LONG).show();
+
+                                phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+                            }
+                            else {
+                                Toast.makeText(requireActivity(),
+                                        response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(requireActivity(),
+                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("phone", userPhone);
+                params.put("new_phone", newValue);
 
                 return params;
             }

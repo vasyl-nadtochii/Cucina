@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private SharedPreferences prefs;
 
-    private TextView nameTxt, cityTxt;
+    private TextView nameTxt, cityTxt, phoneTxt;
 
     public static int themeCode;
     private boolean backPressedOnce = false;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         cityTxt = navHeader.findViewById(R.id.city_txt);
         cityTxt.setText(themes[Integer.parseInt(user.getCity()) - 1]);
 
-        TextView phoneTxt = navHeader.findViewById(R.id.phone_txt);
+        phoneTxt = navHeader.findViewById(R.id.phone_txt);
         String phoneForm = "+" + user.getPhone();
         phoneTxt.setText(phoneForm);
 
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(dataChanged) {
             nameTxt.setText(user.getName());
+            phoneTxt.setText(user.getPhone());
             cityTxt.setText(themes[Integer.parseInt(user.getCity()) - 1]);
 
             dataChanged = false;
