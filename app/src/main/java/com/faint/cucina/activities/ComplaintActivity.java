@@ -63,7 +63,12 @@ public class ComplaintActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postComplaint(cafeID, userName, complaintText);
+                if(complaintText != null) {
+                    if(complaintText.length() != 0)
+                        postComplaint(cafeID, userName, complaintText);
+                }
+                else
+                    Toast.makeText(ComplaintActivity.this, "Напишите хоть что-нибудь", Toast.LENGTH_SHORT).show();
             }
         });
     }

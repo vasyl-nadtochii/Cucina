@@ -47,6 +47,7 @@ public class UserOrdersFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
     private ViewGroup msg_layout, err_layout;
+    private FloatingActionButton fab;
 
     private UserOrdersLVAdapter adapter;
 
@@ -74,7 +75,7 @@ public class UserOrdersFragment extends Fragment {
             }
         });
 
-        FloatingActionButton fab = root.findViewById(R.id.fab);
+        fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +139,8 @@ public class UserOrdersFragment extends Fragment {
 
                                 orderList.add(order);
                             }
+
+                            fab.show();
                         }
                         catch (Exception e) {
                             e.printStackTrace();

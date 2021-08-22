@@ -247,13 +247,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                     drawable = R.drawable.map_cafe_closing_marker;
                                 }
 
-                                LatLng innerLatLng = new LatLng(latitude, longitude);
-                                MarkerOptions innerOptions = new MarkerOptions()
-                                        .position(innerLatLng)
-                                        .icon(bitmapDescriptorFromVector(getActivity(), drawable))
-                                        .title("cafe");
+                                if(!(forOrder && state == 3)) {
+                                    LatLng innerLatLng = new LatLng(latitude, longitude);
+                                    MarkerOptions innerOptions = new MarkerOptions()
+                                            .position(innerLatLng)
+                                            .icon(bitmapDescriptorFromVector(getActivity(), drawable))
+                                            .title("cafe");
 
-                                myGmap.addMarker(innerOptions);
+                                    myGmap.addMarker(innerOptions);
+                                }
                             }
                         }
                         catch (Exception e) {

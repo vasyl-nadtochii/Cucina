@@ -92,6 +92,7 @@
                 android:layout_gravity="end|bottom"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_delete"
+                android:visibility="gone"
                 android:id="@+id/fab"/>
 
         </FrameLayout>
