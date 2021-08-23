@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     public static boolean dataChanged;
     private String[] themes;
 
+    private int currentPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +92,9 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace( R.id.fragment_container,
                     new NewsFragment() ).commit();
+
             navigationView.setCheckedItem(R.id.news);
+            currentPage = R.id.news;
         }
     }
 
@@ -139,31 +143,44 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.order:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace( R.id.fragment_container, new OrderFragment() )
-                        .commit();
+                if(currentPage != R.id.order) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace( R.id.fragment_container, new OrderFragment() )
+                            .commit();
+
+                    currentPage = R.id.order;
+                }
                 break;
             case R.id.map:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace( R.id.fragment_container, new MapFragment(false) )
-                        .commit();
+                if(currentPage != R.id.map) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new MapFragment(false))
+                            .commit();
+
+                    currentPage = R.id.map;
+                }
                 break;
             case R.id.news:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace( R.id.fragment_container, new NewsFragment() )
-                        .commit();
+                if(currentPage != R.id.news) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new NewsFragment())
+                            .commit();
+                    currentPage = R.id.news;
+                }
                 break;
             case R.id.user_orders:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace( R.id.fragment_container, new UserOrdersFragment() )
-                        .commit();
+                if(currentPage != R.id.user_orders) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new UserOrdersFragment())
+                            .commit();
+                    currentPage = R.id.user_orders;
+                }
                 break;
             case R.id.setts:
                 startActivity( new Intent(this, SettingsActivity.class) );
