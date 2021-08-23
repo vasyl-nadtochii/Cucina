@@ -67,6 +67,16 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:backgroundTint="#3737FF"
+            android:id="@+id/track_btn"
+            android:textColor="@android:color/white"
+            android:text="Проложить маршрут"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/complain"
             android:paddingTop="20dp"
             android:id="@+id/complaint_btn"

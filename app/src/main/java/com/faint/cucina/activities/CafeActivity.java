@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.PhotoVPAdapter;
@@ -59,6 +65,7 @@ public class CafeActivity extends AppCompatActivity {
 
         Button orderBtn = findViewById(R.id.order_btn);
         Button complaintBtn = findViewById(R.id.complaint_btn);
+        Button trackBtn = findViewById(R.id.track_btn);
 
         complaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +99,40 @@ public class CafeActivity extends AppCompatActivity {
                 orderBtn.setVisibility(View.GONE);
                 break;
         }
+
+        trackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+                // we gave location permission before, so there is no need to request it again
+                @SuppressLint("MissingPermission")
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                assert location != null;
+                double userLatitude = location.getLatitude();
+                double userLongitude = location.getLongitude();
+
+                try {
+                    Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + userLatitude
+                        + "," + userLongitude + "/" + cafe.getLatitude() + "," + cafe.getLongitude());
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.setPackage("com.google.android.apps.maps");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent);
+                }
+                catch (ActivityNotFoundException e) {
+                    Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent);
+                }
+            }
+        });
 
         photoVPAdapter = new PhotoVPAdapter(cafe.getImgUrls(), CafeActivity.this);
         viewPager = findViewById(R.id.viewPager);
