@@ -125,6 +125,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             if(position == 0 || position == fragments.size() - 1) {
                 showingBtn = false;
                 btn.hide();
+
+                if(position == 0) {
+                    order.clearOrderList();
+                }
             }
         }
     }

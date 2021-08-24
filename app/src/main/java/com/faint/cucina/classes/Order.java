@@ -112,6 +112,10 @@ public class Order implements Parcelable {
         }
     }
 
+    public void clearOrderList() {
+        this.orderList.clear();
+    }
+
     @Override
     public int describeContents() {
         return 0;

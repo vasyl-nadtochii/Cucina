@@ -11,7 +11,6 @@ import java.util.List;
 public class InnerFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragments;
-    FragmentManager fm;
 
     public InnerFragmentPagerAdapter(@NonNull FragmentManager fm, List<Fragment> fragments) {
         super(fm);
@@ -21,13 +20,6 @@ public class InnerFragmentPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        /*if(position == 0) {
-            return ((MapFragment) fragments.get(position)).newInstance();
-        }
-        else {
-
-        }*/
-
         return fragments.get(position);
     }
 

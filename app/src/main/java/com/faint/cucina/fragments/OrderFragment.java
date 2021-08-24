@@ -38,8 +38,6 @@ public class OrderFragment extends Fragment {
 
     public static boolean forOrder;
 
-    TabLayout tabs;
-
     public OrderFragment(boolean forOrder) {
         OrderFragment.forOrder = forOrder;
     }
@@ -50,7 +48,7 @@ public class OrderFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_order, container, false);
 
         ViewPager sectPager = root.findViewById(R.id.view_pager);
-        tabs = root.findViewById(R.id.tabs);
+        TabLayout tabs = root.findViewById(R.id.tabs);
         fabNext = root.findViewById(R.id.fabNext);
 
         List<Fragment> pages = new ArrayList<>();
@@ -58,7 +56,7 @@ public class OrderFragment extends Fragment {
         pages.add(new OrderPageFragment(2)); // 2 - self choice
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
-                requireActivity().getSupportFragmentManager(), pages);
+                getChildFragmentManager(), pages);
         sectPager.setAdapter(sectionsPagerAdapter);
 
         tabs.setupWithViewPager(sectPager);
