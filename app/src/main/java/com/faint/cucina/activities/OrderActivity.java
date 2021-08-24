@@ -15,14 +15,18 @@ import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.InnerFragmentPagerAdapter;
 import com.faint.cucina.classes.Order;
+import com.faint.cucina.classes.OrderDish;
+import com.faint.cucina.classes.User;
 import com.faint.cucina.custom.CustomViewPager;
 import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.fragments.MapFragment;
+import com.faint.cucina.fragments.OrderFragment;
 import com.faint.cucina.fragments.order_conf_fragments.ConfFragment;
 import com.faint.cucina.fragments.order_conf_fragments.DescFragment;
 import com.faint.cucina.fragments.order_conf_fragments.ResultFragment;
 import com.faint.cucina.interfaces.OrderConfInterface;
 import com.faint.cucina.login_register.URLs;
+import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -53,7 +57,19 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_conf);
 
-        order = getIntent().getParcelableExtra("ORDER");
+        User user = UserDataSP.getInstance(getApplicationContext()).getUser();
+
+        boolean hasDishes = getIntent().getBooleanExtra("HAS_DISHES", true);
+        if(hasDishes) {
+            ArrayList<OrderDish> orderList = getIntent().getParcelableArrayListExtra("ORDER_LIST");
+            order = new Order(user.getName(), user.getPhone(), orderList, "", -1, 0, -1);
+        }
+        else {
+            int cafeID = getIntent().getIntExtra("CAFE_ID", -1);
+            address = getIntent().getStringExtra("CAFE_ADDRESS");
+
+            order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "", cafeID, 0, -1);
+        }
 
         btn = findViewById(R.id.btn);
 
@@ -64,7 +80,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         manager = getSupportFragmentManager();
 
         fragments = new ArrayList<>();
-        fragments.add(new MapFragment(true));   // 0
+        fragments.add((hasDishes) ? new MapFragment(true) : new OrderFragment(true));   // 0
         fragments.add(new DescFragment());  // 1
         fragments.add(new ConfFragment());  // 2
         fragments.add(new ResultFragment());   // 3

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -18,6 +20,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.DishDescActivity;
+import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.fragments.OrderFragment;
@@ -30,13 +33,14 @@ public class OrderVPAdapter extends PagerAdapter {
 
     private final ArrayList<Dish> dishes;
     private final Context context;
-    View root;
 
-    int[] counter;
+    private final int[] counter;
+    private final boolean usesActivityList;
 
-    public OrderVPAdapter(ArrayList<Dish> dishes, Context context) {
+    public OrderVPAdapter(ArrayList<Dish> dishes, Context context, boolean usesActivityList) {
         this.dishes = dishes;
         this.context = context;
+        this.usesActivityList = usesActivityList;
         counter = new int[dishes.size()];
     }
 
@@ -50,7 +54,7 @@ public class OrderVPAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        root = layoutInflater.inflate(R.layout.order_vp_item, container, false);
+        View root = layoutInflater.inflate(R.layout.order_vp_item, container, false);
 
         ImageView imageView = root.findViewById(R.id.img);
 
@@ -74,8 +78,15 @@ public class OrderVPAdapter extends PagerAdapter {
 
                 OrderFragment.orderInterface.addDishToOrder(dishes.get(position));
 
-                if(OrderFragment.order.getOrderList().size() == 1) {
-                    OrderFragment.orderInterface.showHideFAB(true);
+                if(!usesActivityList) {
+                    if(OrderFragment.orderList.size() == 1) {
+                        OrderFragment.orderInterface.showHideFAB(true);
+                    }
+                }
+                else {
+                    if(OrderActivity.order.getOrderList().size() == 1) {
+                        OrderFragment.orderInterface.showHideFAB(true);
+                    }
                 }
             }
         });
@@ -90,8 +101,15 @@ public class OrderVPAdapter extends PagerAdapter {
 
                 OrderFragment.orderInterface.removeDishFromOrder(dishes.get(position));
 
-                if(OrderFragment.order.getOrderList().size() == 0) {
-                    OrderFragment.orderInterface.showHideFAB(false);
+                if(!usesActivityList) {
+                    if(OrderFragment.orderList.size() == 0) {
+                        OrderFragment.orderInterface.showHideFAB(false);
+                    }
+                }
+                else {
+                    if(OrderActivity.order.getOrderList().size() == 0) {
+                        OrderFragment.orderInterface.showHideFAB(false);
+                    }
                 }
             }
         });

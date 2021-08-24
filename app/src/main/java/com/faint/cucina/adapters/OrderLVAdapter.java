@@ -26,12 +26,12 @@ import java.util.Locale;
 public class OrderLVAdapter extends ArrayAdapter<DishGroup> {
 
     private final Context context;
-    ArrayList<DishGroup> categories;
+    private final ArrayList<DishGroup> categories;
+    private final boolean usesActivityList;
 
-    OrderVPAdapter vpAdapter;
-
-    public OrderLVAdapter(ArrayList<DishGroup> categories, Context context) {
+    public OrderLVAdapter(ArrayList<DishGroup> categories, Context context, boolean usesActivityList) {
         super(context, R.layout.order_lv_item, categories);
+        this.usesActivityList = usesActivityList;
         this.context = context;
         this.categories = categories;
     }
@@ -49,7 +49,7 @@ public class OrderLVAdapter extends ArrayAdapter<DishGroup> {
 
         ViewPager viewPager = view.findViewById(R.id.view_pager);
 
-        vpAdapter = new OrderVPAdapter(categories.get(position).getDishes(), context);
+        OrderVPAdapter vpAdapter = new OrderVPAdapter(categories.get(position).getDishes(), context, usesActivityList);
 
         viewPager.setAdapter(vpAdapter);
 

@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 if(currentPage != R.id.order) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace( R.id.fragment_container, new OrderFragment() )
+                            .replace( R.id.fragment_container, new OrderFragment(false) )
                             .commit();
 
                     currentPage = R.id.order;

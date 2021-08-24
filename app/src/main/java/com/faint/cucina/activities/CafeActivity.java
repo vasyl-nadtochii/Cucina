@@ -7,26 +7,21 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.PhotoVPAdapter;
 import com.faint.cucina.classes.Cafe;
 import com.faint.cucina.login_register.UserDataSP;
-
-import java.util.ArrayList;
 
 public class CafeActivity extends AppCompatActivity {
 
@@ -99,6 +94,18 @@ public class CafeActivity extends AppCompatActivity {
                 orderBtn.setVisibility(View.GONE);
                 break;
         }
+
+        orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CafeActivity.this, OrderActivity.class);
+                intent.putExtra("HAS_DISHES", false);
+                intent.putExtra("CAFE_ID", cafe.getCafeID());
+                intent.putExtra("CAFE_ADDRESS", cafe.getAddress());
+
+                startActivity(intent);
+            }
+        });
 
         trackBtn.setOnClickListener(new View.OnClickListener() {
             @Override

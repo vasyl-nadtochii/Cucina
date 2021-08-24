@@ -26,13 +26,23 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderFragment extends Fragment {
 
     private FloatingActionButton fabNext;
 
-    public static Order order;
+    public static ArrayList<OrderDish> orderList;
+
     public static OrderInterface orderInterface;
+
+    public static boolean forOrder;
+
+    TabLayout tabs;
+
+    public OrderFragment(boolean forOrder) {
+        OrderFragment.forOrder = forOrder;
+    }
 
     @Nullable
     @Override
@@ -40,7 +50,7 @@ public class OrderFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_order, container, false);
 
         ViewPager sectPager = root.findViewById(R.id.view_pager);
-        TabLayout tabs = root.findViewById(R.id.tabs);
+        tabs = root.findViewById(R.id.tabs);
         fabNext = root.findViewById(R.id.fabNext);
 
         List<Fragment> pages = new ArrayList<>();
@@ -53,27 +63,49 @@ public class OrderFragment extends Fragment {
 
         tabs.setupWithViewPager(sectPager);
 
-        User user = UserDataSP.getInstance(requireContext()).getUser();
-        order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "", -1, 0, -1);
+        if(forOrder) {
+            tabs.setBackgroundColor(requireActivity().getResources().getColor(R.color.start_bg, requireActivity().getTheme()));
+        }
+
+        orderList = new ArrayList<>();
 
         fabNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), OrderActivity.class);
-                intent.putExtra("ORDER", order);
-                startActivity(intent);
+                if(!forOrder) {
+                    Intent intent = new Intent(getContext(), OrderActivity.class);
+
+                    intent.putExtra("HAS_DISHES", true);
+                    intent.putExtra("ORDER_LIST", orderList);
+
+                    startActivity(intent);
+                }
+                else {
+                    OrderActivity.orderConfInterface.goToNext();
+                    OrderActivity.orderConfInterface.showBtnNext(true);
+                }
             }
         });
 
         orderInterface = new OrderInterface() {
             @Override
             public void addDishToOrder(Dish dish) {
-                order.addDishToOrder(dish);
+                if(!forOrder) {
+                    addDish(dish);
+                }
+                else {
+                    OrderActivity.order.addDishToOrder(dish);
+                }
             }
 
             @Override
             public void removeDishFromOrder(Dish dish) {
-                order.removeDish(dish);
+                if(!forOrder) {
+                    removeDish(dish);
+                }
+                else {
+                    OrderActivity.order.removeDish(dish);
+                }
             }
 
             @Override
@@ -86,6 +118,43 @@ public class OrderFragment extends Fragment {
         };
 
         return root;
+    }
+
+    public void addDish(Dish dishToAdd) {
+        boolean found = false;
+
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToAdd.getName())) {
+                found = true;
+                dish.setAmount(dish.getAmount() + 1);
+
+                break;
+            }
+        }
+
+        if(!found) {
+            orderList.add(new OrderDish(1, dishToAdd.getName()));
+        }
+    }
+
+    public void removeDish(Dish dishToRemove) {
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToRemove.getName())) {
+                dish.setAmount(dish.getAmount() - 1);
+
+                if(dish.getAmount() == 0) {
+                    orderList.remove(dish);
+                }
+
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Override

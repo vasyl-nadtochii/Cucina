@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
+import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderLVAdapter;
 import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Dish;
@@ -119,7 +120,7 @@ public class OrderPageFragment extends Fragment {
                             }
                         }
 
-                        listAdapter = new OrderLVAdapter(dishList, getActivity());
+                        listAdapter = new OrderLVAdapter(dishList, getActivity(), OrderFragment.forOrder);
 
                         listView.setAdapter(listAdapter);
 
