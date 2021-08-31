@@ -142,8 +142,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 order.setClarifications(DescFragment.descText);
             }
 
-            adapter.notifyDataSetChanged();
             viewPager.setCurrentItem(position);
+
+            if(position == 2) {
+                adapter.notifyDataSetChanged();
+            }
 
             if(position == 3) {
                 // here we should try to send order to db, then show successful or not really successful msg

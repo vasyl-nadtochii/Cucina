@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.faint.cucina">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,10 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".activities.ComplaintActivity"
+        <activity android:name=".activities.AddUserDishActivity"></activity>
+        <activity
+            android:name=".activities.ComplaintActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ForPreLoadScr"/>
+            android:theme="@style/AppTheme.ForPreLoadScr" />
         <activity
             android:name=".activities.OrderActivity"
             android:screenOrientation="portrait"

@@ -106,6 +106,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         fabNext = root.findViewById(R.id.fabNext);
         fabNext.setOnClickListener(this);
 
+        FloatingActionButton fabUpdate = root.findViewById(R.id.fabUpdate);
+        fabUpdate.setOnClickListener(this);
+
         providerClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -307,6 +310,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         else if(view.getId() == R.id.fabNext && initialized) {
             OrderActivity.orderConfInterface.goToNext();
             OrderActivity.orderConfInterface.showBtnNext(true);
+        }
+        else if(view.getId() == R.id.fabUpdate) {
+            myGmap.clear();
+            getCafes();     // i`m not sure about that
         }
     }
 

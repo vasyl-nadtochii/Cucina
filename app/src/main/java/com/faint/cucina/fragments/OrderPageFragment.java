@@ -78,7 +78,7 @@ public class OrderPageFragment extends Fragment {
             }
         }
 
-        String url = "http://192.168.1.8/cucina/getDishes.php";
+        String url = "https://cucinacafeapp.000webhostapp.com/getDishes.php";
         StringRequest request =
             new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override

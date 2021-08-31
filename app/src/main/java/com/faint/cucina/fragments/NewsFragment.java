@@ -2,7 +2,8 @@ package com.faint.cucina.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,10 +120,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void getNews() {
-        WifiManager wifi = (WifiManager)
-                requireActivity().getSystemService(Context.WIFI_SERVICE);
-
-        if (wifi.isWifiEnabled()) {   // app uses wifi, so we only check wifi. In future it will be changed (maybe)
+        if (isNetworkAvailable()) {
             if(!eventList.isEmpty()) {
                 eventList.clear();
             }
@@ -131,7 +129,7 @@ public class NewsFragment extends Fragment {
             }
         }
 
-        String url = "http://192.168.1.8/cucina/getNews.php";
+        String url = "https://cucinacafeapp.000webhostapp.com/getNews.php";
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -226,5 +224,13 @@ public class NewsFragment extends Fragment {
         };
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

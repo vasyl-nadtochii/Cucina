@@ -9,7 +9,7 @@
     <string name="complain">Оставить жалобу</string>
 
     <string name="tab_text_1">Готовые меню</string>
-    <string name="tab_text_2">Самостоятельно</string>
+    <string name="tab_text_2">Одиночно</string>
 
     <string name="reg_info_header"><u>Почему именно мы?</u></string>
 
@@ -116,5 +116,7 @@
     <string name="logout_conf">Вы уверены, что хотите выйти из учётной записи?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+
+    <string name="tab_text_3" translatable="false">Польз. меню</string>
 
 </resources>

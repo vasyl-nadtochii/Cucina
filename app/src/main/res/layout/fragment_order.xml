@@ -16,6 +16,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 app:tabTextColor="?attr/colorControlNormal"
+                app:tabTextAppearance="@style/MineCustomTabText"
                 app:tabSelectedTextColor="?attr/colorControlNormal"
                 app:tabIndicatorColor="?attr/colorControlNormal"/>
 

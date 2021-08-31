@@ -12,21 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.faint.cucina.R;
-import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.activities.OrderActivity;
-import com.faint.cucina.adapters.SectionsPagerAdapter;
+import com.faint.cucina.adapters.OrderPagerAdapter;
 import com.faint.cucina.classes.Dish;
-import com.faint.cucina.classes.Order;
 import com.faint.cucina.classes.OrderDish;
-import com.faint.cucina.classes.User;
 import com.faint.cucina.interfaces.OrderInterface;
-import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OrderFragment extends Fragment {
 
@@ -54,10 +49,12 @@ public class OrderFragment extends Fragment {
         List<Fragment> pages = new ArrayList<>();
         pages.add(new OrderPageFragment(1)); // 1 - ready-made
         pages.add(new OrderPageFragment(2)); // 2 - self choice
+        pages.add(new UserMenusFragment());
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(requireActivity(),
+        OrderPagerAdapter orderPagerAdapter = new OrderPagerAdapter(requireActivity(),
                 getChildFragmentManager(), pages);
-        sectPager.setAdapter(sectionsPagerAdapter);
+        sectPager.setAdapter(orderPagerAdapter);
+        sectPager.setOffscreenPageLimit(3);
 
         tabs.setupWithViewPager(sectPager);
 

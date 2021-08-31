@@ -2,6 +2,8 @@ package com.faint.cucina.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
@@ -101,10 +103,7 @@ public class UserOrdersFragment extends Fragment {
     }
 
     private void getOrders() {
-        WifiManager wifi = (WifiManager)
-                requireActivity().getSystemService(Context.WIFI_SERVICE);
-
-        if (wifi.isWifiEnabled()) {
+        if (isNetworkAvailable()) {
             if(!orderList.isEmpty()) {
                 orderList.clear();
             }
@@ -113,7 +112,7 @@ public class UserOrdersFragment extends Fragment {
             }
         }
 
-        String url = "http://192.168.1.8/cucina/getUserOrders.php";
+        String url = "https://cucinacafeapp.000webhostapp.com/getUserOrders.php";
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -271,5 +270,14 @@ public class UserOrdersFragment extends Fragment {
         };
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -15,9 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.User;
@@ -28,6 +31,7 @@ import com.faint.cucina.custom.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,8 +109,6 @@ public class AuthorizationActivity extends AppCompatActivity
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //progressBar.setVisibility(View.GONE);
-
                         try {
                             //converting response to json object
                             JSONObject obj = new JSONObject(response);
@@ -152,7 +154,17 @@ public class AuthorizationActivity extends AppCompatActivity
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(AuthorizationActivity.this.getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        NetworkResponse response = error.networkResponse;
+                        if (error instanceof ServerError && response != null) {
+                            try {
+                                String res = new String(response.data,
+                                        HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                                JSONObject obj = new JSONObject(res);
+                            } catch (UnsupportedEncodingException | JSONException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
                 }) {
             @Override

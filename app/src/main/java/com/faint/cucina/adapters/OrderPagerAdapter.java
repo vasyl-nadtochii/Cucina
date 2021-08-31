@@ -13,14 +13,14 @@ import com.faint.cucina.R;
 
 import java.util.List;
 
-public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+public class OrderPagerAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
     private final List<Fragment> fragments;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments) {
+    public OrderPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         mContext = context;
         this.fragments = fragments;
