@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -56,6 +57,8 @@ public class CafeActivity extends AppCompatActivity {
         final Cafe cafe = getIntent().getParcelableExtra("CAFE");
 
         TextView address = findViewById(R.id.address);
+        address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         TextView state = findViewById(R.id.state);
 
         Button orderBtn = findViewById(R.id.order_btn);

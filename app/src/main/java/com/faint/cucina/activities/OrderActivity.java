@@ -154,14 +154,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                if(response.equals("1")) {
+                                if(response.trim().equals("1")) {
                                     ResultFragment.msgUI.showSuccessUI();
                                 }
-                                else if(response.equals("2")) {
+                                else if(response.trim().equals("2")) {
                                     ResultFragment.msgUI.showLimitLayout();
                                 }
                                 else {
                                     ResultFragment.msgUI.showFailUI();
+                                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         },
