@@ -16,27 +16,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.AddUserDishActivity"></activity>
+
+        <activity
+            android:name=".activities.AddUserMenuActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Universal"/>
+
         <activity
             android:name=".activities.ComplaintActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ForPreLoadScr" />
+
         <activity
             android:name=".activities.OrderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ForPreLoadScr" />
+
         <activity
             android:name=".activities.DishDescActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
+
         <activity
             android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
+
         <activity
             android:name=".activities.RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ForReg" />
+
         <activity
             android:name=".activities.AuthorizationActivity"
             android:screenOrientation="portrait"
@@ -46,17 +56,29 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAEFy2yv6BcSDOEsUy4K2BS8xWjprwVhXA" />
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent"/>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/svg_app_icon" />
+
         <activity
             android:name=".activities.CafeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
+
         <activity
             android:name=".activities.AnnouncementActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal" />
+
         <activity
             android:name=".activities.MainActivity"
+            android:launchMode = "singleTop"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.StartActivity"
             android:screenOrientation="portrait"
@@ -67,6 +89,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

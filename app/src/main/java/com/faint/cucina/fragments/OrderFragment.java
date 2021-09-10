@@ -12,11 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.faint.cucina.R;
+import com.faint.cucina.activities.AddUserMenuActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderPagerAdapter;
 import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.OrderDish;
+import com.faint.cucina.classes.UserMenu;
 import com.faint.cucina.interfaces.OrderInterface;
+import com.faint.cucina.interfaces.UserMenusInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -25,11 +28,12 @@ import java.util.List;
 
 public class OrderFragment extends Fragment {
 
-    private FloatingActionButton fabNext;
+    private FloatingActionButton fabNext, fabAddMenu;
 
     public static ArrayList<OrderDish> orderList;
 
     public static OrderInterface orderInterface;
+    public static UserMenusInterface menusInterface;
 
     public static boolean forOrder;
 
@@ -45,6 +49,9 @@ public class OrderFragment extends Fragment {
         ViewPager sectPager = root.findViewById(R.id.view_pager);
         TabLayout tabs = root.findViewById(R.id.tabs);
         fabNext = root.findViewById(R.id.fabNext);
+        fabAddMenu = root.findViewById(R.id.addMenu);
+
+        fabAddMenu.setOnClickListener(view -> startActivity(new Intent(requireActivity(), AddUserMenuActivity.class)));
 
         List<Fragment> pages = new ArrayList<>();
         pages.add(new OrderPageFragment(1)); // 1 - ready-made
@@ -53,8 +60,26 @@ public class OrderFragment extends Fragment {
 
         OrderPagerAdapter orderPagerAdapter = new OrderPagerAdapter(requireActivity(),
                 getChildFragmentManager(), pages);
+
         sectPager.setAdapter(orderPagerAdapter);
         sectPager.setOffscreenPageLimit(3);
+        sectPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 2) {
+                    fabAddMenu.show();
+                }
+                else {
+                    fabAddMenu.hide();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
 
         tabs.setupWithViewPager(sectPager);
 
@@ -64,21 +89,18 @@ public class OrderFragment extends Fragment {
 
         orderList = new ArrayList<>();
 
-        fabNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!forOrder) {
-                    Intent intent = new Intent(getContext(), OrderActivity.class);
+        fabNext.setOnClickListener(view -> {
+            if(!forOrder) {
+                Intent intent = new Intent(getContext(), OrderActivity.class);
 
-                    intent.putExtra("HAS_DISHES", true);
-                    intent.putExtra("ORDER_LIST", orderList);
+                intent.putExtra("HAS_DISHES", true);
+                intent.putExtra("ORDER_LIST", orderList);
 
-                    startActivity(intent);
-                }
-                else {
-                    OrderActivity.orderConfInterface.goToNext();
-                    OrderActivity.orderConfInterface.showBtnNext(true);
-                }
+                startActivity(intent);
+            }
+            else {
+                OrderActivity.orderConfInterface.goToNext();
+                OrderActivity.orderConfInterface.showBtnNext(true);
             }
         });
 
@@ -104,11 +126,27 @@ public class OrderFragment extends Fragment {
             }
 
             @Override
-            public void showHideFAB(boolean show) {
-                if(show)
+            public void showHideFABNext(boolean show) {
+                if (show)
                     fabNext.show();
                 else
                     fabNext.hide();
+            }
+        };
+
+        menusInterface = new UserMenusInterface() {
+            @Override
+            public void addUserDishToOrder(UserMenu menu) {
+                for(OrderDish dish : menu.getDishes()) {
+                    addDish(dish);
+                }
+            }
+
+            @Override
+            public void removeUserDishFromOrder(UserMenu menu) {
+                for(OrderDish dish : menu.getDishes()) {
+                    removeDish(dish);
+                }
             }
         };
 
@@ -128,7 +166,24 @@ public class OrderFragment extends Fragment {
         }
 
         if(!found) {
-            orderList.add(new OrderDish(1, dishToAdd.getName()));
+            orderList.add(new OrderDish(1, dishToAdd.getName(), dishToAdd.getPrice()));
+        }
+    }
+
+    public void addDish(OrderDish dishToAdd) {
+        boolean found = false;
+
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToAdd.getName())) {
+                found = true;
+                dish.setAmount(dish.getAmount() + dishToAdd.getAmount());
+
+                break;
+            }
+        }
+
+        if(!found) {
+            orderList.add(dishToAdd);
         }
     }
 
@@ -146,10 +201,23 @@ public class OrderFragment extends Fragment {
         }
     }
 
+    public void removeDish(OrderDish dishToRemove) {
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToRemove.getName()) && dish.getAmount() >= dishToRemove.getAmount()) {
+                dish.setAmount(dish.getAmount() - dishToRemove.getAmount());
+
+                if(dish.getAmount() == 0) {
+                    orderList.remove(dish);
+                }
+
+                break;
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override

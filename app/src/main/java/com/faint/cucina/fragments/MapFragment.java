@@ -224,53 +224,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void getCafes() {
         final String userCity = UserDataSP.getInstance(requireContext()).getUser().getCity();
 
+        MainActivity.requestFinished = false;
+
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFES,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONArray(response);
+                response -> {
+                    try {
+                        JSONArray array = new JSONArray(response);
 
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
 
-                                double latitude = object.getDouble("latitude");
-                                double longitude = object.getDouble("longitude");
-                                int state = object.getInt("state");
+                            double latitude = object.getDouble("latitude");
+                            double longitude = object.getDouble("longitude");
+                            int state = object.getInt("state");
 
-                                int drawable;
+                            int drawable;
 
-                                if(state == 1) {
-                                    drawable = R.drawable.map_cafe_open_marker;
-                                }
-                                else if(state == 2) {
-                                    drawable = R.drawable.map_cafe_takeaway_marker;
-                                }
-                                else {
-                                    drawable = R.drawable.map_cafe_closing_marker;
-                                }
+                            if(state == 1) {
+                                drawable = R.drawable.map_cafe_open_marker;
+                            }
+                            else if(state == 2) {
+                                drawable = R.drawable.map_cafe_takeaway_marker;
+                            }
+                            else {
+                                drawable = R.drawable.map_cafe_closing_marker;
+                            }
 
-                                if(!(forOrder && state == 3)) {
-                                    LatLng innerLatLng = new LatLng(latitude, longitude);
-                                    MarkerOptions innerOptions = new MarkerOptions()
-                                            .position(innerLatLng)
-                                            .icon(bitmapDescriptorFromVector(getActivity(), drawable))
-                                            .title("cafe");
+                            if(!(forOrder && state == 3)) {
+                                LatLng innerLatLng = new LatLng(latitude, longitude);
+                                MarkerOptions innerOptions = new MarkerOptions()
+                                        .position(innerLatLng)
+                                        .icon(bitmapDescriptorFromVector(getActivity(), drawable))
+                                        .title("cafe");
 
-                                    myGmap.addMarker(innerOptions);
-                                }
+                                myGmap.addMarker(innerOptions);
                             }
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+                        MainActivity.requestFinished = true;
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
-                    }
+                error -> {
+                    Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                    MainActivity.requestFinished = true;
                 }
         ) {
             @Override
@@ -348,71 +347,68 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(!marker.getTitle().equals("user_location")) {
-            final double latitude = marker.getPosition().latitude;
-            final double longitude = marker.getPosition().longitude;
+        final double latitude = marker.getPosition().latitude;
+        final double longitude = marker.getPosition().longitude;
 
-            StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFE_BY_POS,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                if(!response.trim().equals("fail")) {
-                                    JSONObject object = new JSONObject(response);
+        MainActivity.requestFinished = false;
 
-                                    int state = object.getInt("state");
-                                    String address = object.getString("address");
-                                    int id = object.getInt("id");
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFE_BY_POS,
+                response -> {
+                    try {
+                        if(!response.trim().equals("fail")) {
+                            JSONObject object = new JSONObject(response);
 
-                                    JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
-                                    ArrayList<String> urlList = new ArrayList<>();
+                            int state = object.getInt("state");
+                            String address = object.getString("address");
+                            int id = object.getInt("id");
 
-                                    for(int j = 0; j < jsonArray.length(); j++) {
-                                        urlList.add(jsonArray.getString(j));
-                                    }
+                            JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
+                            ArrayList<String> urlList = new ArrayList<>();
 
-                                    Cafe chosenCafe = new Cafe(latitude, longitude, state, address, id, urlList);
-
-                                    if(forOrder) {
-                                        OrderActivity.order.setCafeID(chosenCafe.getCafeID());
-                                        OrderActivity.address = chosenCafe.getAddress();
-
-                                        String info = "Выбрано: " + chosenCafe.getAddress();
-                                        infoTV.setText(info);
-
-                                        fabNext.show();
-                                    }
-                                    else {
-                                        Intent intent = new Intent(requireActivity(), CafeActivity.class);
-                                        intent.putExtra("CAFE", chosenCafe);
-                                        startActivity(intent);
-                                    }
-                                }
+                            for(int j = 0; j < jsonArray.length(); j++) {
+                                urlList.add(jsonArray.getString(j));
                             }
-                            catch (Exception e) {
-                                e.printStackTrace();
+
+                            Cafe chosenCafe = new Cafe(latitude, longitude, state, address, id, urlList);
+
+                            if(forOrder) {
+                                OrderActivity.order.setCafeID(chosenCafe.getCafeID());
+                                OrderActivity.address = chosenCafe.getAddress();
+
+                                String info = "Выбрано: " + chosenCafe.getAddress();
+                                infoTV.setText(info);
+
+                                fabNext.show();
+                            }
+                            else {
+                                Intent intent = new Intent(requireActivity(), CafeActivity.class);
+                                intent.putExtra("CAFE", chosenCafe);
+                                startActivity(intent);
                             }
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
-                        }
+
+                        MainActivity.requestFinished = true;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("lat", String.valueOf(latitude));
-                    params.put("lng", String.valueOf(longitude));
-
-                    return params;
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                    MainActivity.requestFinished = true;
                 }
-            };
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("lat", String.valueOf(latitude));
+                params.put("lng", String.valueOf(longitude));
 
-            VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
-        }
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
 
         return true;
     }

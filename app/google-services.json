@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "859406547755",
+    "project_id": "cucina-304407",
+    "storage_bucket": "cucina-304407.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859406547755:android:0802a686980edf5ffba36e",
+        "android_client_info": {
+          "package_name": "com.faint.cucina"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859406547755-7a6eg17bca3lmi5r5nj0iu0pu8csqakg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkI77rGopaw1Pl3nM_l9gik1lKducMuWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859406547755-7a6eg17bca3lmi5r5nj0iu0pu8csqakg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

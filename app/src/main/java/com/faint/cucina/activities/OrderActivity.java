@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.InnerFragmentPagerAdapter;
@@ -28,12 +26,14 @@ import com.faint.cucina.interfaces.OrderConfInterface;
 import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -149,29 +149,37 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
 
             if(position == 3) {
+                final String[] token = new String[1];
+
+                FirebaseMessaging
+                        .getInstance()
+                        .getToken()
+                        .addOnCompleteListener(task -> {
+
+                            if(!task.isSuccessful()) {
+                                return;
+                            }
+
+                            token[0] = task.getResult();
+                        });
+
                 // here we should try to send order to db, then show successful or not really successful msg
                 StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_POST_ORDER,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                if(response.trim().equals("1")) {
-                                    ResultFragment.msgUI.showSuccessUI();
-                                }
-                                else if(response.trim().equals("2")) {
-                                    ResultFragment.msgUI.showLimitLayout();
-                                }
-                                else {
-                                    ResultFragment.msgUI.showFailUI();
-                                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-                                }
+                        response -> {
+                            if(response.trim().equals("1")) {
+                                ResultFragment.msgUI.showSuccessUI();
+                            }
+                            else if(response.trim().equals("2")) {
+                                ResultFragment.msgUI.showLimitLayout();
+                            }
+                            else {
+                                ResultFragment.msgUI.showFailUI();
+                                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
                             }
                         },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                ResultFragment.msgUI.showFailUI();
-                            }
+                        error -> {
+                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            ResultFragment.msgUI.showFailUI();
                         }) {
                             @Override
                             protected Map<String, String> getParams() {
@@ -182,6 +190,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 params.put("order_list", gson.toJson(order.getOrderList()));
                                 params.put("order_clar", order.getClarifications());
                                 params.put("order_cafe_id", String.valueOf(order.getCafeID()));
+                                params.put("order_token", token[0]);
                                 return params;
                             }
                         };

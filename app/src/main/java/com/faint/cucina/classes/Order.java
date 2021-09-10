@@ -94,7 +94,24 @@ public class Order implements Parcelable {
         }
 
         if(!found) {
-            orderList.add(new OrderDish(1, dishToAdd.getName()));
+            orderList.add(new OrderDish(1, dishToAdd.getName(), dishToAdd.getPrice()));
+        }
+    }
+
+    public void addDish(OrderDish dishToAdd) {
+        boolean found = false;
+
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToAdd.getName())) {
+                found = true;
+                dish.setAmount(dish.getAmount() + dishToAdd.getAmount());
+
+                break;
+            }
+        }
+
+        if(!found) {
+            orderList.add(dishToAdd);
         }
     }
 
@@ -102,6 +119,20 @@ public class Order implements Parcelable {
         for(OrderDish dish : orderList) {
             if(dish.getName().equals(dishToRemove.getName())) {
                 dish.setAmount(dish.getAmount() - 1);
+
+                if(dish.getAmount() == 0) {
+                    orderList.remove(dish);
+                }
+
+                break;
+            }
+        }
+    }
+
+    public void removeDish(OrderDish dishToRemove) {
+        for(OrderDish dish : orderList) {
+            if(dish.getName().equals(dishToRemove.getName()) && dish.getAmount() >= dishToRemove.getAmount()) {
+                dish.setAmount(dish.getAmount() - dishToRemove.getAmount());
 
                 if(dish.getAmount() == 0) {
                     orderList.remove(dish);

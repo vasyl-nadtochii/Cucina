@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity
 
     private int currentPage;
 
+    public static boolean requestFinished;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +107,7 @@ public class MainActivity extends AppCompatActivity
         int newTheme = Integer.parseInt(prefs.getString("change_theme", "0"));
 
         if(newTheme != themeCode) {
-            Intent restartIntent = new Intent(this, StartActivity.class);
-            startActivity(restartIntent);
+            finishAffinity();
         }
         else if(dataChanged) {
             nameTxt.setText(user.getName());
@@ -131,79 +132,76 @@ public class MainActivity extends AppCompatActivity
             this.backPressedOnce = true;    // double click check
             Toast.makeText(this, R.string.press_again, Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    backPressedOnce = false;
-                }
-            }, 2000);
+            new Handler().postDelayed(() -> backPressedOnce = false, 2000);
         }
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.order:
-                if(currentPage != R.id.order) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace( R.id.fragment_container, new OrderFragment(false) )
-                            .commit();
+        if(requestFinished) {
+            switch (item.getItemId()) {
+                case R.id.order:
+                    if(currentPage != R.id.order) {
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace( R.id.fragment_container, new OrderFragment(false) )
+                                .commit();
 
-                    currentPage = R.id.order;
-                }
-                break;
-            case R.id.map:
-                if(currentPage != R.id.map) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, new MapFragment(false))
-                            .commit();
+                        currentPage = R.id.order;
+                    }
+                    break;
+                case R.id.map:
+                    if(currentPage != R.id.map) {
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new MapFragment(false))
+                                .commit();
 
-                    currentPage = R.id.map;
-                }
-                break;
-            case R.id.news:
-                if(currentPage != R.id.news) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, new NewsFragment())
-                            .commit();
-                    currentPage = R.id.news;
-                }
-                break;
-            case R.id.user_orders:
-                if(currentPage != R.id.user_orders) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_container, new UserOrdersFragment())
-                            .commit();
-                    currentPage = R.id.user_orders;
-                }
-                break;
-            case R.id.setts:
-                startActivity( new Intent(this, SettingsActivity.class) );
-                break;
-            case R.id.logout:
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        currentPage = R.id.map;
+                    }
+                    break;
+                case R.id.news:
+                    if(currentPage != R.id.news) {
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new NewsFragment())
+                                .commit();
+                        currentPage = R.id.news;
+                    }
+                    break;
+                case R.id.user_orders:
+                    if(currentPage != R.id.user_orders) {
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new UserOrdersFragment())
+                                .commit();
+                        currentPage = R.id.user_orders;
+                    }
+                    break;
+                case R.id.setts:
+                    startActivity( new Intent(this, SettingsActivity.class) );
+                    break;
+                case R.id.logout:
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setMessage(getString(R.string.logout_conf))
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                            public void onClick(final DialogInterface dialog, final int id) {
-                                UserDataSP.getInstance(getApplicationContext()).logout();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.no), null);
+                    builder.setMessage(getString(R.string.logout_conf))
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.yes), (dialog, id) ->
+                                    UserDataSP.getInstance(getApplicationContext()).logout(user.getCity()))
+                            .setNegativeButton(getString(R.string.no), null);
 
-                final AlertDialog alert = builder.create();
-                alert.show();
+                    final AlertDialog alert = builder.create();
+                    alert.show();
 
-                break;
+                    break;
+            }
+
+            drawer.closeDrawer(GravityCompat.START);
+
+            return true;
         }
 
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 }

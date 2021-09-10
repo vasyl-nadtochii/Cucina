@@ -66,43 +66,29 @@ public class UserOrdersFragment extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
 
         orderList = new ArrayList<>();
-        getOrders();
+        getOrders(false);
 
         refreshLayout = root.findViewById(R.id.refresh_layout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getOrders();
-                refreshLayout.setRefreshing(false);
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> getOrders(true));
 
         fab = root.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
+        fab.setOnClickListener(view -> {
+            final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
 
-                builder.setTitle("Удалить отклонённые заказы")
-                        .setMessage("Вы уверены, что хотите удалить все отклонённые заказы?")
-                        .setCancelable(true)
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                removeOrders(-1, -1);
-                            }
-                        })
-                        .setNegativeButton("Нет", null);
+            builder.setTitle("Удалить отклонённые заказы")
+                    .setMessage("Вы уверены, что хотите удалить все отклонённые заказы?")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", (dialogInterface, i) -> removeOrders(-1, -1))
+                    .setNegativeButton("Нет", null);
 
-                final AlertDialog alert = builder.create();
-                alert.show();
-            }
+            final AlertDialog alert = builder.create();
+            alert.show();
         });
 
         return root;
     }
 
-    private void getOrders() {
+    private void getOrders(boolean refreshing) {
         if (isNetworkAvailable()) {
             if(!orderList.isEmpty()) {
                 orderList.clear();
@@ -112,101 +98,98 @@ public class UserOrdersFragment extends Fragment {
             }
         }
 
+        MainActivity.requestFinished = false;
+
         String url = "https://cucinacafeapp.000webhostapp.com/getUserOrders.php";
         StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONArray(response);
+                response -> {
+                    try {
+                        JSONArray array = new JSONArray(response);
 
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
 
-                                String jsonDishes = object.getString("order_list");
-                                Gson gson = new Gson();
-                                Type listType = new TypeToken< ArrayList<OrderDish> >(){}.getType();
+                            String jsonDishes = object.getString("order_list");
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken< ArrayList<OrderDish> >(){}.getType();
 
-                                ArrayList<OrderDish> dishes = gson.fromJson(jsonDishes, listType);
-                                String orderClar = object.getString("order_clar");
-                                int orderCafeID = object.getInt("order_cafe_id");
-                                int state = object.getInt("state");
-                                int id = object.getInt("id");
+                            ArrayList<OrderDish> dishes = gson.fromJson(jsonDishes, listType);
+                            String orderClar = object.getString("order_clar");
+                            int orderCafeID = object.getInt("order_cafe_id");
+                            int state = object.getInt("state");
+                            int id = object.getInt("id");
 
-                                Order order = new Order(MainActivity.user.getName(), MainActivity.user.getPhone(),
-                                        dishes, orderClar, orderCafeID, state, id);
+                            Order order = new Order(MainActivity.user.getName(), MainActivity.user.getPhone(),
+                                    dishes, orderClar, orderCafeID, state, id);
 
-                                orderList.add(order);
-                            }
-
-                            fab.show();
-                        }
-                        catch (Exception e) {
-                            e.printStackTrace();
+                            orderList.add(order);
                         }
 
-                        if(orderList.size() == 0) {
-                            msg_layout.setVisibility(View.VISIBLE);
-                            listView.setVisibility(View.GONE);
-                        }
-                        else {
-                            adapter = new UserOrdersLVAdapter(requireContext(), orderList);
-                            listView.setAdapter(adapter);
-
-                            listView.setVisibility(View.VISIBLE);
-                            msg_layout.setVisibility(View.GONE);
-                        }
-                        
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
-                                final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
-
-                                StringBuilder dishesStr = new StringBuilder();
-                                for(int i = 0; i < orderList.get(pos).getOrderList().size(); i++) {
-                                    OrderDish dish = orderList.get(pos).getOrderList().get(i);
-
-                                    dishesStr.append( dish.getName() ).append(" - ").append( dish.getAmount() );
-
-                                    if(i != orderList.get(pos).getOrderList().size() - 1)
-                                        dishesStr.append("\n");
-                                }
-
-                                builder.setTitle("Ваш заказ")
-                                        .setMessage(dishesStr)
-                                        .setCancelable(true)
-                                        .setPositiveButton("Ok", null);
-
-                                if(orderList.get(pos).getState() > 2) {
-                                    builder.setNegativeButton("Удалить", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            removeOrders(orderList.get(pos).getId(), pos);
-                                        }
-                                    });
-                                }
-
-                                final AlertDialog alert = builder.create();
-                                alert.show();
-                            }
-                        });
-
-                        err_layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
+                        fab.show();
                     }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if(orderList.size() == 0) {
+                        msg_layout.setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.GONE);
+                    }
+                    else {
+                        adapter = new UserOrdersLVAdapter(requireContext(), orderList);
+                        listView.setAdapter(adapter);
+
+                        listView.setVisibility(View.VISIBLE);
+                        msg_layout.setVisibility(View.GONE);
+                    }
+
+                    listView.setOnItemClickListener((adapterView, view, pos, l) -> {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
+
+                        StringBuilder dishesStr = new StringBuilder();
+                        for(int i = 0; i < orderList.get(pos).getOrderList().size(); i++) {
+                            OrderDish dish = orderList.get(pos).getOrderList().get(i);
+
+                            dishesStr.append( dish.getName() ).append(" - ").append( dish.getAmount() );
+
+                            if(i != orderList.get(pos).getOrderList().size() - 1)
+                                dishesStr.append("\n");
+                        }
+
+                        builder.setTitle("Ваш заказ")
+                                .setMessage(dishesStr)
+                                .setCancelable(true)
+                                .setPositiveButton("Ok", null);
+
+                        if(orderList.get(pos).getState() > 2) {
+                            builder.setNegativeButton("Удалить", (dialogInterface, i) ->
+                                    removeOrders(orderList.get(pos).getId(), pos));
+                        }
+
+                        final AlertDialog alert = builder.create();
+                        alert.show();
+                    });
+
+                    err_layout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+
+                    if(refreshing) {
+                        refreshLayout.setRefreshing(false);
+                    }
+
+                    MainActivity.requestFinished = true;
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                error -> {
+                    Toast.makeText(requireActivity(),
+                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
 
-                        if(orderList.isEmpty()) {
-                            progressBar.setVisibility(View.GONE);
-                            listView.setVisibility(View.GONE);
-                            err_layout.setVisibility(View.VISIBLE);
-                        }
+                    if(orderList.isEmpty()) {
+                        progressBar.setVisibility(View.GONE);
+                        listView.setVisibility(View.GONE);
+                        err_layout.setVisibility(View.VISIBLE);
                     }
+
+                    MainActivity.requestFinished = true;
                 }
         ) {
             @Override
@@ -222,10 +205,10 @@ public class UserOrdersFragment extends Fragment {
     }
 
     private void removeOrders(final int id, final int pos) {
+        MainActivity.requestFinished = false;
+
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_REMOVE_ORDER,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
+                response -> {
                     if(response.trim().equals("1")) {
                         Toast.makeText(requireActivity(), "Успешно удалено!", Toast.LENGTH_SHORT).show();
 
@@ -248,16 +231,16 @@ public class UserOrdersFragment extends Fragment {
                     else {
                         Toast.makeText(requireActivity(), "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
                     }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+
+                    MainActivity.requestFinished = true;
+                },
+                error -> {
                     Toast.makeText(requireActivity(),
                             "Не удалось подключиться к серверу, проверьте интернет-соединение",
                             Toast.LENGTH_SHORT).show();
+
+                    MainActivity.requestFinished = true;
                 }
-            }
         ) {
             @Override
             protected Map<String, String> getParams() {

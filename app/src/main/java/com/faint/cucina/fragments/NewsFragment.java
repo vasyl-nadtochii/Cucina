@@ -19,12 +19,14 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.AnnouncementActivity;
+import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.adapters.NewsLVAdapter;
 import com.faint.cucina.adapters.NewsVPAdapter;
 import com.faint.cucina.classes.Announcement;
@@ -84,16 +86,10 @@ public class NewsFragment extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
 
         eventList = new ArrayList<>();
-        getNews();
+        getNews(false);
 
         refreshLayout = root.findViewById(R.id.refresh_layout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getNews();
-                refreshLayout.setRefreshing(false);
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> getNews(true));
 
         return root;
     }
@@ -119,7 +115,7 @@ public class NewsFragment extends Fragment {
         return newContent;
     }
 
-    private void getNews() {
+    private void getNews(boolean refreshing) {
         if (isNetworkAvailable()) {
             if(!eventList.isEmpty()) {
                 eventList.clear();
@@ -129,89 +125,90 @@ public class NewsFragment extends Fragment {
             }
         }
 
+        MainActivity.requestFinished = false;
+
         String url = "https://cucinacafeapp.000webhostapp.com/getNews.php";
         StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONArray(response);
+                response -> {
+                    try {
+                        JSONArray array = new JSONArray(response);
 
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
 
-                                int type = object.getInt("type");
-                                String header = object.getString("header");
-                                String content = formatContent(object.getString("content"));
-                                String img_url = object.getString("img_url");
-                                String end_date = object.getString("end_date");
+                            int type = object.getInt("type");
+                            String header = object.getString("header");
+                            String content = formatContent(object.getString("content"));
+                            String img_url = object.getString("img_url");
+                            String end_date = object.getString("end_date");
 
-                                Announcement announcement = new Announcement(img_url, type,
-                                        header, content, end_date);
+                            Announcement announcement = new Announcement(img_url, type,
+                                    header, content, end_date);
 
-                                eventList.add(announcement);
-                            }
+                            eventList.add(announcement);
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                        if(eventList.size() == 0) {
-                            msg_layout.setVisibility(View.VISIBLE);
-                            content_layout.setVisibility(View.GONE);
+                    if(eventList.size() == 0) {
+                        msg_layout.setVisibility(View.VISIBLE);
+                        content_layout.setVisibility(View.GONE);
+                    }
+                    else {
+                        Collections.reverse(eventList);
+
+                        if(eventList.size() >= 3) {
+                            List<Announcement> vpPart = eventList.subList(0, eventList.size() / 2);
+                            List<Announcement> lvPart = eventList.subList(eventList.size() / 2, eventList.size());
+
+                            newsLvAdapter = new NewsLVAdapter( new ArrayList<>(lvPart), getActivity() );
+                            newsVpAdapter = new NewsVPAdapter( new ArrayList<>(vpPart), getActivity() );
                         }
                         else {
-                            Collections.reverse(eventList);
-
-                            if(eventList.size() >= 3) {
-                                List<Announcement> vpPart = eventList.subList(0, eventList.size() / 2);
-                                List<Announcement> lvPart = eventList.subList(eventList.size() / 2, eventList.size());
-
-                                newsLvAdapter = new NewsLVAdapter( new ArrayList<>(lvPart), getActivity() );
-                                newsVpAdapter = new NewsVPAdapter( new ArrayList<>(vpPart), getActivity() );
-                            }
-                            else {
-                                newsLvAdapter = new NewsLVAdapter( eventList, getActivity() );
-                                newsVpAdapter = new NewsVPAdapter( eventList, getActivity() );
-                            }
-
-                            listView.setAdapter(newsLvAdapter);
-                            viewPager.setAdapter(newsVpAdapter);
-
-                            content_layout.setVisibility(View.VISIBLE);
-                            msg_layout.setVisibility(View.GONE);
+                            newsLvAdapter = new NewsLVAdapter( eventList, getActivity() );
+                            newsVpAdapter = new NewsVPAdapter( eventList, getActivity() );
                         }
 
-                        err_layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
+                        listView.setAdapter(newsLvAdapter);
+                        viewPager.setAdapter(newsVpAdapter);
 
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                                // transition with selected announcement
-                                if(eventList.size() >= 3) {
-                                    startActivity( getNewsIntent( getActivity(), pos,
-                                            new ArrayList<>(eventList.subList(eventList.size() / 2, eventList.size()))) );
-                                }
-                                else {
-                                    startActivity( getNewsIntent( getActivity(), pos, eventList) );
-                                }
-                            }
-                        });
+                        content_layout.setVisibility(View.VISIBLE);
+                        msg_layout.setVisibility(View.GONE);
                     }
+
+                    err_layout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+
+                    listView.setOnItemClickListener((adapterView, view, pos, l) -> {
+                        // transition with selected announcement
+                        if(eventList.size() >= 3) {
+                            startActivity( getNewsIntent( getActivity(), pos,
+                                    new ArrayList<>(eventList.subList(eventList.size() / 2, eventList.size()))) );
+                        }
+                        else {
+                            startActivity( getNewsIntent( getActivity(), pos, eventList) );
+                        }
+                    });
+
+                    if(refreshing) {
+                        refreshLayout.setRefreshing(false);
+                    }
+
+                    MainActivity.requestFinished = true;
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                error -> {
+                    Toast.makeText(requireActivity(),
+                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
 
-                        if(eventList.isEmpty()) {
-                            progressBar.setVisibility(View.GONE);
-                            content_layout.setVisibility(View.GONE);
-                            err_layout.setVisibility(View.VISIBLE);
-                        }
+                    if(eventList.isEmpty()) {
+                        progressBar.setVisibility(View.GONE);
+                        content_layout.setVisibility(View.GONE);
+                        err_layout.setVisibility(View.VISIBLE);
                     }
+
+                    MainActivity.requestFinished = true;
                 }
         ) {
             @Override
@@ -223,7 +220,7 @@ public class NewsFragment extends Fragment {
             }
         };
 
-        VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+        VolleySingleton.getInstance(requireActivity()).addToRequestQueue(request);
     }
 
     private boolean isNetworkAvailable() {

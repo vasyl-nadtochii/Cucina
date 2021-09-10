@@ -46,12 +46,7 @@ public class StartActivity extends AppCompatActivity {
             mainActIntent.putExtra("THEME", themeCode);
 
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(mainActIntent);
-                }
-            }, 250);
+            handler.postDelayed(() -> startActivity(mainActIntent), 100);
         }
         else {
             Intent loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);

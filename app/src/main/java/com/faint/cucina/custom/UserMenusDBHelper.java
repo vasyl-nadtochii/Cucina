@@ -56,7 +56,8 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "Успешно добавлено", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,
+                    "Меню успешно добавлено!", Toast.LENGTH_SHORT).show();
         }
     }
 

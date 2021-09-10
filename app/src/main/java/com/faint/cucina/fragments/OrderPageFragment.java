@@ -1,6 +1,8 @@
 package com.faint.cucina.fragments;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
+import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderLVAdapter;
 import com.faint.cucina.classes.Announcement;
@@ -66,10 +69,7 @@ public class OrderPageFragment extends Fragment {
     }
 
     private void getDishes() {
-        WifiManager wifi = (WifiManager)
-                requireActivity().getSystemService(Context.WIFI_SERVICE);
-
-        if (wifi.isWifiEnabled()) {
+        if (isNetworkAvailable()) {
             if(!dishList.isEmpty()) {
                 dishList.clear();
             }
@@ -78,75 +78,82 @@ public class OrderPageFragment extends Fragment {
             }
         }
 
+        MainActivity.requestFinished = false;
+
         String url = "https://cucinacafeapp.000webhostapp.com/getDishes.php";
         StringRequest request =
-            new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONArray array = new JSONArray(response);
+            new StringRequest(Request.Method.GET, url, response -> {
+                try {
+                    JSONArray array = new JSONArray(response);
 
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject object = array.getJSONObject(i);
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
 
-                            int category = object.getInt("category");
+                        int category = object.getInt("category");
 
-                            if(category == categoryCode) {
-                                String name = object.getString("name");
-                                String group = object.getString("dish_group");
-                                String desc = object.getString("description");
-                                String imgUrl = object.getString("img_url");
-                                int price = object.getInt("price");
+                        if(category == categoryCode) {
+                            String name = object.getString("name");
+                            String group = object.getString("dish_group");
+                            String desc = object.getString("description");
+                            String imgUrl = object.getString("img_url");
+                            int price = object.getInt("price");
 
-                                Dish dish = new Dish(name, desc, imgUrl, price);
+                            Dish dish = new Dish(name, desc, imgUrl, price);
 
-                                boolean foundGroup = false;
-                                if(dishList.size() != 0) {
-                                    for(DishGroup dishGroup : dishList) {
-                                        if(dishGroup.getName().equals(group)) {
-                                            foundGroup = true;
-                                            dishGroup.addDish(dish);
-                                        }
+                            boolean foundGroup = false;
+                            if(dishList.size() != 0) {
+                                for(DishGroup dishGroup : dishList) {
+                                    if(dishGroup.getName().equals(group)) {
+                                        foundGroup = true;
+                                        dishGroup.addDish(dish);
                                     }
                                 }
+                            }
 
-                                if(!foundGroup) {
-                                    ArrayList<Dish> dishes = new ArrayList<>();
-                                    dishes.add(dish);
+                            if(!foundGroup) {
+                                ArrayList<Dish> dishes = new ArrayList<>();
+                                dishes.add(dish);
 
-                                    DishGroup newDishGroup = new DishGroup(group, dishes);
-                                    dishList.add(newDishGroup);
-                                }
+                                DishGroup newDishGroup = new DishGroup(group, dishes);
+                                dishList.add(newDishGroup);
                             }
                         }
-
-                        listAdapter = new OrderLVAdapter(dishList, getActivity(), OrderFragment.forOrder);
-
-                        listView.setAdapter(listAdapter);
-
-                        progressBar.setVisibility(View.GONE);
-                        errorLayout.setVisibility(View.GONE);
-                        listView.setVisibility(View.VISIBLE);
                     }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
+                    listAdapter = new OrderLVAdapter(dishList, getActivity(), OrderFragment.forOrder);
+
+                    listView.setAdapter(listAdapter);
+
+                    progressBar.setVisibility(View.GONE);
+                    errorLayout.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+
+                    MainActivity.requestFinished = true;
                 }
-            },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, error -> {
+                    Toast.makeText(requireActivity(),
+                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
 
-                        if(dishList.isEmpty()) {
-                            progressBar.setVisibility(View.GONE);
-                            listView.setVisibility(View.GONE);
-                            errorLayout.setVisibility(View.VISIBLE);
-                        }
+                    if(dishList.isEmpty()) {
+                        progressBar.setVisibility(View.GONE);
+                        listView.setVisibility(View.GONE);
+                        errorLayout.setVisibility(View.VISIBLE);
                     }
-            });
+
+                    MainActivity.requestFinished = true;
+                });
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

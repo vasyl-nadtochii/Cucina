@@ -2,14 +2,12 @@ package com.faint.cucina.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,17 +15,13 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.DishDescActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.classes.Dish;
-import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.fragments.OrderFragment;
-import com.faint.cucina.fragments.OrderPageFragment;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class OrderVPAdapter extends PagerAdapter {
 
@@ -70,45 +64,41 @@ public class OrderVPAdapter extends PagerAdapter {
         Button plus, minus;
 
         plus = root.findViewById(R.id.btn_plus);
-        plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                counter[position]++;
-                counterView.setText(String.valueOf(counter[position]));
+        plus.setOnClickListener(view -> {
+            counter[position]++;
+            counterView.setText(String.valueOf(counter[position]));
 
-                OrderFragment.orderInterface.addDishToOrder(dishes.get(position));
+            OrderFragment.orderInterface.addDishToOrder(dishes.get(position));
 
-                if(!usesActivityList) {
-                    if(OrderFragment.orderList.size() == 1) {
-                        OrderFragment.orderInterface.showHideFAB(true);
-                    }
+            if(!usesActivityList) {
+                if(OrderFragment.orderList.size() == 1) {
+                    OrderFragment.orderInterface.showHideFABNext(true);
                 }
-                else {
-                    if(OrderActivity.order.getOrderList().size() == 1) {
-                        OrderFragment.orderInterface.showHideFAB(true);
-                    }
+            }
+            else {
+                if(OrderActivity.order.getOrderList().size() == 1) {
+                    OrderFragment.orderInterface.showHideFABNext(true);
                 }
             }
         });
 
         minus = root.findViewById(R.id.btn_minus);
-        minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (counter[position] > 0)
-                    counter[position]--;
+        minus.setOnClickListener(v -> {
+            if (counter[position] > 0) {
+                counter[position]--;
+
                 counterView.setText(String.valueOf(counter[position]));
 
                 OrderFragment.orderInterface.removeDishFromOrder(dishes.get(position));
 
                 if(!usesActivityList) {
                     if(OrderFragment.orderList.size() == 0) {
-                        OrderFragment.orderInterface.showHideFAB(false);
+                        OrderFragment.orderInterface.showHideFABNext(false);
                     }
                 }
                 else {
                     if(OrderActivity.order.getOrderList().size() == 0) {
-                        OrderFragment.orderInterface.showHideFAB(false);
+                        OrderFragment.orderInterface.showHideFABNext(false);
                     }
                 }
             }
@@ -123,17 +113,14 @@ public class OrderVPAdapter extends PagerAdapter {
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
 
-        root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DishDescActivity.class);
-                intent.putExtra("name", dishes.get(position).getName())
-                        .putExtra("desc", dishes.get(position).getDesc())
-                        .putExtra("imgUrl", dishes.get(position).getImgUrl())
-                        .putExtra("price", dishes.get(position).getPrice());
+        root.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DishDescActivity.class);
+            intent.putExtra("name", dishes.get(position).getName())
+                    .putExtra("desc", dishes.get(position).getDesc())
+                    .putExtra("imgUrl", dishes.get(position).getImgUrl())
+                    .putExtra("price", dishes.get(position).getPrice());
 
-                context.startActivity(intent);
-            }
+            context.startActivity(intent);
         });
 
         container.addView(root, 0);
