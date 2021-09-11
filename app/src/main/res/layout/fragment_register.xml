@@ -46,18 +46,6 @@
                 android:id="@+id/name_et"
                 android:layout_height="wrap_content"/>
 
-            <!--<EditText
-                android:layout_width="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="10dp"
-                android:singleLine="true"
-                android:textColor="@color/header_strong"
-                android:drawablePadding="2dp"
-                android:hint="@string/e_mail"
-                android:id="@+id/mail_et"
-                android:layout_height="wrap_content"/>-->
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
@@ -146,5 +134,16 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/loadingPB"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/header_strong"
+        android:visibility="invisible"/>
 
 </LinearLayout>

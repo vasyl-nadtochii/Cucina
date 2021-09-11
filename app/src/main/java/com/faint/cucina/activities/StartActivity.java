@@ -9,9 +9,20 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
+import com.faint.cucina.custom.VolleySingleton;
+import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -44,6 +55,39 @@ public class StartActivity extends AppCompatActivity {
         if(accExists) {
             final Intent mainActIntent = new Intent(getApplicationContext(), MainActivity.class);
             mainActIntent.putExtra("THEME", themeCode);
+
+            FirebaseMessaging
+                    .getInstance()
+                    .getToken()
+                    .addOnCompleteListener(task -> {
+
+                        if(!task.isSuccessful()) {
+                            return;
+                        }
+
+                        String token = task.getResult();
+
+                        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHECK_TOKEN,
+                                response -> {
+                                    if(!response.trim().equals("SUCCESS")) {
+                                        Log.d("BUG:", response);
+                                    }
+                                },
+                                error -> {
+                                    Log.d("ERR:", Objects.requireNonNull(error.getMessage()));
+                                })
+                        {
+                            @Override
+                            protected Map<String, String> getParams() {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("phone", UserDataSP.getInstance(getApplicationContext()).getUser().getPhone());
+                                params.put("token", token);
+                                return params;
+                            }
+                        };
+
+                        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+                    });
 
             Handler handler = new Handler();
             handler.postDelayed(() -> startActivity(mainActIntent), 100);

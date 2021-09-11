@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
     private EditText editTextUsername, editTextPassword, editTextPhone, editTextConfPassword;
     private String city;
     private CheckBox checkBox;
+    private ProgressBar progressBar;
+    private Button regBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,11 +59,12 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         editTextPassword = root.findViewById(R.id.pass_et);
         editTextConfPassword = root.findViewById(R.id.pass_conf_et);
         editTextPhone = root.findViewById(R.id.phone_et);
+        progressBar = root.findViewById(R.id.loadingPB);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        Button regBtn = root.findViewById(R.id.regBtn);
+        regBtn = root.findViewById(R.id.regBtn);
         regBtn.setOnClickListener(this);
 
         checkBox = root.findViewById(R.id.checkbox);
@@ -71,15 +75,6 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         city = String.valueOf(position + 1);
-
-        /*  CITY CODES:
-            Kyiv - 1
-            Kharkiv - 2
-            Lviv - 3
-            Dnipro - 4
-            Odesa - 5
-            Iv-Fr - 6
-            Kherson - 7  */
     }
 
     @Override
@@ -136,61 +131,63 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+        regBtn.setClickable(false);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_REGISTER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //converting response to json object
-                            JSONObject obj = new JSONObject(response);
-                            //if no error in response
-                            String msg;
-                            if (!obj.getBoolean("error")) {
-                                msg = "Регистрация прошла успешно";
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                response -> {
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+                        //if no error in response
+                        String msg;
+                        if (!obj.getBoolean("error")) {
+                            msg = "Регистрация прошла успешно";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
 
-                                //getting the user from the response
-                                JSONObject userJson = obj.getJSONObject("user");
+                            //getting the user from the response
+                            JSONObject userJson = obj.getJSONObject("user");
 
-                                //creating a new user object
-                                User user = new User(
-                                        userJson.getInt("id"),
-                                        userJson.getString("username"),
-                                        userJson.getString("phone"),
-                                        userJson.getString("city")
-                                );
+                            //creating a new user object
+                            User user = new User(
+                                    userJson.getInt("id"),
+                                    userJson.getString("username"),
+                                    userJson.getString("phone"),
+                                    userJson.getString("city")
+                            );
 
-                                //storing the user in shared preferences
-                                UserDataSP.getInstance(requireContext()).userLogin(user);
+                            //storing the user in shared preferences
+                            UserDataSP.getInstance(requireContext()).userLogin(user);
 
-                                //starting the profile activity
-                                requireActivity().finish();
-                                startActivity(new Intent(requireContext(), StartActivity.class));
-                            }
-                            else {    // if err occurred
-                                switch (obj.getString("message")) {
-                                    case "000":
-                                        msg = "Пользователь с такими данными уже зарегистрирован";
-                                        break;
-                                    case "010":
-                                        msg = "Запрашиваемые параметры недоступны. Повторите позже.";
-                                        break;
-                                    default:
-                                        msg = "Unexpected error.";
-                                        break;
-                                }
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            //starting the profile activity
+                            requireActivity().finish();
+                            startActivity(new Intent(requireContext(), StartActivity.class));
                         }
+                        else {    // if err occurred
+                            switch (obj.getString("message")) {
+                                case "000":
+                                    msg = "Пользователь с такими данными уже зарегистрирован";
+                                    break;
+                                case "010":
+                                    msg = "Запрашиваемые параметры недоступны. Повторите позже.";
+                                    break;
+                                default:
+                                    msg = "Unexpected error.";
+                                    break;
+                            }
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+                    progressBar.setVisibility(View.INVISIBLE);
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegFragment.this.requireContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                error -> {
+                    Toast.makeText(RegFragment.this.requireContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    progressBar.setVisibility(View.INVISIBLE);
+                    regBtn.setClickable(true);
                 }
         ) {
             @Override

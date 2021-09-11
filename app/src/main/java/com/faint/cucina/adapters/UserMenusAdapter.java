@@ -1,24 +1,35 @@
 package com.faint.cucina.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.classes.UserMenu;
+import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.login_register.URLs;
+import com.faint.cucina.login_register.UserDataSP;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.CustomViewHolder> {
 
@@ -60,57 +71,84 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
 
         holder.dishes.setText(dishesStr.toString());
 
-        holder.add.setOnClickListener(view -> {
-            counter[position]++;
-            holder.counterView.setText(String.valueOf(counter[position]));
-
-            OrderFragment.menusInterface.addUserDishToOrder(menus.get(position));
-
-            if(!usesActivityList) {
-                if(OrderFragment.orderList.size() == 1) {
-                    OrderFragment.orderInterface.showHideFABNext(true);
-                }
-            }
-            else {
-                if(OrderActivity.order.getOrderList().size() == 1) {
-                    OrderFragment.orderInterface.showHideFABNext(true);
-                }
-            }
-        });
-
-        holder.remove.setOnClickListener(view -> {
-            if (counter[position] > 0) {
-                counter[position]--;
-
-                holder.counterView.setText(String.valueOf(counter[position]));
-
-                OrderFragment.menusInterface.removeUserDishFromOrder(menus.get(position));
-
-                if(!usesActivityList) {
-                    if(OrderFragment.orderList.size() == 0) {
-                        OrderFragment.orderInterface.showHideFABNext(false);
-                    }
-                }
-                else {
-                    if(OrderActivity.order.getOrderList().size() == 0) {
-                        OrderFragment.orderInterface.showHideFABNext(false);
-                    }
-                }
-            }
-        });
-
         ArrayList<String> dishNames = new ArrayList<>();
         for(OrderDish dish : dishes) {
             dishNames.add(dish.getName());
         }
 
-        String jsonDishes = new Gson().toJson(dishNames);
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHECK_REMOVED_DISHES,
+                response -> {
+                    if(response.trim().equals("HAS_DELETED")) {
+                        holder.warnImg.setVisibility(View.VISIBLE);
+                        holder.warnImg.setOnClickListener(view -> {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(checkForDeletedDishes(jsonDishes)) {
-            holder.warnImg.setVisibility(View.VISIBLE);
-            holder.add.setClickable(false);
-            holder.remove.setClickable(false);
-        }
+                            builder.setTitle("Обнаружены удалённые блюда")
+                                    .setMessage("Похоже, в вашем пользовательском меню имеются удалённые блюда." +
+                                            " Проверьте состав меню и удалите более несуществующие блюда!")
+                                    .setCancelable(true)
+                                    .setPositiveButton("Ок", null);
+
+                            final AlertDialog alert = builder.create();
+                            alert.show();
+                        });
+
+                        holder.add.setClickable(false);
+                        holder.remove.setClickable(false);
+                    }
+                    else {
+                        holder.add.setOnClickListener(view -> {
+                            counter[position]++;
+                            holder.counterView.setText(String.valueOf(counter[position]));
+
+                            OrderFragment.menusInterface.addUserDishToOrder(menus.get(position));
+
+                            if(!usesActivityList) {
+                                if(OrderFragment.orderList.size() > 0) {
+                                    OrderFragment.orderInterface.showHideFABNext(true);
+                                }
+                            }
+                            else {
+                                if(OrderActivity.order.getOrderList().size() > 0) {
+                                    OrderFragment.orderInterface.showHideFABNext(true);
+                                }
+                            }
+                        });
+
+                        holder.remove.setOnClickListener(view -> {
+                            if (counter[position] > 0) {
+                                counter[position]--;
+
+                                holder.counterView.setText(String.valueOf(counter[position]));
+
+                                OrderFragment.menusInterface.removeUserDishFromOrder(menus.get(position));
+
+                                if(!usesActivityList) {
+                                    if(OrderFragment.orderList.size() == 0) {
+                                        OrderFragment.orderInterface.showHideFABNext(false);
+                                    }
+                                }
+                                else {
+                                    if(OrderActivity.order.getOrderList().size() == 0) {
+                                        OrderFragment.orderInterface.showHideFABNext(false);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                error ->
+                    Log.d("ERR:", Objects.requireNonNull(error.getMessage())))
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("dishes_json", new Gson().toJson(dishNames));
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     @Override
@@ -126,19 +164,14 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = (TextView) itemView.findViewById(R.id.name);
-            dishes = (TextView) itemView.findViewById(R.id.dishes);
-            counterView = (TextView) itemView.findViewById(R.id.counter);
+            name = itemView.findViewById(R.id.name);
+            dishes = itemView.findViewById(R.id.dishes);
+            counterView = itemView.findViewById(R.id.counter);
 
-            add = (Button) itemView.findViewById(R.id.btn_add);
-            remove = (Button) itemView.findViewById(R.id.btn_remove);
+            add = itemView.findViewById(R.id.btn_add);
+            remove = itemView.findViewById(R.id.btn_remove);
 
-            warnImg = (ImageView) itemView.findViewById(R.id.warning_img);
+            warnImg = itemView.findViewById(R.id.warning_img);
         }
-    }
-
-    private boolean checkForDeletedDishes(String jsonArray) {
-
-        return false;
     }
 }

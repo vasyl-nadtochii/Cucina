@@ -12,15 +12,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.User;
@@ -31,16 +27,16 @@ import com.faint.cucina.custom.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AuthorizationActivity extends AppCompatActivity
             implements View.OnKeyListener, View.OnClickListener {
 
-    TextView regLink;
-    EditText phoneEt, passEt;
-    Button loginBtn;
+    private EditText phoneEt, passEt;
+    private ProgressBar progressBar;
+    private Button loginBtn;
+    private TextView regLink;
 
     private boolean backPressedOnce = false;
 
@@ -50,10 +46,10 @@ public class AuthorizationActivity extends AppCompatActivity
         setContentView(R.layout.activity_authorization);
 
         regLink = findViewById(R.id.reg);
-
         phoneEt = findViewById(R.id.mail_et);
         passEt = findViewById(R.id.pass_et);
         loginBtn = findViewById(R.id.loginBtn);
+        progressBar = findViewById(R.id.loadingPB);
 
         phoneEt.setOnKeyListener(this);
         passEt.setOnKeyListener(this);
@@ -105,68 +101,65 @@ public class AuthorizationActivity extends AppCompatActivity
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+        loginBtn.setClickable(false);
+        regLink.setClickable(false);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //converting response to json object
-                            JSONObject obj = new JSONObject(response);
+                response -> {
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
 
-                            String msg;
-                            //if no error in response
-                            if (!obj.getBoolean("error")) {
+                        String msg;
+                        //if no error in response
+                        if (!obj.getBoolean("error")) {
 
-                                msg = "Авторизация прошла успешно";
-                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                            msg = "Авторизация прошла успешно";
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
-                                //getting the user from the response
-                                JSONObject userJson = obj.getJSONObject("user");
+                            //getting the user from the response
+                            JSONObject userJson = obj.getJSONObject("user");
 
-                                //creating a new user object
-                                User user = new User(
-                                        userJson.getInt("id"),
-                                        userJson.getString("username"),
-                                        userJson.getString("phone"),
-                                        userJson.getString("city")
-                                );
+                            //creating a new user object
+                            User user = new User(
+                                    userJson.getInt("id"),
+                                    userJson.getString("username"),
+                                    userJson.getString("phone"),
+                                    userJson.getString("city")
+                            );
 
-                                //storing the user in shared preferences
-                                UserDataSP.getInstance(getApplicationContext()).userLogin(user);
-                                //starting the profile activity
-                                finish();
-                                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+                            //storing the user in shared preferences
+                            UserDataSP.getInstance(getApplicationContext()).userLogin(user);
+                            //starting the profile activity
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), StartActivity.class));
+                        }
+                        else {
+                            if ("11".equals(obj.getString("message"))) {
+                                msg = "Неверно введён номер телефона или пароль";
                             }
                             else {
-                                if ("11".equals(obj.getString("message"))) {
-                                    msg = "Неверно введён номер телефона или пароль";
-                                }
-                                else {
-                                    msg = "Unexpected error.";
-                                }
-                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                msg = "Unexpected error.";
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+
                         }
+
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                error -> {
+                    Toast.makeText(getApplicationContext(),
+                            "Проверьте подключение к интернету", Toast.LENGTH_SHORT).show();
 
-                        NetworkResponse response = error.networkResponse;
-                        if (error instanceof ServerError && response != null) {
-                            try {
-                                String res = new String(response.data,
-                                        HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                                JSONObject obj = new JSONObject(res);
-                            } catch (UnsupportedEncodingException | JSONException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                    }
-                }) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    loginBtn.setClickable(true);
+                })
+        {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -189,11 +182,6 @@ public class AuthorizationActivity extends AppCompatActivity
         this.backPressedOnce = true;    // double click check
         Toast.makeText(this, R.string.press_again, Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                backPressedOnce = false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> backPressedOnce = false, 2000);
     }
 }

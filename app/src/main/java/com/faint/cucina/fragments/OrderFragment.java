@@ -138,14 +138,24 @@ public class OrderFragment extends Fragment {
             @Override
             public void addUserDishToOrder(UserMenu menu) {
                 for(OrderDish dish : menu.getDishes()) {
-                    addDish(dish);
+                    if(!forOrder) {
+                        addDish(dish);
+                    }
+                    else {
+                        OrderActivity.order.addDish(dish);
+                    }
                 }
             }
 
             @Override
             public void removeUserDishFromOrder(UserMenu menu) {
                 for(OrderDish dish : menu.getDishes()) {
-                    removeDish(dish);
+                    if(!forOrder) {
+                        removeDish(dish);
+                    }
+                    else {
+                        OrderActivity.order.removeDish(dish);
+                    }
                 }
             }
         };

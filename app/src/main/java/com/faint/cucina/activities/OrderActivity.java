@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,6 +50,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     int position = 0;
     private boolean showingBtn = false;
     public static String address;
+    private boolean hasDishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         User user = UserDataSP.getInstance(getApplicationContext()).getUser();
 
-        boolean hasDishes = getIntent().getBooleanExtra("HAS_DISHES", true);
+        hasDishes = getIntent().getBooleanExtra("HAS_DISHES", true);
         if(hasDishes) {
             ArrayList<OrderDish> orderList = getIntent().getParcelableArrayListExtra("ORDER_LIST");
             order = new Order(user.getName(), user.getPhone(), orderList, "", -1, 0, -1);
@@ -68,7 +68,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             int cafeID = getIntent().getIntExtra("CAFE_ID", -1);
             address = getIntent().getStringExtra("CAFE_ADDRESS");
 
-            order = new Order(user.getName(), user.getPhone(), new ArrayList<OrderDish>(), "", cafeID, 0, -1);
+            order = new Order(user.getName(), user.getPhone(), new ArrayList<>(), "", cafeID, 0, -1);
         }
 
         btn = findViewById(R.id.btn);
@@ -110,6 +110,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
         if(position == 0 || position == fragments.size() - 1) {
+            if(hasDishes) {
+                OrderFragment.orderList.clear();
+                OrderFragment.orderInterface.showHideFABNext(false);
+            }
+
             super.onBackPressed();
         }
         else {
@@ -126,7 +131,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 showingBtn = false;
                 btn.hide();
 
-                if(position == 0) {
+                if(position == 0 && !hasDishes) {
                     order.clearOrderList();
                 }
             }
@@ -163,7 +168,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             token[0] = task.getResult();
                         });
 
-                // here we should try to send order to db, then show successful or not really successful msg
                 StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_POST_ORDER,
                         response -> {
                             if(response.trim().equals("1")) {
@@ -185,12 +189,21 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             protected Map<String, String> getParams() {
                                 Gson gson = new Gson();
                                 Map<String, String> params = new HashMap<>();
+
+                                int price = 0;
+
+                                for(OrderDish dish : order.getOrderList()) {
+                                    price += dish.getPrice() * dish.getAmount();
+                                }
+
                                 params.put("order_name", order.getName());
                                 params.put("order_phone", order.getPhone());
                                 params.put("order_list", gson.toJson(order.getOrderList()));
                                 params.put("order_clar", order.getClarifications());
                                 params.put("order_cafe_id", String.valueOf(order.getCafeID()));
                                 params.put("order_token", token[0]);
+                                params.put("order_price", String.valueOf(price));
+
                                 return params;
                             }
                         };

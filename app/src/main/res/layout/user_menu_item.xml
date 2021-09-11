@@ -48,7 +48,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:layout_below="@+id/dishes"
                 android:layout_alignParentStart="true"
                 android:id="@+id/warning_img"

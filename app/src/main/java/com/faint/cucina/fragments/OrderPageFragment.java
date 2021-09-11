@@ -3,7 +3,6 @@ package com.faint.cucina.fragments;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
-import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderLVAdapter;
-import com.faint.cucina.classes.Announcement;
 import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.DishGroup;
 import com.faint.cucina.custom.VolleySingleton;
@@ -147,6 +142,14 @@ public class OrderPageFragment extends Fragment {
                 });
 
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(listAdapter != null)
+            listAdapter.notifyDataSetChanged();
     }
 
     private boolean isNetworkAvailable() {

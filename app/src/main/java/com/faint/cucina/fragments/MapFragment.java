@@ -3,7 +3,6 @@ package com.faint.cucina.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -30,8 +29,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.CafeActivity;
@@ -79,6 +76,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private LocationCallback locationCallback;
     private LocationManager locationManager;
 
+    private ViewGroup loadingLayout;
+
     private static final int REQUEST_CODE = 10001;
     private boolean initialized = false;
     private final boolean forOrder;
@@ -96,6 +95,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         infoTV = root.findViewById(R.id.cafe_info_tv);
         ViewGroup infoLayout = root.findViewById(R.id.infoField);
+        loadingLayout = root.findViewById(R.id.loadingLayout);
 
         if (forOrder)
             infoLayout.setVisibility(View.VISIBLE);
@@ -169,11 +169,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         builder.setMessage(getString(R.string.gps_notification))
                 .setCancelable(false)
-                .setPositiveButton(R.string.goto_sett, new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                });
+                .setPositiveButton(R.string.goto_sett,
+                        (dialog, id) -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
 
         final AlertDialog alert = builder.create();
         alert.show();
@@ -347,68 +344,72 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        final double latitude = marker.getPosition().latitude;
-        final double longitude = marker.getPosition().longitude;
+        if(loadingLayout.getVisibility() == View.GONE) {
+            final double latitude = marker.getPosition().latitude;
+            final double longitude = marker.getPosition().longitude;
 
-        MainActivity.requestFinished = false;
+            MainActivity.requestFinished = false;
+            loadingLayout.setVisibility(View.VISIBLE);
 
-        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFE_BY_POS,
-                response -> {
-                    try {
-                        if(!response.trim().equals("fail")) {
-                            JSONObject object = new JSONObject(response);
+            StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_CAFE_BY_POS,
+                    response -> {
+                        try {
+                            if (!response.trim().equals("fail")) {
+                                JSONObject object = new JSONObject(response);
 
-                            int state = object.getInt("state");
-                            String address = object.getString("address");
-                            int id = object.getInt("id");
+                                int state = object.getInt("state");
+                                String address = object.getString("address");
+                                int id = object.getInt("id");
 
-                            JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
-                            ArrayList<String> urlList = new ArrayList<>();
+                                JSONArray jsonArray = new JSONArray(object.getString("img_urls"));
+                                ArrayList<String> urlList = new ArrayList<>();
 
-                            for(int j = 0; j < jsonArray.length(); j++) {
-                                urlList.add(jsonArray.getString(j));
+                                for (int j = 0; j < jsonArray.length(); j++) {
+                                    urlList.add(jsonArray.getString(j));
+                                }
+
+                                Cafe chosenCafe = new Cafe(latitude, longitude, state, address, id, urlList);
+
+                                if (forOrder) {
+                                    OrderActivity.order.setCafeID(chosenCafe.getCafeID());
+                                    OrderActivity.address = chosenCafe.getAddress();
+
+                                    String info = "Выбрано: " + chosenCafe.getAddress();
+                                    infoTV.setText(info);
+
+                                    fabNext.show();
+                                } else {
+                                    Intent intent = new Intent(requireActivity(), CafeActivity.class);
+                                    intent.putExtra("CAFE", chosenCafe);
+                                    startActivity(intent);
+                                }
                             }
 
-                            Cafe chosenCafe = new Cafe(latitude, longitude, state, address, id, urlList);
-
-                            if(forOrder) {
-                                OrderActivity.order.setCafeID(chosenCafe.getCafeID());
-                                OrderActivity.address = chosenCafe.getAddress();
-
-                                String info = "Выбрано: " + chosenCafe.getAddress();
-                                infoTV.setText(info);
-
-                                fabNext.show();
-                            }
-                            else {
-                                Intent intent = new Intent(requireActivity(), CafeActivity.class);
-                                intent.putExtra("CAFE", chosenCafe);
-                                startActivity(intent);
-                            }
+                            MainActivity.requestFinished = true;
+                            loadingLayout.setVisibility(View.GONE);
                         }
-
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> {
+                        Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
                         MainActivity.requestFinished = true;
+                        loadingLayout.setVisibility(View.GONE);
                     }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> {
-                    Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
-                    MainActivity.requestFinished = true;
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("lat", String.valueOf(latitude));
+                    params.put("lng", String.valueOf(longitude));
+
+                    return params;
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("lat", String.valueOf(latitude));
-                params.put("lng", String.valueOf(longitude));
+            };
 
-                return params;
-            }
-        };
-
-        VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+            VolleySingleton.getInstance(requireContext()).addToRequestQueue(request);
+        }
 
         return true;
     }

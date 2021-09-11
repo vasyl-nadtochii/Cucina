@@ -21,4 +21,5 @@ public class URLs {
     public static final String URL_CHANGE_PHONE = URL_CHANGE_ROOT + "phone";
 
     public static final String URL_CHECK_TOKEN = "https://cucinacafeapp.000webhostapp.com/checkDeviceToken.php";
+    public static final String URL_CHECK_REMOVED_DISHES = "https://cucinacafeapp.000webhostapp.com/checkRemovedDishes.php";
 }

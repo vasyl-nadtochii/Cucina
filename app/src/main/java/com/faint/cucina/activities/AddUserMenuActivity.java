@@ -21,6 +21,7 @@ import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.UserMenu;
 import com.faint.cucina.custom.UserMenusDBHelper;
 import com.faint.cucina.custom.VolleySingleton;
+import com.faint.cucina.fragments.OrderFragment;
 import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -141,5 +142,16 @@ public class AddUserMenuActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // TODO: here we should check if Activity started from OrderFragment or CafeActivity
+        // TODO: or we can make AddUserMenuActivity FAB visible only from OrderFragment (?)
+
+        OrderFragment.orderList.clear();
+        OrderFragment.orderInterface.showHideFABNext(false);
+
+        super.onBackPressed();
     }
 }

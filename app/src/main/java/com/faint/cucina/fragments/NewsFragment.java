@@ -205,7 +205,12 @@ public class NewsFragment extends Fragment {
                     if(eventList.isEmpty()) {
                         progressBar.setVisibility(View.GONE);
                         content_layout.setVisibility(View.GONE);
+                        msg_layout.setVisibility(View.GONE);
                         err_layout.setVisibility(View.VISIBLE);
+                    }
+
+                    if(refreshing) {
+                        refreshLayout.setRefreshing(false);
                     }
 
                     MainActivity.requestFinished = true;
