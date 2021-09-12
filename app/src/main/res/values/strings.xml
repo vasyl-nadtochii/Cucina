@@ -69,7 +69,7 @@
 
     <string name="info7">Поспешите и присоединяйтесь к нашей дружной семье! Это займет не больше пары минут;)</string>
 
-    <string name="notify_changes">Изменения вступят в силу после закрытия настроек</string>
+    <string name="notify_changes">Изменения вступят в силу после перезапуска приложения</string>
     <string name="your_phone">Ваш телефон</string>
     <string name="logout">Выйти</string>
 

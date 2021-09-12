@@ -14,6 +14,9 @@ public class URLs {
 
     public static final String URL_REMOVE_ORDER = "https://cucinacafeapp.000webhostapp.com/removeOrder.php";
 
+    public static final String URL_GET_NEWS = "https://cucinacafeapp.000webhostapp.com/getNews.php";
+    public static final String URL_GET_DISHES = "https://cucinacafeapp.000webhostapp.com/getDishes.php";
+
     public static final String URL_CHANGE_ROOT = "https://cucinacafeapp.000webhostapp.com/changeUserData.php?apicall=";
     public static final String URL_CHANGE_NAME = URL_CHANGE_ROOT + "username";
     public static final String URL_CHANGE_PASSWORD = URL_CHANGE_ROOT + "password";

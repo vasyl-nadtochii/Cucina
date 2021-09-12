@@ -23,6 +23,7 @@ import com.faint.cucina.adapters.OrderLVAdapter;
 import com.faint.cucina.classes.Dish;
 import com.faint.cucina.classes.DishGroup;
 import com.faint.cucina.custom.VolleySingleton;
+import com.faint.cucina.login_register.URLs;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,9 +76,8 @@ public class OrderPageFragment extends Fragment {
 
         MainActivity.requestFinished = false;
 
-        String url = "https://cucinacafeapp.000webhostapp.com/getDishes.php";
         StringRequest request =
-            new StringRequest(Request.Method.GET, url, response -> {
+            new StringRequest(Request.Method.GET, URLs.URL_GET_DISHES, response -> {
                 try {
                     JSONArray array = new JSONArray(response);
 

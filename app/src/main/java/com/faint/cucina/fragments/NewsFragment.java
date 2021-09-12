@@ -30,6 +30,7 @@ import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.adapters.NewsLVAdapter;
 import com.faint.cucina.adapters.NewsVPAdapter;
 import com.faint.cucina.classes.Announcement;
+import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
 import com.faint.cucina.custom.VolleySingleton;
 
@@ -127,8 +128,7 @@ public class NewsFragment extends Fragment {
 
         MainActivity.requestFinished = false;
 
-        String url = "https://cucinacafeapp.000webhostapp.com/getNews.php";
-        StringRequest request = new StringRequest(Request.Method.POST, url,
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_NEWS,
                 response -> {
                     try {
                         JSONArray array = new JSONArray(response);

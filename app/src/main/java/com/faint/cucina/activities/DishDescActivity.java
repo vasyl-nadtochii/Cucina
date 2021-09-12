@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 import com.faint.cucina.R;
 import com.faint.cucina.classes.async.Translator;
+import com.faint.cucina.fragments.OrderFragment;
 import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -98,12 +98,9 @@ public class DishDescActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         finally {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    nameTV.setText(translatedName[0]);
-                                    descTV.setText(translatedDesc[0]);
-                                }
+                            runOnUiThread(() -> {
+                                nameTV.setText(translatedName[0]);
+                                descTV.setText(translatedDesc[0]);
                             });
 
                             if(translated)
@@ -114,5 +111,16 @@ public class DishDescActivity extends AppCompatActivity {
                 trThread.start();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // TODO: here we should check if Activity started from OrderFragment or CafeActivity
+        // TODO: or we can make UserMenuActivity FAB visible only from OrderFragment (?)
+
+        OrderFragment.orderList.clear();
+        OrderFragment.orderInterface.showHideFABNext(false);
+
+        super.onBackPressed();
     }
 }

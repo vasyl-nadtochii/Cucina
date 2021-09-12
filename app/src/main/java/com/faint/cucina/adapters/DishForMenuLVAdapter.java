@@ -12,29 +12,43 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.faint.cucina.R;
-import com.faint.cucina.activities.AddUserMenuActivity;
+import com.faint.cucina.activities.UserMenuActivity;
 import com.faint.cucina.classes.Dish;
-import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.classes.OrderDish;
 
 import java.util.ArrayList;
 
 public class DishForMenuLVAdapter extends ArrayAdapter<Dish> {
 
     private final ArrayList<Dish> dishes;
+    private ArrayList<OrderDish> dishesToUpdate;
+
     private final Context context;
 
     private final int[] counter;
 
     public DishForMenuLVAdapter(@NonNull Context context, ArrayList<Dish> dishes) {
         super(context, R.layout.order_vp_item, dishes);
+
         this.context = context;
         this.dishes = dishes;
+
+        counter = new int[dishes.size()];
+    }
+
+    // use this in case we wanna edit user menu
+    public DishForMenuLVAdapter(@NonNull Context context, ArrayList<Dish> dishes, ArrayList<OrderDish> dishesToUpdate) {
+        super(context, R.layout.order_vp_item, dishes);
+
+        this.context = context;
+        this.dishes = dishes;
+        this.dishesToUpdate = dishesToUpdate;
+
         counter = new int[dishes.size()];
     }
 
@@ -51,24 +65,39 @@ public class DishForMenuLVAdapter extends ArrayAdapter<Dish> {
 
         TextView name = root.findViewById(R.id.name);
         final TextView counterView = root.findViewById(R.id.counter);
-        TextView price = root.findViewById(R.id.price_field);
+
+        if(dishesToUpdate != null) {
+            UserMenuActivity.fab.show();
+
+            for(int i = 0; i < dishesToUpdate.size(); i++) {
+                if(dishesToUpdate.get(i).getName().equals(dishes.get(position).getName())) {
+                    counter[position] += dishesToUpdate.get(i).getAmount();
+                    break;
+                }
+            }
+        }
 
         counterView.setText(String.valueOf(counter[position]));
+
+        TextView price = root.findViewById(R.id.price_field);
 
         CardView cardView = root.findViewById(R.id.card);
         cardView.setCardBackgroundColor(context.getColor(R.color.card_bg));
 
         Button plus, minus;
 
+        root.findViewById(R.id.infoBtn).setVisibility(View.GONE);
+
         plus = root.findViewById(R.id.btn_plus);
         plus.setOnClickListener(view -> {
             counter[position]++;
             counterView.setText(String.valueOf(counter[position]));
 
-            AddUserMenuActivity.menu.addDish(dishes.get(position));
+            UserMenuActivity.menu.addDish(dishes.get(position));
 
-            if(AddUserMenuActivity.menu.getDishes().size() > 0) {
-                AddUserMenuActivity.fab.show();
+            if(UserMenuActivity.menu.getDishes().size() > 0) {
+                UserMenuActivity.fab.setClickable(true);
+                UserMenuActivity.fab.show();
             }
         });
 
@@ -79,10 +108,15 @@ public class DishForMenuLVAdapter extends ArrayAdapter<Dish> {
 
                 counterView.setText(String.valueOf(counter[position]));
 
-                AddUserMenuActivity.menu.removeDish(dishes.get(position));
+                UserMenuActivity.menu.removeDish(dishes.get(position));
 
-                if(AddUserMenuActivity.menu.getDishes().size() == 0) {
-                    AddUserMenuActivity.fab.hide();
+                if(UserMenuActivity.menu.getDishes().size() == 0) {
+                    UserMenuActivity.fab.setClickable(false);
+                    UserMenuActivity.fab.hide();
+                }
+                else if(dishesToUpdate != null && UserMenuActivity.menu.getDishes().size() > 0) {
+                    UserMenuActivity.fab.setClickable(true);
+                    UserMenuActivity.fab.show();
                 }
             }
         });

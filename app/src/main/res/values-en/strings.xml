@@ -50,7 +50,7 @@
     <string name="press_again">Press again to exit</string>
     <string name="gps_notification">It looks like you have GPS turned off. \n\nPlease turn it on in the settings to continue using the application.</string>
     <string name="goto_sett">Open Settings</string>
-    <string name="notify_changes">Changes will be applied after closing the settings</string>
+    <string name="notify_changes">Changes will take effect after restarting the application</string>
     <string name="your_phone">Your phone</string>
     <string name="kyiv">Kyiv</string>
     <string name="kharkiv">Kharkiv</string>

@@ -50,7 +50,7 @@
     <string name="reg_link">Не зареєстровані?\n <font color="#1E88E5">Створіть аккаунт зараз!</font> </string>
     <string name="gps_notification">Схоже, у вас відключено визначення місцезнаходження. \n\nБудь ласка, увімкніть його у налаштуваннях для продовження роботи програми.</string>
     <string name="goto_sett">До налаштувань</string>
-    <string name="notify_changes">Зміни вступлять в силу після виходу з налаштувань</string>
+    <string name="notify_changes">Зміни вступлять в силу після перезапуску застосунку</string>
     <string name="your_phone">Ваш телефон</string>
     <string name="kyiv">Київ</string>
     <string name="kharkiv">Харків</string>

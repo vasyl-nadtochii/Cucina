@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
         // setting controls for Action(Tool)Bar
@@ -110,8 +111,10 @@ public class MainActivity extends AppCompatActivity
             finishAffinity();
         }
         else if(dataChanged) {
+            String newPhone = "+" + user.getPhone();
+
             nameTxt.setText(user.getName());
-            phoneTxt.setText(user.getPhone());
+            phoneTxt.setText(newPhone);
             cityTxt.setText(themes[Integer.parseInt(user.getCity()) - 1]);
 
             dataChanged = false;

@@ -61,7 +61,7 @@ public class OrderVPAdapter extends PagerAdapter {
         CardView cardView = root.findViewById(R.id.card);
         cardView.setBackgroundResource(R.drawable.ripple);
 
-        Button plus, minus;
+        Button plus, minus, info;
 
         plus = root.findViewById(R.id.btn_plus);
         plus.setOnClickListener(view -> {
@@ -113,7 +113,8 @@ public class OrderVPAdapter extends PagerAdapter {
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
 
-        root.setOnClickListener(view -> {
+        info = root.findViewById(R.id.infoBtn);
+        info.setOnClickListener(view -> {
             Intent intent = new Intent(context, DishDescActivity.class);
             intent.putExtra("name", dishes.get(position).getName())
                     .putExtra("desc", dishes.get(position).getDesc())

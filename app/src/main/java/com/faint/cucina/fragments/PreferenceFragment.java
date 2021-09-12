@@ -2,14 +2,13 @@ package com.faint.cucina.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -17,22 +16,25 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
+import com.faint.cucina.custom.UserMenusDBHelper;
 import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private ListPreference themePref, citiesPref;
-    private EditTextPreference namePref, phonePref, passwordPref;
+    private EditTextPreference namePref;
+    private EditTextPreference phonePref;
 
     private String userPhone;
 
@@ -55,14 +57,11 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         themePref.setSummary(themes[posTheme]);
 
         // changing summary by interacting with preference
-        themePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                themePref.setSummary(themes[Integer.parseInt(newValue.toString())]);
-                notifyAboutChanges();
+        themePref.setOnPreferenceChangeListener((preference, newValue) -> {
+            themePref.setSummary(themes[Integer.parseInt(newValue.toString())]);
+            notifyAboutChanges();
 
-                return true;
-            }
+            return true;
         });
 
         userPhone = UserDataSP.getInstance(requireActivity()).getUser().getPhone();
@@ -71,87 +70,76 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         namePref = getPreferenceManager().findPreference("change_name");
         assert namePref != null;
         namePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getName());
-        namePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(newValue.toString().trim().length() > 0) {
-                    updateNameInDB(newValue.toString());
-                    return true;
-                }
-                else {
-                    return false;
-                }
+        namePref.setOnPreferenceChangeListener((preference, newValue) -> {
+
+            if(newValue.toString().trim().length() > 0) {
+                updateNameInDB(newValue.toString());
+                return true;
             }
-        });
-
-        // change the password pref
-        passwordPref = getPreferenceManager().findPreference("change_password");
-
-        // this code hides the password, because xml inputType doesn't work
-        assert passwordPref != null;
-        passwordPref.setText("");
-        passwordPref.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
-            @Override
-            public void onBindEditText(@NonNull EditText editText) {
-                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                editText.selectAll();
-
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(99)});
-            }
-        });
-
-        // and this code changes the password
-        passwordPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(newValue.toString().trim().length() > 0 &&
-                        newValue.toString().trim().matches("^[a-zA-Z0-9_]+$")) {
-                    updatePasswordInDB(newValue.toString());
-                }
-                else {
-                    Toast.makeText(requireActivity(),
-                            "В пароле могут использоваться только латинские символы, цифры и подчеркивания",
-                            Toast.LENGTH_SHORT).show();
-                }
-
+            else {
                 return false;
             }
         });
 
+        // change the password pref
+        EditTextPreference passwordPref = getPreferenceManager().findPreference("change_password");
+
+        // this code hides the password, because xml inputType doesn't work
+        assert passwordPref != null;
+        passwordPref.setText("");
+        passwordPref.setOnBindEditTextListener(editText -> {
+
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            editText.selectAll();
+
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(99)});
+        });
+
+        // and this code changes the password
+        passwordPref.setOnPreferenceChangeListener((preference, newValue) -> {
+
+            if(newValue.toString().trim().length() > 0 &&
+                    newValue.toString().trim().matches("^[a-zA-Z0-9_]+$")) {
+                updatePasswordInDB(newValue.toString());
+            }
+            else {
+                Toast.makeText(requireActivity(),
+                        "В пароле могут использоваться только латинские символы, цифры и подчеркивания",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            return false;
+        });
+
         phonePref = getPreferenceManager().findPreference("change_phone");
         assert phonePref != null;
+        phonePref.setOnBindEditTextListener(editText -> {
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE);
 
-        phonePref.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
-            @Override
-            public void onBindEditText(@NonNull EditText editText) {
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_PHONE);
-
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
-            }
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         });
 
         phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+        phonePref.setOnPreferenceChangeListener((preference, newValue) -> {
 
-        phonePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(newValue.toString().trim().length() == 12) {
-                    updatePhoneInDB(newValue.toString());
-                    return true;
-                }
-                else if(newValue.toString().trim().length() < 12) {
-                    Toast.makeText(requireActivity(),
-                            "Проверьте корректность ввода номера телефона",
-                            Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                else {
-                    Toast.makeText(requireActivity(),
-                            "В номере телефона могут использоваться только цифры",
-                            Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+            if(newValue.toString().trim().length() == 12 &&
+                    !newValue.equals(UserDataSP.getInstance(requireActivity()).getUser().getPhone())) {
+
+                updatePhoneInDB(newValue.toString());
+                return true;
+            }
+            else if(newValue.toString().trim().length() < 12) {
+                Toast.makeText(requireActivity(),
+                        "Проверьте корректность ввода номера телефона",
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            else {
+                Toast.makeText(requireActivity(),
+                        "В номере телефона могут использоваться только цифры",
+                        Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 
@@ -159,65 +147,75 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         citiesPref = getPreferenceManager().findPreference("change_city");
         assert citiesPref != null;
         citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
-        citiesPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(!newValue.toString().equals(UserDataSP.getInstance(requireContext()).getUser().getCity())) {
-                    updateCityInDB(newValue.toString());
-                    return true;
-                }
-                else
-                    return false;
+        citiesPref.setOnPreferenceChangeListener((preference, newValue) -> {
+
+            if(!newValue.toString().equals(UserDataSP.getInstance(requireContext()).getUser().getCity())) {
+                updateCityInDB(newValue.toString());
+                return true;
             }
+            else
+                return false;
         });
 
         // user agreement
         Preference userAgrPref = getPreferenceManager().findPreference("user_agreement");
         assert userAgrPref != null;
-        userAgrPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://neurosite.tilda.ws/template"));
-                startActivity(intent);
+        userAgrPref.setOnPreferenceClickListener(preference -> {
 
-                return true;
-            }
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://neurosite.tilda.ws/template"));
+            startActivity(intent);
+
+            return true;
+        });
+
+        Preference bugReportPref = getPreferenceManager().findPreference("bug_report");
+        assert bugReportPref != null;
+        bugReportPref.setOnPreferenceClickListener(preference -> {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MM.dd.yyyy HH:mm", Locale.getDefault());
+
+            Intent intent = new Intent (Intent.ACTION_SEND);
+            intent.setType("message/rfc822");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"faint.incorp@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT,
+                    "BUG REPORT - " + sdf.format(new Date()) + ". SDK ver. " + Build.VERSION.SDK_INT);
+            intent.putExtra(Intent.EXTRA_TEXT, "Describe your problem here");
+            intent.setPackage("com.google.android.gm");
+
+            if (intent.resolveActivity(requireActivity().getPackageManager()) != null)
+                startActivity(intent);
+            else
+                Toast.makeText(requireActivity(), "Gmail App is not installed", Toast.LENGTH_SHORT).show();
+
+            return true;
         });
     }
 
     private void updateNameInDB(final String newValue) {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_NAME,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            if(response.trim().equals("SUCCESS")) {
-                                namePref.setText(newValue);
-                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_USERNAME, newValue);
+                response -> {
+                    try {
+                        if(response.trim().equals("SUCCESS")) {
+                            namePref.setText(newValue);
+                            UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_USERNAME, newValue);
 
-                                MainActivity.user.setName(newValue);
-                                MainActivity.dataChanged = true;
+                            MainActivity.user.setName(newValue);
+                            MainActivity.dataChanged = true;
 
-                                Toast.makeText(requireActivity(), "Имя успешно обновлено!", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(requireActivity(),
-                                        response, Toast.LENGTH_SHORT).show();
-                            }
+                            Toast.makeText(requireActivity(), "Имя успешно обновлено!", Toast.LENGTH_SHORT).show();
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
+                        else {
+                            Toast.makeText(requireActivity(),
+                                    response, Toast.LENGTH_SHORT).show();
                         }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                error -> Toast.makeText(requireActivity(),
+                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -234,30 +232,22 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private void updatePasswordInDB(final String newValue) {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_PASSWORD,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            if(response.trim().equals("SUCCESS")) {
-                                Toast.makeText(requireActivity(), "Пароль успешно обновлён!", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(requireActivity(),
-                                        response, Toast.LENGTH_SHORT).show();
-                            }
+                response -> {
+                    try {
+                        if(response.trim().equals("SUCCESS")) {
+                            Toast.makeText(requireActivity(), "Пароль успешно обновлён!", Toast.LENGTH_SHORT).show();
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
+                        else {
+                            Toast.makeText(requireActivity(),
+                                    response, Toast.LENGTH_SHORT).show();
                         }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                error -> Toast.makeText(requireActivity(),
+                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -274,41 +264,33 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
     public void updateCityInDB(final String newValue) {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_CITY,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            if(response.trim().equals("SUCCESS")) {
-                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_CITY, newValue);
+                response -> {
+                    try {
+                        if(response.trim().equals("SUCCESS")) {
+                            UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_CITY, newValue);
 
-                                MainActivity.user.setCity(newValue);
-                                MainActivity.dataChanged = true;
+                            MainActivity.user.setCity(newValue);
+                            MainActivity.dataChanged = true;
 
-                                Toast.makeText(requireActivity(), "Город успешно обновлён!", Toast.LENGTH_SHORT).show();
-                            }
-                            else if(response.trim().equals("ACTIVE_ORDERS")) {
-                                Toast.makeText(requireActivity(),
-                                        "Вы не можете изменить город, пока у вас есть активные заказы!",
-                                        Toast.LENGTH_LONG).show();
-
-                                citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
-                            }
-                            else {
-                                Toast.makeText(requireActivity(), response, Toast.LENGTH_SHORT).show();
-                            }
+                            Toast.makeText(requireActivity(), "Город успешно обновлён!", Toast.LENGTH_SHORT).show();
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
+                        else if(response.trim().equals("ACTIVE_ORDERS")) {
+                            Toast.makeText(requireActivity(),
+                                    "Вы не можете изменить город, пока у вас есть активные заказы!",
+                                    Toast.LENGTH_LONG).show();
+
+                            citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
                         }
+                        else {
+                            Toast.makeText(requireActivity(), response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                error -> Toast.makeText(requireActivity(),
+                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -325,43 +307,46 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private void updatePhoneInDB(final String newValue) {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_PHONE,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            if(response.trim().equals("SUCCESS")) {
-                                phonePref.setText(newValue);
-                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_PHONE, newValue);
+                response -> {
+                    try {
+                        if(response.trim().equals("SUCCESS")) {
+                            phonePref.setText(newValue);
 
-                                MainActivity.user.setPhone(newValue);
-                                MainActivity.dataChanged = true;
+                            UserMenusDBHelper myDB = new UserMenusDBHelper(requireActivity());
+                            myDB.updatePhone(UserDataSP.getInstance(requireActivity()).getUser().getPhone(), newValue);
 
-                                Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
-                            }
-                            else if(response.trim().equals("ACTIVE_ORDERS")) {
-                                Toast.makeText(requireActivity(),
-                                        "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
-                                        Toast.LENGTH_LONG).show();
+                            UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_PHONE, newValue);
 
-                                phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
-                            }
-                            else {
-                                Toast.makeText(requireActivity(),
-                                        response, Toast.LENGTH_SHORT).show();
-                            }
+                            MainActivity.user.setPhone(newValue);
+                            MainActivity.dataChanged = true;
+
+                            Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
                         }
-                        catch (Exception e) {
-                            e.printStackTrace();
+                        else if(response.trim().equals("ACTIVE_ORDERS")) {
+                            Toast.makeText(requireActivity(),
+                                    "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
+                                    Toast.LENGTH_LONG).show();
+
+                            phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                         }
+                        else if(response.trim().equals("PHONE_TAKEN")) {
+                            Toast.makeText(requireActivity(),
+                                    "Введённый вами телефон уже зарегистрирован!",
+                                    Toast.LENGTH_LONG).show();
+
+                            phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+                        }
+                        else {
+                            Toast.makeText(requireActivity(),
+                                    response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireActivity(),
-                                "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                error -> Toast.makeText(requireActivity(),
+                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {

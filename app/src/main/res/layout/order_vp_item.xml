@@ -101,6 +101,13 @@
                     android:id="@+id/price_field"
                     android:textSize="18sp"/>
 
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_info_grey"
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/infoBtn"/>
+
             </LinearLayout>
 
         </RelativeLayout>

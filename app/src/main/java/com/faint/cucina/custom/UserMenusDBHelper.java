@@ -62,7 +62,7 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor readData() {
-        String query = "SELECT " + COLUMN_NAME + ", " + COLUMN_DISHES + " FROM " + TABLE_NAME + " WHERE "
+        String query = "SELECT " + COLUMN_ID + ", " + COLUMN_NAME + ", " + COLUMN_DISHES + " FROM " + TABLE_NAME + " WHERE "
                 + COLUMN_PHONE + " = " + UserDataSP.getInstance(context).getUser().getPhone();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -85,6 +85,36 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
         }
         else {
             Toast.makeText(context, "Успешно удалено", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateData(String row_id, String dishes, String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_DISHES, dishes);
+        cv.put(COLUMN_NAME, name);
+
+        long result = db.update(TABLE_NAME, cv, "_id=?", new String[] {row_id});
+
+        if(result == -1) {
+            Toast.makeText(context, "Произошла ошибка, попробуйте еще раз", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(context, "Меню успешно обновлено", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updatePhone(String oldPhone, String newPhone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_PHONE, newPhone);
+
+        long result = db.update(TABLE_NAME, cv, "phone=?", new String[] {oldPhone});
+
+        if(result == -1) {
+            Toast.makeText(context, "Произошла ошибка, попробуйте еще раз", Toast.LENGTH_SHORT).show();
         }
     }
 

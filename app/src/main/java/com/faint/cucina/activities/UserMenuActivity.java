@@ -18,10 +18,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.adapters.DishForMenuLVAdapter;
 import com.faint.cucina.classes.Dish;
+import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.classes.UserMenu;
 import com.faint.cucina.custom.UserMenusDBHelper;
 import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.fragments.OrderFragment;
+import com.faint.cucina.login_register.URLs;
 import com.faint.cucina.login_register.UserDataSP;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -31,7 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class AddUserMenuActivity extends AppCompatActivity {
+public class UserMenuActivity extends AppCompatActivity {
 
     private ListView listView;
     private ViewGroup errorLayout;
@@ -45,6 +47,8 @@ public class AddUserMenuActivity extends AppCompatActivity {
 
     public static UserMenu menu;
 
+    private boolean editing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,20 +60,38 @@ public class AddUserMenuActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.et_name);
         fab = findViewById(R.id.fab);
 
-        menu = new UserMenu(null, new ArrayList<>());
-        dishList = new ArrayList<>();
 
+        editing = getIntent().getBooleanExtra("EDITING", false);
+        if(!editing) {
+            menu = new UserMenu(null,null, new ArrayList<>());
+        }
+        else {
+            String name = getIntent().getStringExtra("NAME");
+            String id = getIntent().getStringExtra("ID");
+            ArrayList<OrderDish> menuDishes = getIntent().getParcelableArrayListExtra("DISH_LIST");
+
+            menu = new UserMenu(id, name, menuDishes);
+            nameEditText.setText(name);
+        }
+
+        dishList = new ArrayList<>();
         getDishes();
 
         fab.setOnClickListener(view -> {
             String name = nameEditText.getText().toString();
+
             if(name.length() > 0) {
                 menu.setName(name);
 
                 UserMenusDBHelper myDB = new UserMenusDBHelper(getApplicationContext());
 
-                myDB.addMenu(UserDataSP.getInstance(getApplicationContext()).getUser().getPhone(),
-                        new Gson().toJson(menu.getDishes()), menu.getName());
+                if(editing) {
+                    myDB.updateData(menu.getID(), new Gson().toJson(menu.getDishes()), name);
+                }
+                else {
+                    myDB.addMenu(UserDataSP.getInstance(getApplicationContext()).getUser().getPhone(),
+                            new Gson().toJson(menu.getDishes()), menu.getName());
+                }
 
                 finish();
             }
@@ -90,9 +112,8 @@ public class AddUserMenuActivity extends AppCompatActivity {
             }
         }
 
-        String url = "https://cucinacafeapp.000webhostapp.com/getDishes.php";
         StringRequest request =
-                new StringRequest(Request.Method.GET, url, response -> {
+                new StringRequest(Request.Method.GET, URLs.URL_GET_DISHES, response -> {
                     try {
                         JSONArray array = new JSONArray(response);
 
@@ -109,13 +130,19 @@ public class AddUserMenuActivity extends AppCompatActivity {
                             dishList.add(dish);
                         }
 
-                        listAdapter = new DishForMenuLVAdapter(AddUserMenuActivity.this, dishList);
+                        if(editing) {
+                            listAdapter = new DishForMenuLVAdapter(UserMenuActivity.this, dishList, menu.getDishes());
+                        }
+                        else {
+                            listAdapter = new DishForMenuLVAdapter(UserMenuActivity.this, dishList);
+                        }
 
                         progressBar.setVisibility(View.GONE);
                         errorLayout.setVisibility(View.GONE);
                         listView.setVisibility(View.VISIBLE);
 
                         listView.setAdapter(listAdapter);
+
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -147,7 +174,7 @@ public class AddUserMenuActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // TODO: here we should check if Activity started from OrderFragment or CafeActivity
-        // TODO: or we can make AddUserMenuActivity FAB visible only from OrderFragment (?)
+        // TODO: or we can make UserMenuActivity FAB visible only from OrderFragment (?)
 
         OrderFragment.orderList.clear();
         OrderFragment.orderInterface.showHideFABNext(false);

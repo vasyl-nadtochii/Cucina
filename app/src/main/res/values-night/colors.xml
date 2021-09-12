@@ -17,4 +17,5 @@
 
     <color name="cardBgPrimary">#1B1B1B</color>
     <color name="cardBgAccent">#CF7400</color>
+    <color name="mapLoadingBg">#0C1D1D1D</color>
 </resources>

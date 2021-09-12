@@ -50,7 +50,7 @@
     <string name="reg_link">Nie zarejestrowany?\n <font color="#1E88E5">Utwórz konto teraz!</font> </string>
     <string name="gps_notification">Wygląda na to, że masz wyłączone wykrywanie lokalizacji. \n\nWłącz ją w ustawieniach, aby kontynuować aplikację.</string>
     <string name="goto_sett">Do ustawień</string>
-    <string name="notify_changes">Zmiany zaczną obowiązywać po zamknięciu ustawień</string>
+    <string name="notify_changes">Zmiany zaczną obowiązywać po ponownym uruchomieniu aplikacji</string>
     <string name="your_phone">Twój numer telefonu</string>
     <string name="kyiv">Kijów</string>
     <string name="kharkiv">Charków</string>

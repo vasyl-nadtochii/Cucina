@@ -1,6 +1,8 @@
 package com.faint.cucina.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,12 +19,13 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.OrderActivity;
+import com.faint.cucina.activities.UserMenuActivity;
 import com.faint.cucina.classes.OrderDish;
 import com.faint.cucina.classes.UserMenu;
+import com.faint.cucina.custom.UserMenusDBHelper;
 import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.fragments.OrderFragment;
 import com.faint.cucina.login_register.URLs;
-import com.faint.cucina.login_register.UserDataSP;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -56,13 +58,17 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+        UserMenusDBHelper myDB = new UserMenusDBHelper(context);
+
         holder.name.setText(menus.get(position).getName());
 
         StringBuilder dishesStr = new StringBuilder();
         ArrayList<OrderDish> dishes = menus.get(position).getDishes();
 
         for(int i = 0; i < dishes.size(); i++) {
-            dishesStr.append(dishes.get(i).getName());
+            dishesStr.append(dishes.get(i).getName())
+                    .append(" - ")
+                    .append(dishes.get(i).getAmount());
 
             if(i != dishes.size() - 1) {
                 dishesStr.append("\n");
@@ -75,6 +81,34 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
         for(OrderDish dish : dishes) {
             dishNames.add(dish.getName());
         }
+
+        holder.deleteImg.setOnClickListener(view -> {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+            builder.setTitle("Удалить польз. меню")
+                    .setMessage("Вы уверены, что хотите удалить польз. меню \"" + menus.get(position).getName() + "\"?")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", (dialogInterface, i) -> {
+                        myDB.deleteOneRow(menus.get(position).getID());
+                        menus.remove(position);
+                        notifyDataSetChanged();
+                    })
+                    .setNegativeButton("Нет", null);
+
+            final AlertDialog alert = builder.create();
+            alert.show();
+        });
+
+        holder.editImg.setOnClickListener(view -> {
+            Intent intent = new Intent(context, UserMenuActivity.class);
+
+            intent.putExtra("EDITING", true);
+            intent.putExtra("ID", menus.get(position).getID());
+            intent.putExtra("NAME", menus.get(position).getName());
+            intent.putExtra("DISH_LIST", menus.get(position).getDishes());
+
+            context.startActivity(intent);
+        });
 
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHECK_REMOVED_DISHES,
                 response -> {
@@ -159,7 +193,7 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView name, dishes, counterView;
         Button add, remove;
-        ImageView warnImg;
+        ImageView warnImg, editImg, deleteImg;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -172,6 +206,8 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
             remove = itemView.findViewById(R.id.btn_remove);
 
             warnImg = itemView.findViewById(R.id.warning_img);
+            editImg = itemView.findViewById(R.id.editImg);
+            deleteImg = itemView.findViewById(R.id.delImg);
         }
     }
 }

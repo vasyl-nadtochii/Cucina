@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 public class UserMenu {
 
+    private final String id;
     private String name;
     private final ArrayList<OrderDish> dishes;
 
-    public UserMenu(String name, ArrayList<OrderDish> dishes) {
+    public UserMenu(String id, String name, ArrayList<OrderDish> dishes) {
+        this.id = id;
         this.name = name;
         this.dishes = dishes;
     }
@@ -39,6 +41,10 @@ public class UserMenu {
         if(!found) {
             dishes.add(new OrderDish(1, dishToAdd.getName(), dishToAdd.getPrice()));
         }
+    }
+
+    public String getID() {
+        return id;
     }
 
     public void removeDish(Dish dishToRemove) {

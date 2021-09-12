@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.faint.cucina.R;
-import com.faint.cucina.activities.AddUserMenuActivity;
+import com.faint.cucina.activities.UserMenuActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderPagerAdapter;
 import com.faint.cucina.classes.Dish;
@@ -51,7 +51,11 @@ public class OrderFragment extends Fragment {
         fabNext = root.findViewById(R.id.fabNext);
         fabAddMenu = root.findViewById(R.id.addMenu);
 
-        fabAddMenu.setOnClickListener(view -> startActivity(new Intent(requireActivity(), AddUserMenuActivity.class)));
+        fabAddMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(requireActivity(), UserMenuActivity.class);
+            intent.putExtra("EDITING", false);
+            startActivity(intent);
+        });
 
         List<Fragment> pages = new ArrayList<>();
         pages.add(new OrderPageFragment(1)); // 1 - ready-made
@@ -70,6 +74,7 @@ public class OrderFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 if(position == 2) {
+
                     fabAddMenu.show();
                 }
                 else {
@@ -127,10 +132,14 @@ public class OrderFragment extends Fragment {
 
             @Override
             public void showHideFABNext(boolean show) {
-                if (show)
+                if (show) {
+                    fabNext.setClickable(true);
                     fabNext.show();
-                else
+                }
+                else {
+                    fabNext.setClickable(false);
                     fabNext.hide();
+                }
             }
         };
 

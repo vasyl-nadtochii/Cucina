@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".activities.AddUserMenuActivity"
+            android:name=".activities.UserMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Universal"/>
 

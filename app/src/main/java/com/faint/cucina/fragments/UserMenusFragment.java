@@ -65,9 +65,9 @@ public class UserMenusFragment extends Fragment {
                 Gson gson = new Gson();
                 Type listType = new TypeToken< ArrayList<OrderDish> >(){}.getType();
 
-                ArrayList<OrderDish> dishes = gson.fromJson(cursor.getString(1), listType);
+                ArrayList<OrderDish> dishes = gson.fromJson(cursor.getString(2), listType);
 
-                menus.add(new UserMenu(cursor.getString(0), dishes));
+                menus.add(new UserMenu(cursor.getString(0), cursor.getString(1), dishes));
             }
 
             recyclerView.setAdapter(new UserMenusAdapter(menus, requireContext(), OrderFragment.forOrder));

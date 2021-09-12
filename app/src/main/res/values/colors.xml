@@ -9,7 +9,7 @@
     <color name="yellow">#E4A205</color>
     <color name="layout_background">#F3F3F3</color>
     <color name="header_strong">@android:color/black</color>
-    <color name="header_weak">#4E4E4E</color>
+    <color name="header_weak">#5C5C5C</color>
     <color name="bg_auth_card">#FFF1B1</color>
     <color name="pure">#ffffff</color>
     <color name="start_bg">#ffffff</color>
@@ -18,4 +18,5 @@
 
     <color name="cardBgPrimary">#FDEBC6</color>
     <color name="cardBgAccent">#D5EBFF</color>
+    <color name="mapLoadingBg">#0CE19E00</color>
 </resources>
