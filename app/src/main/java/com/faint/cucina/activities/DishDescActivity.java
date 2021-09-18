@@ -115,10 +115,12 @@ public class DishDescActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO: here we should check if Activity started from OrderFragment or CafeActivity
-        // TODO: or we can make UserMenuActivity FAB visible only from OrderFragment (?)
-
-        OrderFragment.orderList.clear();
+        if(OrderFragment.orderList != null) {
+            OrderFragment.orderList.clear();
+        }
+        if(OrderActivity.order != null) {
+            OrderActivity.order.clearOrderList();
+        }
         OrderFragment.orderInterface.showHideFABNext(false);
 
         super.onBackPressed();

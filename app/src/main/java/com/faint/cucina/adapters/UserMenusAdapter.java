@@ -1,8 +1,8 @@
 package com.faint.cucina.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,9 @@ import com.faint.cucina.custom.VolleySingleton;
 import com.faint.cucina.fragments.OrderFragment;
 import com.faint.cucina.login_register.URLs;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,25 +62,25 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         UserMenusDBHelper myDB = new UserMenusDBHelper(context);
 
+        holder.warnImg.setVisibility(View.GONE);
         holder.name.setText(menus.get(position).getName());
 
-        StringBuilder dishesStr = new StringBuilder();
-        ArrayList<OrderDish> dishes = menus.get(position).getDishes();
+        final StringBuilder[] dishesStr = {new StringBuilder()};
 
-        for(int i = 0; i < dishes.size(); i++) {
-            dishesStr.append(dishes.get(i).getName())
+        for(int i = 0; i < menus.get(position).getDishes().size(); i++) {
+            dishesStr[0].append(menus.get(position).getDishes().get(i).getName())
                     .append(" - ")
-                    .append(dishes.get(i).getAmount());
+                    .append(menus.get(position).getDishes().get(i).getAmount());
 
-            if(i != dishes.size() - 1) {
-                dishesStr.append("\n");
+            if(i != menus.get(position).getDishes().size() - 1) {
+                dishesStr[0].append("\n");
             }
         }
 
-        holder.dishes.setText(dishesStr.toString());
+        holder.dishes.setText(dishesStr[0].toString());
 
         ArrayList<String> dishNames = new ArrayList<>();
-        for(OrderDish dish : dishes) {
+        for(OrderDish dish : menus.get(position).getDishes()) {
             dishNames.add(dish.getName());
         }
 
@@ -112,16 +114,29 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
 
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHECK_REMOVED_DISHES,
                 response -> {
-                    if(response.trim().equals("HAS_DELETED")) {
+                    if(!response.trim().equals("OK")) {
+                        Type listType = new TypeToken< ArrayList<String> >(){}.getType();
+                        ArrayList<String> deletedNames = new Gson().fromJson(response, listType);
+
                         holder.warnImg.setVisibility(View.VISIBLE);
                         holder.warnImg.setOnClickListener(view -> {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                             builder.setTitle("Обнаружены удалённые блюда")
                                     .setMessage("Похоже, в вашем пользовательском меню имеются удалённые блюда." +
-                                            " Проверьте состав меню и удалите более несуществующие блюда!")
+                                            " Нажмите кнопку УДАЛИТЬ, чтобы удалить несуществующие блюда")
                                     .setCancelable(true)
-                                    .setPositiveButton("Ок", null);
+                                    .setPositiveButton("УДАЛИТЬ",
+                                        (dialogInterface, p) -> {
+                                            if(menus.get(position).getDishes().size() == deletedNames.size()) {
+                                                myDB.deleteOneRow(menus.get(position).getID());
+                                                menus.remove(position);
+                                            }
+                                            else {
+                                                menus.get(position).setDishes(removeDeleted(menus.get(position).getID(), deletedNames));
+                                            }
+                                            notifyDataSetChanged();
+                                        });
 
                             final AlertDialog alert = builder.create();
                             alert.show();
@@ -131,6 +146,10 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
                         holder.remove.setClickable(false);
                     }
                     else {
+                        holder.warnImg.setVisibility(View.GONE);
+                        holder.add.setClickable(true);
+                        holder.remove.setClickable(true);
+
                         holder.add.setOnClickListener(view -> {
                             counter[position]++;
                             holder.counterView.setText(String.valueOf(counter[position]));
@@ -188,6 +207,40 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
     @Override
     public int getItemCount() {
         return menus.size();
+    }
+
+    private ArrayList<OrderDish> removeDeleted(String id, ArrayList<String> deletedNames) {
+        UserMenusDBHelper myDB = new UserMenusDBHelper(context);
+
+        Cursor cursor = myDB.getDishes(id);
+        ArrayList<OrderDish> dishes = new ArrayList<>();
+
+        if(cursor != null) {
+            cursor.moveToFirst();
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<OrderDish> >(){}.getType();
+
+            dishes = gson.fromJson(cursor.getString(0), listType);
+
+            for(String deletedName : deletedNames) {
+                for(int i = 0; i < dishes.size(); i++) {
+                    OrderDish dish = dishes.get(i);
+
+                    if(dish.getName().equals(deletedName)) {
+                        dishes.remove(i);
+                        i--;
+                    }
+                }
+            }
+
+            myDB.setDishes(id, dishes);
+        }
+        else {
+            Log.d("BUG", "Cursor is null");
+        }
+
+        return dishes;
     }
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {

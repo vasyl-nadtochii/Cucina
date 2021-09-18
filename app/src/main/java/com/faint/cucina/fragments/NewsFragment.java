@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -19,10 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.AnnouncementActivity;
@@ -47,7 +43,7 @@ public class NewsFragment extends Fragment {
 
     public static ArrayList<Announcement> eventList;
 
-    private NewsVPAdapter newsVpAdapter;     //ViewPager adapter
+    private NewsVPAdapter newsVpAdapter;     // ViewPager adapter
     private NewsLVAdapter newsLvAdapter;    // ListView adapter
 
     private ViewPager viewPager;
@@ -76,7 +72,7 @@ public class NewsFragment extends Fragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
             }
         });
 

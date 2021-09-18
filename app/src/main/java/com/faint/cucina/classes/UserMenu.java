@@ -6,7 +6,7 @@ public class UserMenu {
 
     private final String id;
     private String name;
-    private final ArrayList<OrderDish> dishes;
+    private ArrayList<OrderDish> dishes;
 
     public UserMenu(String id, String name, ArrayList<OrderDish> dishes) {
         this.id = id;
@@ -45,6 +45,10 @@ public class UserMenu {
 
     public String getID() {
         return id;
+    }
+
+    public void setDishes(ArrayList<OrderDish> dishes) {
+        this.dishes = dishes;
     }
 
     public void removeDish(Dish dishToRemove) {

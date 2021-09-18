@@ -36,8 +36,6 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     private EditTextPreference namePref;
     private EditTextPreference phonePref;
 
-    private String userPhone;
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.main_settings);
@@ -63,8 +61,6 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
             return true;
         });
-
-        userPhone = UserDataSP.getInstance(requireActivity()).getUser().getPhone();
 
         // change username pref
         namePref = getPreferenceManager().findPreference("change_name");
@@ -122,12 +118,14 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
         phonePref.setOnPreferenceChangeListener((preference, newValue) -> {
-
             if(newValue.toString().trim().length() == 12 &&
                     !newValue.equals(UserDataSP.getInstance(requireActivity()).getUser().getPhone())) {
 
                 updatePhoneInDB(newValue.toString());
                 return true;
+            }
+            else if(newValue.equals(UserDataSP.getInstance(requireActivity()).getUser().getPhone())) {
+                return false;
             }
             else if(newValue.toString().trim().length() < 12) {
                 Toast.makeText(requireActivity(),
@@ -220,7 +218,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phone", userPhone);
+                params.put("phone", UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                 params.put("username", newValue);
 
                 return params;
@@ -252,7 +250,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phone", userPhone);
+                params.put("phone", UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                 params.put("password", newValue);
 
                 return params;
@@ -295,7 +293,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phone", userPhone);
+                params.put("phone", UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                 params.put("city", newValue);
 
                 return params;
@@ -309,36 +307,38 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_CHANGE_PHONE,
                 response -> {
                     try {
-                        if(response.trim().equals("SUCCESS")) {
-                            phonePref.setText(newValue);
+                        switch (response.trim()) {
+                            case "SUCCESS":
+                                phonePref.setText(newValue);
 
-                            UserMenusDBHelper myDB = new UserMenusDBHelper(requireActivity());
-                            myDB.updatePhone(UserDataSP.getInstance(requireActivity()).getUser().getPhone(), newValue);
+                                UserMenusDBHelper myDB = new UserMenusDBHelper(requireActivity());
+                                myDB.updatePhone(UserDataSP.getInstance(requireActivity()).getUser().getPhone(), newValue);
 
-                            UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_PHONE, newValue);
+                                UserDataSP.getInstance(requireContext()).changeData(UserDataSP.KEY_PHONE, newValue);
 
-                            MainActivity.user.setPhone(newValue);
-                            MainActivity.dataChanged = true;
+                                MainActivity.user.setPhone(newValue);
+                                MainActivity.dataChanged = true;
 
-                            Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
-                        }
-                        else if(response.trim().equals("ACTIVE_ORDERS")) {
-                            Toast.makeText(requireActivity(),
-                                    "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
-                                    Toast.LENGTH_LONG).show();
+                                Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "ACTIVE_ORDERS":
+                                Toast.makeText(requireActivity(),
+                                        "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
+                                        Toast.LENGTH_LONG).show();
 
-                            phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
-                        }
-                        else if(response.trim().equals("PHONE_TAKEN")) {
-                            Toast.makeText(requireActivity(),
-                                    "Введённый вами телефон уже зарегистрирован!",
-                                    Toast.LENGTH_LONG).show();
+                                phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+                                break;
+                            case "PHONE_TAKEN":
+                                Toast.makeText(requireActivity(),
+                                        "Введённый вами телефон уже зарегистрирован!",
+                                        Toast.LENGTH_LONG).show();
 
-                            phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
-                        }
-                        else {
-                            Toast.makeText(requireActivity(),
-                                    response, Toast.LENGTH_SHORT).show();
+                                phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
+                                break;
+                            default:
+                                Toast.makeText(requireActivity(),
+                                        response, Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     }
                     catch (Exception e) {
@@ -351,7 +351,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phone", userPhone);
+                params.put("phone", UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                 params.put("new_phone", newValue);
 
                 return params;

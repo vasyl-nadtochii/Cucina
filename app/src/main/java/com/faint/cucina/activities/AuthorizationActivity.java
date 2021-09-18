@@ -144,6 +144,8 @@ public class AuthorizationActivity extends AppCompatActivity
                             }
                             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
+                            loginBtn.setClickable(true);
+                            regLink.setClickable(true);
                         }
 
                         progressBar.setVisibility(View.INVISIBLE);

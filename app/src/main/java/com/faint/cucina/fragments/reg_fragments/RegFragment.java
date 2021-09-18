@@ -100,7 +100,7 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         }
 
         if (TextUtils.isEmpty(phone)) {
-            editTextPassword.setError("Введите номер телефона!");
+            editTextPhone.setError("Введите номер телефона!");
             editTextPassword.requestFocus();
             return;
         }
@@ -176,6 +176,8 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                                     break;
                             }
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+
+                            regBtn.setClickable(true);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
