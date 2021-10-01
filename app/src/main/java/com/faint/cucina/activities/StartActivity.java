@@ -72,10 +72,11 @@ public class StartActivity extends AppCompatActivity {
                                     if(!response.trim().equals("SUCCESS")) {
                                         Log.d("BUG:", response);
                                     }
+                                    else {
+                                        mainActIntent.putExtra("TOKEN", token);
+                                    }
                                 },
-                                error -> {
-                                    Log.d("ERR:", Objects.requireNonNull(error.getMessage()));
-                                })
+                                error -> Log.d("ERR:", Objects.requireNonNull(error.getMessage())))
                         {
                             @Override
                             protected Map<String, String> getParams() {
@@ -90,7 +91,7 @@ public class StartActivity extends AppCompatActivity {
                     });
 
             Handler handler = new Handler();
-            handler.postDelayed(() -> startActivity(mainActIntent), 100);
+            handler.postDelayed(() -> startActivity(mainActIntent), 150);
         }
         else {
             Intent loginIntent = new Intent(getApplicationContext(), AuthorizationActivity.class);

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     public static int themeCode;
     private boolean backPressedOnce = false;
     public static boolean dataChanged;
+    public static String TOKEN;
     private String[] themes;
 
     private int currentPage;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         dataChanged = false;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        TOKEN = getIntent().getStringExtra("TOKEN");
         themeCode = getIntent().getIntExtra("THEME", 0);
         user = UserDataSP.getInstance(this).getUser();
 

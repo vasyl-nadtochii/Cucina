@@ -35,7 +35,6 @@ public class PhotoVPAdapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.photo_vp_item, container, false);
 
         ImageView imageView = view.findViewById(R.id.img);
-        //imageView.setImageDrawable( photos.get(position) );
         Glide.with(context)
                 .load(photos_urls.get(position))
                 .transition(DrawableTransitionOptions.withCrossFade())

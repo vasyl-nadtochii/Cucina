@@ -32,17 +32,17 @@
         <EditTextPreference
             android:key="change_phone"
             android:inputType="phone"
-            android:summary="Введите новый номер телефона"
-            android:title="Изменить номер телефона"/>
+            android:summary="@string/enter_new_phone"
+            android:title="@string/change_phone"/>
 
         <ListPreference
-            android:dialogTitle="Выберите город"
+            android:dialogTitle="@string/change_city"
             android:key="change_city"
             android:entries="@array/cities"
             android:defaultValue="0"
             android:entryValues="@array/city_entries"
-            android:title="Изменить город"
-            android:summary="Выберите новый город из списка"/>
+            android:title="@string/change_city"
+            android:summary="@string/enter_new_city"/>
 
     </PreferenceCategory>
 

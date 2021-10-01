@@ -86,7 +86,7 @@
                 android:backgroundTint="#3737FF"
                 android:id="@+id/track_btn"
                 android:textColor="@android:color/white"
-                android:text="Проложить маршрут"/>
+                android:text="@string/make_route"/>
 
             <Button
                 android:layout_width="match_parent"

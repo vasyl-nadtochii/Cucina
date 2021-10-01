@@ -90,13 +90,13 @@ public class AuthorizationActivity extends AppCompatActivity
         final String password = passEt.getText().toString();
 
         if (TextUtils.isEmpty(phone)) {
-            phoneEt.setError("Пожалуйста, введите номер телефона");
+            phoneEt.setError(getString(R.string.empty_phone));
             phoneEt.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            passEt.setError("Пожалуйста, введите пароль");
+            passEt.setError(getString(R.string.empty_password));
             passEt.requestFocus();
             return;
         }
@@ -115,7 +115,7 @@ public class AuthorizationActivity extends AppCompatActivity
                         //if no error in response
                         if (!obj.getBoolean("error")) {
 
-                            msg = "Авторизация прошла успешно";
+                            msg = getString(R.string.success_auth);
                             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
                             //getting the user from the response
@@ -137,7 +137,7 @@ public class AuthorizationActivity extends AppCompatActivity
                         }
                         else {
                             if ("11".equals(obj.getString("message"))) {
-                                msg = "Неверно введён номер телефона или пароль";
+                                msg = getString(R.string.incorrect_auth);
                             }
                             else {
                                 msg = "Unexpected error.";
@@ -156,7 +156,7 @@ public class AuthorizationActivity extends AppCompatActivity
                 },
                 error -> {
                     Toast.makeText(getApplicationContext(),
-                            "Проверьте подключение к интернету", Toast.LENGTH_SHORT).show();
+                            getString(R.string.network_err), Toast.LENGTH_SHORT).show();
 
                     progressBar.setVisibility(View.INVISIBLE);
                     loginBtn.setClickable(true);

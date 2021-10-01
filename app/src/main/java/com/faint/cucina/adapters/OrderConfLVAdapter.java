@@ -41,7 +41,7 @@ public class OrderConfLVAdapter extends ArrayAdapter<OrderDish> {
 
         name.setText(list.get(position).getName());
 
-        String amountStr = "Количество: " + list.get(position).getAmount();
+        String amountStr = context.getString(R.string.amount) + ": " + list.get(position).getAmount();
         amount.setText(amountStr);
 
         return view;

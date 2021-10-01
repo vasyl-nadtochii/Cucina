@@ -130,7 +130,7 @@ public class OrderPageFragment extends Fragment {
                 }
             }, error -> {
                     Toast.makeText(requireActivity(),
-                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
 
                     if(dishList.isEmpty()) {
                         progressBar.setVisibility(View.GONE);

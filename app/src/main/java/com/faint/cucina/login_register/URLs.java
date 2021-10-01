@@ -8,6 +8,7 @@ public class URLs {
 
     public static final String URL_POST_ORDER = "https://cucinacafeapp.000webhostapp.com/postOrder.php";
     public static final String URL_POST_COMPLAINT = "https://cucinacafeapp.000webhostapp.com/postComplaint.php";
+    public static final String URL_GET_ORDERS = "https://cucinacafeapp.000webhostapp.com/getUserOrders.php";
 
     public static final String URL_GET_CAFES = "https://cucinacafeapp.000webhostapp.com/getCafes.php";
     public static final String URL_GET_CAFE_BY_POS = "https://cucinacafeapp.000webhostapp.com/getCafeByLatLng.php";

@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
+        tools:node="merge"
         android:usesCleartextTraffic="true">
 
         <activity

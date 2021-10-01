@@ -73,12 +73,9 @@ public class NewsVPAdapter extends PagerAdapter {
                 .into(imageView);
 
         // Item onClickListener
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // also transition with selected announcement
-                context.startActivity( NewsFragment.getNewsIntent(context, position, events) );
-            }
+        view.setOnClickListener(view1 -> {
+            // also transition with selected announcement
+            context.startActivity( NewsFragment.getNewsIntent(context, position, events) );
         });
 
         container.addView(view, 0);

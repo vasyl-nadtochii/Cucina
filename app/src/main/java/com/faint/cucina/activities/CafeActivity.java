@@ -65,17 +65,14 @@ public class CafeActivity extends AppCompatActivity {
         Button complaintBtn = findViewById(R.id.complaint_btn);
         Button trackBtn = findViewById(R.id.track_btn);
 
-        complaintBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ComplaintActivity.class);
+        complaintBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ComplaintActivity.class);
 
-                assert cafe != null;
-                intent.putExtra("CAFE_ID", cafe.getCafeID());
-                intent.putExtra("USER_NAME", UserDataSP.getInstance(getApplicationContext()).getUser().getName());
+            assert cafe != null;
+            intent.putExtra("CAFE_ID", cafe.getCafeID());
+            intent.putExtra("USER_NAME", UserDataSP.getInstance(getApplicationContext()).getUser().getName());
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
 
         assert cafe != null;
@@ -88,59 +85,53 @@ public class CafeActivity extends AppCompatActivity {
                 state.setTextColor(getColor(R.color.green));
                 break;
             case 2:
-                state.setText("◉ Работаем на вынос");
+                state.setText("◉ " + getString(R.string.takeaway));
                 state.setTextColor(getColor(R.color.yellow));
                 break;
             case 3:
-                state.setText("◉ Скоро закрываемся");
+                state.setText("◉ " + getString(R.string.closing));
                 state.setTextColor(getColor(R.color.orange));
                 orderBtn.setVisibility(View.GONE);
                 break;
         }
 
-        orderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CafeActivity.this, OrderActivity.class);
-                intent.putExtra("HAS_DISHES", false);
-                intent.putExtra("CAFE_ID", cafe.getCafeID());
-                intent.putExtra("CAFE_ADDRESS", cafe.getAddress());
+        orderBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(CafeActivity.this, OrderActivity.class);
+            intent.putExtra("HAS_DISHES", false);
+            intent.putExtra("CAFE_ID", cafe.getCafeID());
+            intent.putExtra("CAFE_ADDRESS", cafe.getAddress());
+
+            startActivity(intent);
+        });
+
+        trackBtn.setOnClickListener(view -> {
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+            // we gave location permission before, so there is no need to request it again
+            @SuppressLint("MissingPermission")
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            assert location != null;
+            double userLatitude = location.getLatitude();
+            double userLongitude = location.getLongitude();
+
+            try {
+                Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + userLatitude
+                    + "," + userLongitude + "/" + cafe.getLatitude() + "," + cafe.getLongitude());
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.google.android.apps.maps");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 startActivity(intent);
             }
-        });
+            catch (ActivityNotFoundException e) {
+                Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
 
-        trackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                // we gave location permission before, so there is no need to request it again
-                @SuppressLint("MissingPermission")
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                assert location != null;
-                double userLatitude = location.getLatitude();
-                double userLongitude = location.getLongitude();
-
-                try {
-                    Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + userLatitude
-                        + "," + userLongitude + "/" + cafe.getLatitude() + "," + cafe.getLongitude());
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    intent.setPackage("com.google.android.apps.maps");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    startActivity(intent);
-                }
-                catch (ActivityNotFoundException e) {
-                    Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    startActivity(intent);
-                }
+                startActivity(intent);
             }
         });
 
@@ -149,15 +140,12 @@ public class CafeActivity extends AppCompatActivity {
         viewPager.setAdapter(photoVPAdapter);
 
         handler = new Handler();
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(!touched)
-                    touched = true;
-                handler.removeCallbacks(runnable);
+        viewPager.setOnTouchListener((view, motionEvent) -> {
+            if(!touched)
+                touched = true;
+            handler.removeCallbacks(runnable);
 
-                return false;
-            }
+            return false;
         });
     }
 

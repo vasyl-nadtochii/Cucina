@@ -118,7 +118,8 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
                             android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"/>
+                            android:layout_marginEnd="10dp"
+                            tools:ignore="HardcodedText" />
 
                 </androidx.cardview.widget.CardView>
 

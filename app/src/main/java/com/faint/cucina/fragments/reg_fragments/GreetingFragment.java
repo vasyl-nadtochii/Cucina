@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.faint.cucina.R;
 import com.plattysoft.leonids.ParticleSystem;
 
-import java.util.Objects;
 
 public class GreetingFragment extends Fragment {
 
@@ -30,24 +29,21 @@ public class GreetingFragment extends Fragment {
         txt = root.findViewById(R.id.txt);
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                new ParticleSystem(requireActivity(),
-                        25, R.drawable.particle_red, 3000)
-                        .setSpeedRange(0.2f, 0.5f)
-                        .oneShot(txt, 25);
+        handler.postDelayed(() -> {
+            new ParticleSystem(requireActivity(),
+                    25, R.drawable.particle_red, 3000)
+                    .setSpeedRange(0.2f, 0.5f)
+                    .oneShot(txt, 25);
 
-                new ParticleSystem(requireActivity(),
-                        25, R.drawable.particle_green, 1500)
-                        .setSpeedRange(0.2f, 0.5f)
-                        .oneShot(txt, 25);
+            new ParticleSystem(requireActivity(),
+                    25, R.drawable.particle_green, 1500)
+                    .setSpeedRange(0.2f, 0.5f)
+                    .oneShot(txt, 25);
 
-                new ParticleSystem(requireActivity(),
-                        25, R.drawable.particle_blue, 1500)
-                        .setSpeedRange(0.2f, 0.4f)
-                        .oneShot(txt, 25);
-            }
+            new ParticleSystem(requireActivity(),
+                    25, R.drawable.particle_blue, 1500)
+                    .setSpeedRange(0.2f, 0.4f)
+                    .oneShot(txt, 25);
         }, 150);
 
         return root;

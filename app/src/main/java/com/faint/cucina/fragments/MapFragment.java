@@ -93,11 +93,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         View root = inflater.inflate(R.layout.fragment_map, container, false);
 
+        String info = requireActivity().getString(R.string.chosen) + " " + requireActivity().getString(R.string.nothing);
         infoTV = root.findViewById(R.id.cafe_info_tv);
+        infoTV.setText(info);
+
         ViewGroup infoLayout = root.findViewById(R.id.infoField);
         loadingLayout = root.findViewById(R.id.loadingLayout);
 
-        if (forOrder)
+        if(forOrder)
             infoLayout.setVisibility(View.VISIBLE);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
@@ -265,7 +268,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     }
                 },
                 error -> {
-                    Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
                     MainActivity.requestFinished = true;
                 }
         ) {
@@ -309,7 +312,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
         else if(view.getId() == R.id.fabUpdate) {
             myGmap.clear();
-            getCafes();     // i`m not sure about that
+            getCafes();
         }
     }
 
@@ -374,7 +377,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                     OrderActivity.order.setCafeID(chosenCafe.getCafeID());
                                     OrderActivity.address = chosenCafe.getAddress();
 
-                                    String info = "Выбрано: " + chosenCafe.getAddress();
+                                    String info = requireActivity().getString(R.string.chosen) + " " + chosenCafe.getAddress();
                                     infoTV.setText(info);
 
                                     fabNext.show();
@@ -393,7 +396,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         }
                     },
                     error -> {
-                        Toast.makeText(requireActivity(), "Не удалось подключиться к серверу!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
                         MainActivity.requestFinished = true;
                         loadingLayout.setVisibility(View.GONE);
                     }

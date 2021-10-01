@@ -196,7 +196,7 @@ public class NewsFragment extends Fragment {
                 },
                 error -> {
                     Toast.makeText(requireActivity(),
-                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
 
                     if(eventList.isEmpty()) {
                         progressBar.setVisibility(View.GONE);

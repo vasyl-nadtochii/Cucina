@@ -101,7 +101,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             }
             else {
                 Toast.makeText(requireActivity(),
-                        "В пароле могут использоваться только латинские символы, цифры и подчеркивания",
+                        requireActivity().getString(R.string.password_alert),
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -129,13 +129,13 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             }
             else if(newValue.toString().trim().length() < 12) {
                 Toast.makeText(requireActivity(),
-                        "Проверьте корректность ввода номера телефона",
+                        requireActivity().getString(R.string.phone_alert1),
                         Toast.LENGTH_SHORT).show();
                 return false;
             }
             else {
                 Toast.makeText(requireActivity(),
-                        "В номере телефона могут использоваться только цифры",
+                        requireActivity().getString(R.string.phone_alert2),
                         Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -178,13 +178,13 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"faint.incorp@gmail.com"});
             intent.putExtra(Intent.EXTRA_SUBJECT,
                     "BUG REPORT - " + sdf.format(new Date()) + ". SDK ver. " + Build.VERSION.SDK_INT);
-            intent.putExtra(Intent.EXTRA_TEXT, "Describe your problem here");
+            intent.putExtra(Intent.EXTRA_TEXT, requireActivity().getString(R.string.describe_problem));
             intent.setPackage("com.google.android.gm");
 
             if (intent.resolveActivity(requireActivity().getPackageManager()) != null)
                 startActivity(intent);
             else
-                Toast.makeText(requireActivity(), "Gmail App is not installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "GMail App is not installed", Toast.LENGTH_SHORT).show();
 
             return true;
         });
@@ -201,7 +201,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                             MainActivity.user.setName(newValue);
                             MainActivity.dataChanged = true;
 
-                            Toast.makeText(requireActivity(), "Имя успешно обновлено!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), requireActivity().getString(R.string.name_updated), Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(requireActivity(),
@@ -213,7 +213,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     }
                 },
                 error -> Toast.makeText(requireActivity(),
-                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
+                        requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -233,7 +233,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 response -> {
                     try {
                         if(response.trim().equals("SUCCESS")) {
-                            Toast.makeText(requireActivity(), "Пароль успешно обновлён!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), requireActivity().getString(R.string.password_updated), Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(requireActivity(),
@@ -245,7 +245,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     }
                 },
                 error -> Toast.makeText(requireActivity(),
-                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
+                        requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -270,11 +270,12 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                             MainActivity.user.setCity(newValue);
                             MainActivity.dataChanged = true;
 
-                            Toast.makeText(requireActivity(), "Город успешно обновлён!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(),
+                                    requireActivity().getString(R.string.city_updated), Toast.LENGTH_SHORT).show();
                         }
                         else if(response.trim().equals("ACTIVE_ORDERS")) {
                             Toast.makeText(requireActivity(),
-                                    "Вы не можете изменить город, пока у вас есть активные заказы!",
+                                    requireActivity().getString(R.string.cant_change_city),
                                     Toast.LENGTH_LONG).show();
 
                             citiesPref.setValueIndex(Integer.parseInt(UserDataSP.getInstance(requireActivity()).getUser().getCity()) - 1);
@@ -288,7 +289,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     }
                 },
                 error -> Toast.makeText(requireActivity(),
-                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
+                        requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -319,18 +320,18 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                                 MainActivity.user.setPhone(newValue);
                                 MainActivity.dataChanged = true;
 
-                                Toast.makeText(requireActivity(), "Номер телефона успешно обновлен!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireActivity(), requireActivity().getString(R.string.phone_changed), Toast.LENGTH_SHORT).show();
                                 break;
                             case "ACTIVE_ORDERS":
                                 Toast.makeText(requireActivity(),
-                                        "Вы не можете изменить номер телефона, пока у вас есть активные заказы!",
+                                        requireActivity().getString(R.string.has_active_orders),
                                         Toast.LENGTH_LONG).show();
 
                                 phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
                                 break;
                             case "PHONE_TAKEN":
                                 Toast.makeText(requireActivity(),
-                                        "Введённый вами телефон уже зарегистрирован!",
+                                        requireActivity().getString(R.string.phone_exists),
                                         Toast.LENGTH_LONG).show();
 
                                 phonePref.setText(UserDataSP.getInstance(requireActivity()).getUser().getPhone());
@@ -346,7 +347,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                     }
                 },
                 error -> Toast.makeText(requireActivity(),
-                        "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show()
+                        requireActivity().getString(R.string.network_err), Toast.LENGTH_SHORT).show()
         ) {
             @Override
             protected Map<String, String> getParams() {

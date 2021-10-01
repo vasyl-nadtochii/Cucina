@@ -47,7 +47,7 @@ public class DishDescActivity extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         desc = getIntent().getStringExtra("desc");
         imgUrl = getIntent().getStringExtra("imgUrl");
-        price = "Цена: " + getIntent().getIntExtra("price", -1) + " UAH";
+        price = getString(R.string.price) + ": " + getIntent().getIntExtra("price", -1) + " UAH";
 
         Glide.with(this)
                 .load(imgUrl)

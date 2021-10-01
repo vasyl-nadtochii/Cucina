@@ -58,7 +58,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Похоже, новых новостей нет"
+                    android:text="@string/no_news"
                     android:layout_gravity="center_horizontal"
                     android:textAlignment="center"
                     android:textSize="20sp"
@@ -84,7 +84,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Проверьте интернет-соединение"
+                    android:text="@string/network_err"
                     android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:textSize="20sp"

@@ -1,6 +1,5 @@
 package com.faint.cucina.custom;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,13 +9,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.faint.cucina.R;
 import com.faint.cucina.classes.OrderDish;
-import com.faint.cucina.classes.UserMenu;
 import com.faint.cucina.login_register.UserDataSP;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class UserMenusDBHelper extends SQLiteOpenHelper {
@@ -60,12 +57,13 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
 
         long result = db.insert(TABLE_NAME, null, cv);
 
+        assert context != null;
         if(result == -1) {
-            Toast.makeText(context, "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.sqlite_error), Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(context,
-                    "Меню успешно добавлено!", Toast.LENGTH_SHORT).show();
+                    context.getString(R.string.menu_added), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -88,11 +86,12 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
 
         long result = db.delete(TABLE_NAME, "_id=?", new String[]{ row_id });
 
+        assert context != null;
         if(result == -1) {
-            Toast.makeText(context, "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.sqlite_error), Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "Успешно удалено", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -105,11 +104,12 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[] {row_id});
 
+        assert context != null;
         if(result == -1) {
-            Toast.makeText(context, "Произошла ошибка, попробуйте еще раз", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.sqlite_error), Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "Меню успешно обновлено", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -121,8 +121,9 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME, cv, "phone=?", new String[] {oldPhone});
 
+        assert context != null;
         if(result == -1) {
-            Toast.makeText(context, "Произошла ошибка, попробуйте еще раз", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.sqlite_error), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -148,11 +149,12 @@ public class UserMenusDBHelper extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[] {id});
 
+        assert context != null;
         if(result == -1) {
-            Toast.makeText(context, "Произошла ошибка, попробуйте еще раз", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.sqlite_error), Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "Успешно удалено", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
         }
     }
 

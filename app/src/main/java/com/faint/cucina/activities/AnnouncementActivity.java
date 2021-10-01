@@ -104,12 +104,9 @@ public class AnnouncementActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         finally {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    title.setText(translatedTitle[0]);
-                                    desc.setText(translatedDesc[0]);
-                                }
+                            runOnUiThread(() -> {
+                                title.setText(translatedTitle[0]);
+                                desc.setText(translatedDesc[0]);
                             });
 
                             if(translated)

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -156,17 +158,21 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             if(position == 3) {
                 final String[] token = new String[1];
 
-                FirebaseMessaging
-                        .getInstance()
-                        .getToken()
-                        .addOnCompleteListener(task -> {
+                if(MainActivity.TOKEN == null) {
+                    FirebaseMessaging
+                            .getInstance()
+                            .getToken()
+                            .addOnCompleteListener(task -> {
 
-                            if(!task.isSuccessful()) {
-                                return;
-                            }
+                                if(!task.isSuccessful()) {
+                                    Log.d("BUG", "token not received");
+                                    return;
+                                }
 
-                            token[0] = task.getResult();
-                        });
+                                token[0] = task.getResult();
+                                Log.d("TOKEN", token[0]);
+                            });
+                }
 
                 StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_POST_ORDER,
                         response -> {
@@ -179,10 +185,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             else {
                                 ResultFragment.msgUI.showFailUI();
                                 Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                                Log.d("BUG", response);
                             }
                         },
                         error -> {
                             Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("BUG", Objects.requireNonNull(error.getMessage()));
                             ResultFragment.msgUI.showFailUI();
                         }) {
                             @Override
@@ -201,7 +209,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 params.put("order_list", gson.toJson(order.getOrderList()));
                                 params.put("order_clar", order.getClarifications());
                                 params.put("order_cafe_id", String.valueOf(order.getCafeID()));
-                                params.put("order_token", token[0]);
+
+                                if(MainActivity.TOKEN == null)
+                                    params.put("order_token", token[0]);
+                                else
+                                    params.put("order_token", MainActivity.TOKEN);
+
                                 params.put("order_price", String.valueOf(price));
 
                                 return params;

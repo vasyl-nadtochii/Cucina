@@ -1,20 +1,17 @@
 package com.faint.cucina.fragments.order_conf_fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.faint.cucina.R;
-import com.faint.cucina.activities.MainActivity;
 import com.faint.cucina.activities.OrderActivity;
 import com.faint.cucina.adapters.OrderConfLVAdapter;
-import com.faint.cucina.classes.Cafe;
 
 public class ConfFragment extends Fragment {
 
@@ -33,10 +30,10 @@ public class ConfFragment extends Fragment {
 
         OrderConfLVAdapter adapter = new OrderConfLVAdapter(requireActivity(), OrderActivity.order.getOrderList());
 
-        String addressStr = "Адрес заказа: " + OrderActivity.address;
+        String addressStr = requireActivity().getString(R.string.address) + " " + OrderActivity.address;
         addressTV.setText(addressStr);
 
-        String clarStr = "Уточнения к заказу: " + OrderActivity.order.getClarifications();
+        String clarStr = requireActivity().getString(R.string.clarification) + " " + OrderActivity.order.getClarifications();
         clarificationTV.setText(clarStr);
 
         orderLV.setAdapter(adapter);

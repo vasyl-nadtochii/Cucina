@@ -46,26 +46,27 @@ public class UserOrdersLVAdapter extends ArrayAdapter<Order> {
         String stateStr = "";
         switch (orders.get(position).getState()) {
             case 0:
-                stateStr = "в ожидании";
+                stateStr = context.getString(R.string.waiting_state);
                 break;
             case 1:
                 header.setTextSize(17);
-                stateStr = "идёт приготовление";
+                stateStr = context.getString(R.string.preparing_state);
                 break;
             case 2:
                 header.setTextColor(context.getResources().getColor(R.color.green, context.getTheme()));
-                stateStr = "готово";
+                stateStr = context.getString(R.string.ready_state);
                 break;
             case 3:
                 header.setTextColor(context.getResources().getColor(R.color.red, context.getTheme()));
-                stateStr = "отклонено";
+                stateStr = context.getString(R.string.declined_state);
                 break;
         }
 
-        String headStr = "ID: " + orders.get(position).getId() + ". Состояние: " + stateStr;
+        String headStr = "ID: " + orders.get(position).getId() + ". "
+                + context.getString(R.string.state) + " " + stateStr;
         header.setText(headStr);
 
-        String descStr = "Уточнения: " + orders.get(position).getClarifications();
+        String descStr = context.getString(R.string.clarification) + " " + orders.get(position).getClarifications();
         desc.setText(descStr);
 
         return item;

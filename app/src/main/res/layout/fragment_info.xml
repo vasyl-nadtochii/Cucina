@@ -24,8 +24,6 @@
             android:src="@drawable/scooter1"
             tools:ignore="RtlSymmetry" />
 
-        <!-- -->
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

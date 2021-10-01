@@ -18,8 +18,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.StartActivity;
@@ -88,45 +86,45 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
         final String phone = editTextPhone.getText().toString().trim();
 
         if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Пожалуйста, введите имя!");
+            editTextUsername.setError(requireActivity().getString(R.string.empty_name));
             editTextUsername.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Введите пароль!");
+            editTextPassword.setError(requireActivity().getString(R.string.empty_password));
             editTextPassword.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(phone)) {
-            editTextPhone.setError("Введите номер телефона!");
+            editTextPhone.setError(requireActivity().getString(R.string.empty_phone));
             editTextPassword.requestFocus();
             return;
         }
 
         if (phone.length() < 12) {
-            editTextPassword.setError("Введите корректный номер телефона!");
+            editTextPassword.setError(requireActivity().getString(R.string.incorrect_phone));
             editTextPassword.requestFocus();
             return;
         }
 
         if(!password.matches("^[a-zA-Z0-9_]+$")) {
             editTextPassword
-                    .setError("В пароле могут использоваться только латинские символы, цифры и подчеркивания");
+                    .setError(requireActivity().getString(R.string.incorrect_password));
             editTextPassword.requestFocus();
             return;
         }
 
         if (!password.equals(editTextConfPassword.getText().toString())) {
-            editTextConfPassword.setError("Пароли не совпадают!");
+            editTextConfPassword.setError(requireActivity().getString(R.string.mismatch_passwords));
             editTextConfPassword.requestFocus();
             return;
         }
 
         if (!checkBox.isChecked()) {
             Toast.makeText(requireContext(),
-                    "Вы должны принять условия Пользовательского Соглашения для продолжения регистрации!",
+                    requireActivity().getString(R.string.user_agreement_not_accepted),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -142,7 +140,7 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                         //if no error in response
                         String msg;
                         if (!obj.getBoolean("error")) {
-                            msg = "Регистрация прошла успешно";
+                            msg = requireActivity().getString(R.string.successful_registration);
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
 
                             //getting the user from the response
@@ -166,10 +164,10 @@ public class RegFragment extends Fragment implements AdapterView.OnItemSelectedL
                         else {    // if err occurred
                             switch (obj.getString("message")) {
                                 case "000":
-                                    msg = "Пользователь с такими данными уже зарегистрирован";
+                                    msg = requireActivity().getString(R.string.phone_exists);
                                     break;
                                 case "010":
-                                    msg = "Запрашиваемые параметры недоступны. Повторите позже.";
+                                    msg = requireActivity().getString(R.string.network_err);
                                     break;
                                 default:
                                     msg = "Unexpected error.";

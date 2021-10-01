@@ -1,27 +1,21 @@
 package com.faint.cucina.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.faint.cucina.R;
 import com.faint.cucina.activities.MainActivity;
@@ -75,11 +69,11 @@ public class UserOrdersFragment extends Fragment {
         fab.setOnClickListener(view -> {
             final AlertDialog.Builder builder = new AlertDialog.Builder( requireActivity() );
 
-            builder.setTitle("Удалить отклонённые заказы")
-                    .setMessage("Вы уверены, что хотите удалить все отклонённые заказы?")
+            builder.setTitle(requireActivity().getString(R.string.delete_declined))
+                    .setMessage(requireActivity().getString(R.string.delete_declined_body))
                     .setCancelable(true)
-                    .setPositiveButton("Да", (dialogInterface, i) -> removeOrders(-1, -1))
-                    .setNegativeButton("Нет", null);
+                    .setPositiveButton(requireActivity().getString(R.string.yes), (dialogInterface, i) -> removeOrders(-1, -1))
+                    .setNegativeButton(requireActivity().getString(R.string.no), null);
 
             final AlertDialog alert = builder.create();
             alert.show();
@@ -100,8 +94,7 @@ public class UserOrdersFragment extends Fragment {
 
         MainActivity.requestFinished = false;
 
-        String url = "https://cucinacafeapp.000webhostapp.com/getUserOrders.php";
-        StringRequest request = new StringRequest(Request.Method.POST, url,
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_GET_ORDERS,
                 response -> {
                     try {
                         JSONArray array = new JSONArray(response);
@@ -156,13 +149,13 @@ public class UserOrdersFragment extends Fragment {
                                 dishesStr.append("\n");
                         }
 
-                        builder.setTitle("Ваш заказ")
+                        builder.setTitle(requireContext().getString(R.string.your_order))
                                 .setMessage(dishesStr)
                                 .setCancelable(true)
                                 .setPositiveButton("Ok", null);
 
                         if(orderList.get(pos).getState() > 2) {
-                            builder.setNegativeButton("Удалить", (dialogInterface, i) ->
+                            builder.setNegativeButton(requireContext().getString(R.string.delete), (dialogInterface, i) ->
                                     removeOrders(orderList.get(pos).getId(), pos));
                         }
 
@@ -181,7 +174,7 @@ public class UserOrdersFragment extends Fragment {
                 },
                 error -> {
                     Toast.makeText(requireActivity(),
-                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            requireContext().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
 
                     if(orderList.isEmpty()) {
                         progressBar.setVisibility(View.GONE);
@@ -215,7 +208,7 @@ public class UserOrdersFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.POST, URLs.URL_REMOVE_ORDER,
                 response -> {
                     if(response.trim().equals("1")) {
-                        Toast.makeText(requireActivity(), "Успешно удалено!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), requireContext().getString(R.string.successfully_deleted), Toast.LENGTH_SHORT).show();
 
                         if(pos != -1) {
                             orderList.remove(pos);
@@ -234,14 +227,14 @@ public class UserOrdersFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                     else {
-                        Toast.makeText(requireActivity(), "Произошла ошибка, повторите позже", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), requireContext().getString(R.string.network_err), Toast.LENGTH_SHORT).show();
                     }
 
                     MainActivity.requestFinished = true;
                 },
                 error -> {
                     Toast.makeText(requireActivity(),
-                            "Не удалось подключиться к серверу, проверьте интернет-соединение",
+                            requireContext().getString(R.string.network_err),
                             Toast.LENGTH_SHORT).show();
 
                     MainActivity.requestFinished = true;

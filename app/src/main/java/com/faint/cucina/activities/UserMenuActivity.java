@@ -97,7 +97,7 @@ public class UserMenuActivity extends AppCompatActivity {
             }
             else {
                 Toast.makeText(getApplicationContext(),
-                        "Введите название вашего меню!", Toast.LENGTH_SHORT).show();
+                        getString(R.string.enter_user_menu_name), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -149,7 +149,7 @@ public class UserMenuActivity extends AppCompatActivity {
                     }
                 }, error -> {
                     Toast.makeText(getApplicationContext(),
-                            "Ошибка подключения!\nПроверьте интернет-соединение", Toast.LENGTH_SHORT).show();
+                            getString(R.string.network_err), Toast.LENGTH_SHORT).show();
 
                     if(dishList.isEmpty()) {
                         progressBar.setVisibility(View.GONE);

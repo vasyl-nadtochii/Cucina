@@ -87,15 +87,15 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
         holder.deleteImg.setOnClickListener(view -> {
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-            builder.setTitle("Удалить польз. меню")
-                    .setMessage("Вы уверены, что хотите удалить польз. меню \"" + menus.get(position).getName() + "\"?")
+            builder.setTitle(context.getString(R.string.delete_user_menu))
+                    .setMessage(context.getString(R.string.delete_user_menu_body) + " \"" + menus.get(position).getName() + "\"?")
                     .setCancelable(true)
-                    .setPositiveButton("Да", (dialogInterface, i) -> {
+                    .setPositiveButton(context.getString(R.string.yes), (dialogInterface, i) -> {
                         myDB.deleteOneRow(menus.get(position).getID());
                         menus.remove(position);
                         notifyDataSetChanged();
                     })
-                    .setNegativeButton("Нет", null);
+                    .setNegativeButton(context.getString(R.string.no), null);
 
             final AlertDialog alert = builder.create();
             alert.show();
@@ -122,11 +122,10 @@ public class UserMenusAdapter extends RecyclerView.Adapter<UserMenusAdapter.Cust
                         holder.warnImg.setOnClickListener(view -> {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                            builder.setTitle("Обнаружены удалённые блюда")
-                                    .setMessage("Похоже, в вашем пользовательском меню имеются удалённые блюда." +
-                                            " Нажмите кнопку УДАЛИТЬ, чтобы удалить несуществующие блюда")
+                            builder.setTitle(context.getString(R.string.removed_dish_detected))
+                                    .setMessage(context.getString(R.string.removed_dish_body))
                                     .setCancelable(true)
-                                    .setPositiveButton("УДАЛИТЬ",
+                                    .setPositiveButton(context.getString(R.string.delete),
                                         (dialogInterface, p) -> {
                                             if(menus.get(position).getDishes().size() == deletedNames.size()) {
                                                 myDB.deleteOneRow(menus.get(position).getID());

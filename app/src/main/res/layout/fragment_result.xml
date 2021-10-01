@@ -8,6 +8,12 @@
     android:background="@color/start_bg"
     android:paddingEnd="10dp">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
-            android:text="Ваш заказ успешно отправлен на обработку!"
+            android:text="@string/order_sent"
             android:textSize="22sp"
             android:textColor="@color/cal_frame"
             android:fontFamily="@font/gilroy_bold"/>
@@ -53,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
-            android:text="При отправке произошла ошибка, попытайтесь позже!"
+            android:text="@string/network_err"
             android:textSize="22sp"
             android:textColor="@color/cal_frame"
             android:fontFamily="@font/gilroy_bold"/>
@@ -79,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
-            android:text="Вы достигли лимита в 5 активных заказов.\nПовторите попытку позже"
+            android:text="@string/user_reached_order_limit"
             android:textSize="20sp"
             android:textColor="@color/cal_frame"
             android:fontFamily="@font/gilroy_bold"/>

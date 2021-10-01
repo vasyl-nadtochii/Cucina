@@ -39,6 +39,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:inputType="text"
                 android:singleLine="true"
                 android:textColor="@color/header_strong"
                 android:drawablePadding="2dp"
@@ -58,7 +59,8 @@
                 android:hint="380XXXXXXXXX"
                 android:maxLength="12"
                 android:id="@+id/phone_et"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,7 +70,7 @@
                 android:layout_marginStart="20dp"
                 android:textSize="16sp"
                 android:layout_marginEnd="15dp"
-                android:text="Ваш город:"/>
+                android:text="@string/your_city"/>
 
             <Spinner
                 android:layout_marginTop="5dp"
