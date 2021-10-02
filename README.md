@@ -9,6 +9,7 @@ Name *Cucina* comes from Italian and means "kitchen". The essence of the project
 ## Used Tools
 
 ### Language: Java 1.8 <br>
+### Gradle version: 4.0.1
 ### Libraries (non-Android):
   - [Glide](https://github.com/bumptech/glide)
   - [Volley](https://github.com/google/volley)
@@ -16,6 +17,12 @@ Name *Cucina* comes from Italian and means "kitchen". The essence of the project
   - [FAB Progress Circle](https://github.com/JorgeCastilloPrz/FABProgressCircle)
   - [Particles](https://github.com/plattysoft/Leonids)
   - [Firebase Android SDK](https://github.com/firebase/firebase-android-sdk)
+### Databases: MySQL 8.0, SQLite (for User menus)
+
+## Additional Information
+
+### [Content Telegram bot](https://github.com/o-r-d-i-n-a-r-y/Cucina-Content-Tg-Bot)
+### Min. SDK version: 7.0 (Nougat)
 
 ## App Components
 
@@ -44,3 +51,6 @@ Name *Cucina* comes from Italian and means "kitchen". The essence of the project
 - ComplaintActivity
 - DishDescActivity
 - UserMenuActivity
+
+## StartActivity
+This is the *Start screen* of application. 
