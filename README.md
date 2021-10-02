@@ -4,7 +4,13 @@
 
 **This application is created only for educational purposes. All coincidences are accidental.**
 
-Name *Cucina* comes from Italian and means "kitchen". The essence of the project is to create **native android** application for the fictional pizza franchise. Basic functionality: user registration and authorization, displaying news, creating and tracking orders, displaying cafes on the map.
+Name *Cucina* comes from Italian and means "kitchen".
+
+The essence of the project is to create **native android** application for the fictional pizza franchise.
+
+Basic functionality: user registration and authorization, displaying news, creating and tracking orders, displaying cafes on the map. 
+
+The application is translated into 4 languages: English, Ukrainian, Russian, Polish.
 
 ## Used Tools
 
@@ -53,4 +59,12 @@ Name *Cucina* comes from Italian and means "kitchen". The essence of the project
 - UserMenuActivity
 
 ## StartActivity
-This is the *Start screen* of application. 
+This is the *Start screen* of application. **StartActivity** is used to apply the application theme depending on the user's choice, redirect user to the **MainActivity** or to the **AuthorizationActivity** (if user isn't logged in). Also, **StartActivity** 
+
+![StartActivity](https://i.postimg.cc/Hsfw4vc6/Screenshot-20211002-114720.png)
+
+## MainActivity
+**MainActivity** is the main screen of the application. It consists of ToolBar, FragmentContainer and NavigationView. <br>
+
+![FragmentContainer](https://i.postimg.cc/PJvTkQb5/Screenshot-20211002-123256.png)
+![NavigationView](https://i.postimg.cc/XvxVKJ74/Screenshot-20211002-123247.png)
