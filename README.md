@@ -4,13 +4,13 @@
 
 **This application is created only for educational purposes. All coincidences are accidental.**
 
-Name *Cucina* comes from Italian and means "kitchen".
+Name ***Cucina*** comes from Italian and means "kitchen".
 
 The essence of the project is to create **native android** application for the fictional pizza franchise.
 
 Basic functionality: user registration and authorization, displaying news, creating and tracking orders, displaying cafes on the map. 
 
-The application is translated into 4 languages: English, Ukrainian, Russian, Polish.
+The application is translated into 4 languages: *English, Ukrainian, Russian, Polish*.
 
 ## Used Tools
 
@@ -60,7 +60,7 @@ The application is translated into 4 languages: English, Ukrainian, Russian, Pol
 - UserMenuActivity
 
 ## StartActivity
-This is the *start screen* of application. **StartActivity** is used to apply the application theme depending on the user's choice, redirect user to the **MainActivity** or to the **AuthorizationActivity** (if user isn't logged in). Also, **StartActivity** updates user's FCM token in order's table.
+This is the *start screen* of application. **StartActivity** is used to apply the application theme depending on the user's choice, redirect user to the **MainActivity** or to the **AuthorizationActivity** (if user isn't logged in). Also, **StartActivity** updates user's FCM token in order's DB table.
 
 ![StartActivity](https://i.postimg.cc/Hsfw4vc6/Screenshot-20211002-114720.png)
 
@@ -140,9 +140,37 @@ latitude | double
 longitude | double
 state | int
 address | String
+imgUrls | ArrayList\<String\>
 cafeID | int
-imgUrls | ArrayList<String>
 
 Then, the **CafeActivity** starts.
 
 ![CafeActivity](https://i.postimg.cc/bYVwvkrf/Screenshot-20211002-141936.png)
+
+#### OrderFragment
+  
+**OrderFragment** contains only *TabLayout*, *ViewPager* and 2 *FABs*: the first adds a new User menu, the second redirects user to the **OrderActivity** (the first is shown when user switches to the user menus tab, the second is shown when user orders at least 1 meal).
+
+![OrderFragment1](https://i.postimg.cc/3J5SvGp6/Screenshot-20211002-181421.png)
+![OrderFragment2](https://i.postimg.cc/K8fSvfKx/Screenshot-20211002-180257.png)
+
+All main functional is realized in **OrderPageFragment** and **UserMenusFragment**.
+
+**OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into categories, so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager*: item to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
+
+**OrderPageFragment** also used in **OrderFragment** in **OrderActivity**, if it's launched from **CafeActvity**. Its functional is the same, excepting the moment, that it doesn't use **OrderFragment** *ArrayList\<OrderDish\>* and directy adds dishes to the **OrderActivity** *Order* order.
+
+```java
+if(!usesActivityList) {   // boolean usesActivityList is used to show if we use the OrderFragment ArrayList or OrderActivity.order ArrayList
+    if(OrderFragment.orderList.size() == 1) {
+        OrderFragment.orderInterface.showHideFABNext(true);
+    }
+}
+else {
+    if(OrderActivity.order.getOrderList().size() == 1) {
+        OrderFragment.orderInterface.showHideFABNext(true);
+    }
+}
+```
+
+**UserMenusFragment** is used to add dishes from User menus to the order, to change or delete User menus. When **OrderFragment** is called from **OrderActivity**, 'Add menu' *FAB* is disabled.
