@@ -16,6 +16,7 @@ The application is translated into 4 languages: English, Ukrainian, Russian, Pol
 
 ### Language: Java 1.8 <br>
 ### Gradle version: 4.0.1
+### [Backend scripts](https://github.com/o-r-d-i-n-a-r-y/Cucina-php-Scripts)
 ### Libraries (non-Android):
   - [Glide](https://github.com/bumptech/glide)
   - [Volley](https://github.com/google/volley)
