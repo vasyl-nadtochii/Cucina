@@ -272,3 +272,34 @@ Nothing special. The first one is just the screen with the greeting (particles w
 ### RegFragment
 
 This *Fragment* does the whole stuff. It is quite similar to the **AuthorizationActivity**, but there user also has to enter his name, choose city and confirm his password. If somewhere user enters wrong data, he/she will be notified about that. Then, app sends request, and if it's successful and user's phone is not taken by anyone, user data will be added to the *users* DB table and user will be logged in with this data as in the **AuthorizationActivity**.
+
+## OrderActivity
+
+**OrderActivity** has already been mentioned before, this activity stores order information and sends it, when user goes to the last page of *FragmentPager*. This activity is similar to the **RegistrationActivity**, **OrderActivity** uses the same *FragmentPager* adapter. As in the **RegistrationActivity** there is only one *FAB* and *ViewPager*. When the user is at the first or last page of the *FragmentPager*, ***onBackPressed*** closes the activity. Otherwise, it will swipe one page back.
+
+**OrderActivity** can be started not only from **MainActivity**, but also from **CafeActivity** (if user presses 'Order here' button). If **it** is started from **MainActivity**, then the *Fragment* at the first page will be **MapFragment**. Otherwise it will be **OrderFragment** at the first page.
+
+**MapFragment** and **OrderFragment** have already been mentioned before, so they will not be described there. Excepting these two, activity has 3 fragments.
+
+### DescFragment
+
+This *Fragment* is used to get order clarifications from *EditText*. Clarifications string cannot be null.
+
+### ConfFragment
+
+**ConfFragment** displays all order information: address of cafe, clarifications and dishes list. It is used to check the order before sending.
+
+### ResFragment
+
+The last one is **ResFragment**. It shows the result of sending the request.
+
+![DescFragment](https://i.postimg.cc/SsLC7VRj/Screenshot-20211003-200809.png)
+![ConfFragment](https://i.postimg.cc/jSWfkR2p/Screenshot-20211003-200819.png)
+![ResFragment](https://i.postimg.cc/sXzZXSmz/Screenshot-20211003-200831.png)
+
+## AnnouncementActivity
+
+As it has been mentioned in **NewsFragment** part, **AnnouncementActivity** starts when the user clicks at the **NewsFragment** *ListView* or *ViewPager* item (chooses announcement). There is an *ImageView* at the top of activity and a *CardView* with announcement header and body *TextViews*. If the device language is not russian, there will be also translate *FAB*, which translates header and body text into device language. If it is clicked again, it translates text back into russian. 
+
+![AnnouncementActivity1](https://i.postimg.cc/X7XKtRv0/Screenshot-20211003-202922.png)
+![AnnouncementActivity2](https://i.postimg.cc/5yrzxttW/Screenshot-20211003-202944.png)
