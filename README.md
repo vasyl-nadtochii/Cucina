@@ -160,8 +160,6 @@ cafeID | int
 
 Then, the **CafeActivity** starts.
 
-![CafeActivity](https://i.postimg.cc/bYVwvkrf/Screenshot-20211002-141936.png)
-
 #### OrderFragment
   
 **OrderFragment** contains only *TabLayout*, *ViewPager* and 2 *FABs*: the first adds a new User menu, the second redirects user to the **OrderActivity** (the first is shown when user switches to the user menus tab, the second is shown when user orders at least 1 meal).
@@ -208,6 +206,8 @@ name | String
 dishes | ArrayList\<OrderDish\>
 
 The principle of adding/removing dishes is the same as in the **OrderPageFragment**.
+
+When a User menu dish list is retrieved from the SQLite database, it is checked for deleted dishes. If the User menu contains removed dishes, user will be notified by the clickable warning sign (which removes deleted dishes from User menu when user clicks it) and the *RecyclerView* item buttons of this User menu will be disabled.
 
 ## SettingsActivity
 
@@ -303,3 +303,27 @@ As it has been mentioned in **NewsFragment** part, **AnnouncementActivity** star
 
 ![AnnouncementActivity1](https://i.postimg.cc/X7XKtRv0/Screenshot-20211003-202922.png)
 ![AnnouncementActivity2](https://i.postimg.cc/5yrzxttW/Screenshot-20211003-202944.png)
+
+## CafeActivity
+
+![CafeActivity](https://i.postimg.cc/bYVwvkrf/Screenshot-20211002-141936.png)
+
+**CafeActivity** shows information about the selected cafe from the map. It has 3 *TextViews*: with cafe address, state and working schedule. Also, it has 3 buttons: to make an order in this cafe (opens **OrderActivity**), to make a route to the selected cafe (redirects user to the Google maps app), to complain about the selected cafe. 
+
+## ComplaintActivity
+
+**ComplaintActivity** has only *EditText* and *FAB*. When user presses *FAB*, app posts complaint to the DB. Complaint string cannot be null.
+
+![ComplaintActivity](https://i.postimg.cc/CMrB6cB9/Screenshot-20211004-004158.png)
+
+## DishDescActivity
+
+This activity is similar to the **AnnouncementActivity**. It has the same layout but with the price *TextView*. 'Translate' *FAB* does the same stuff as in the **AnnouncementActivity**.
+
+![DishDescActivity](https://i.postimg.cc/fW0yFhGX/Screenshot-20211004-011653.png)
+
+## UserMenuActivity
+
+**UserMenuActivity** is used to add (if it is called from the *FAB* of the **OrderFragment**) or to edit (if it is called by clicking 'edit' button in *RecyclerView* item) User menu. It loads dish list from DB, like the **OrderPageFragment** does, but there dishes are not divided into categories. When the user clicks *FAB*, if menu name *EditText* is not empty, new User menu will be saved.
+
+![UserMenuActivity](https://i.postimg.cc/j5rZD3gC/Screenshot-20211004-015423.png)
