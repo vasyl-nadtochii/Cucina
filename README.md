@@ -171,7 +171,7 @@ Then, the **CafeActivity** starts.
 
 All main functional is realized in **OrderPageFragment** and **UserMenusFragment**.
 
-**OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into categories, so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager* item: to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
+**OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into grous (**DishGroup**), so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager* item: to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
 
 **DishGroup** class:
 
@@ -240,7 +240,7 @@ The last one needs no introduction.
 
 ### AuthorizationActivity
 
-**AuthorizationActivity** is the simple activity to login user. It has 2 *EditText*, *Button* and *TextView*. If the user entered login data correctly, *StringRequest* will return all user data and he/she will be redirected to the **MainActivity** and their logged in state will be saved in SharedPreferences. Otherwise, *StringRequest* will return error and user will be notified that login data is incorrect.
+**AuthorizationActivity** is the simple activity to login user. It has 2 *EditText*, *Button* and *TextView*. If the user entered login data correctly, *StringRequest* will return all user data, which will be placed in new **User** object and then user will be redirected to the **MainActivity** and his/her logged in state will be saved in SharedPreferences. Otherwise, *StringRequest* will return error and user will be notified that login data is incorrect.
 
 ###### Note: password restoration is not available at this moment. It will be implemented in future updates (maybe)
 
@@ -259,6 +259,10 @@ The *TextView* below the login button redirects user to the **RegistrationActivi
 
 ## RegistrationActivity
 
+![GreetingFragment](https://i.postimg.cc/1tytyXj8/Screenshot-20211003-190520.png)
+![InfoFragment](https://i.postimg.cc/85F1pvbP/Screenshot-20211003-190536.png)
+![RegFragment](https://i.postimg.cc/RV1vZ4wf/Screenshot-20211003-190558.png)
+
 This activity contains only *ViewPager* with a custom *FragmentPager* adapter (it can be swiped only programatically) and *FAB* to swipe *ViewPager* to the next item. There are 3 *Fragments* in the *FragmentPager*.
 
 ### GreetingFragment and InfoFragment
@@ -267,3 +271,4 @@ Nothing special. The first one is just the screen with the greeting (particles w
 
 ### RegFragment
 
+This *Fragment* does the whole stuff. It is quite similar to the **AuthorizationActivity**, but there user also has to enter his name, choose city and confirm his password. If somewhere user enters wrong data, he/she will be notified about that. Then, app sends request, and if it's successful and user's phone is not taken by anyone, user data will be added to the *users* DB table and user will be logged in with this data as in the **AuthorizationActivity**.
