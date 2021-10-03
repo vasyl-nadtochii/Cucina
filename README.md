@@ -14,7 +14,7 @@ The application is translated into 4 languages: *English, Ukrainian, Russian, Po
 
 ## Used Tools
 
-### Language: Java 1.8 <br>
+### Language: Java 1.8
 ### Gradle version: 4.0.1
 ### [Backend scripts](https://github.com/o-r-d-i-n-a-r-y/Cucina-php-Scripts)
 ### Libraries (non-Android):
@@ -29,6 +29,7 @@ The application is translated into 4 languages: *English, Ukrainian, Russian, Po
 ## Additional Information
 
 ### [Content Telegram bot](https://github.com/o-r-d-i-n-a-r-y/Cucina-Content-Tg-Bot)
+### [Cafe Control app](https://github.com/o-r-d-i-n-a-r-y/Cucina-admin)
 ### Min. SDK version: 7.0 (Nougat)
 
 ## App Components
@@ -74,7 +75,21 @@ This is the *start screen* of application. **StartActivity** is used to apply th
 
 #### NewsFragment
 
-By default, user is redirected to the **NewsFragment**. It is used to display news in *ViewPager* and *ListView*. If the news list length is less than 3, then full news list will be displayed both in *VIewPager* and *ListView*. Otherwise, the first half of list will be displayed in *ViewPager* and the second in *ListView*.
+By default, user is redirected to the **NewsFragment**. It is used to display news in *ViewPager* and *ListView*. If the news list length is less than 3, then full news list will be displayed both in *VIewPager* and *ListView*. Otherwise, the first half of list will be displayed in *ViewPager* and the second in *ListView*. When user clicks *ViewPager* or *ListView* item, **AnnoncementActivity** with the chosen **Announcement** starts.
+
+**Announcement** class:
+
+**param_name** | **param_type**
+:---: | :---:
+type\* | int
+image_url | String
+title | String
+desc | String
+end_date | String
+
+\*type is an Integer, that takes values from 0 to 3: 0 - new opening, 1 - good news, 2 - warning, 3 - bad news.
+
+Depending on a type of **Announcement**, *ListView* items may show different icons.
 
 #### UserOrdersFragment
 
@@ -82,7 +97,7 @@ This *Fragment* is used to display User's orders. It contains *ListView* with th
 
 ![UserOrdersFragment](https://i.postimg.cc/zDWRWsRv/Screenshot-20211002-132639.png)
 
-*ListView Adapter* uses ***Order*** class:
+*ListView Adapter* uses **Order** class:
 
 **param_name** | **param_type**
 :---: | :---:
@@ -158,6 +173,13 @@ All main functional is realized in **OrderPageFragment** and **UserMenusFragment
 
 **OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into categories, so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager* item: to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
 
+**DishGroup** class:
+
+**param_name** | **param_type**
+:---: | :---:
+name | String
+dishes | ArrayList\<Dish\>
+
 **OrderPageFragment** also used in **OrderFragment** in **OrderActivity**, if it's launched from **CafeActvity**. Its functional is the same, excepting the moment, that it doesn't use **OrderFragment** *ArrayList\<OrderDish\>* and directy adds dishes to the **OrderActivity** *Order* order.
 
 ```java
@@ -175,4 +197,73 @@ else {
 
 **UserMenusFragment** is used to add dishes from User menus to the order, to change or delete User menus. When **OrderFragment** is called from **OrderActivity**, 'Add menu' *FAB* is disabled.
 
-It contains only one *RecyclerView*. 
+It contains only one *RecyclerView*. Each item represents each menu from User menus ArrayList.
+
+**UserMenu** class:
+
+**param_name** | **param_type**
+:---: | :---:
+id | String
+name | String
+dishes | ArrayList\<OrderDish\>
+
+The principle of adding/removing dishes is the same as in the **OrderPageFragment**.
+
+## SettingsActivity
+
+**SettingsActivity** is only a container for **PreferenceFragment**. When the user changes the theme, after closing **SettingsActivity**, the whole application closes. This is done in order to avoid collateral problems when the application applies a new theme.
+
+### PreferenceFragment
+
+![PreferenceFragment](https://i.postimg.cc/hjZk4RqR/Screenshot-20211003-130124.png)
+
+**PreferenceFragment** is the *PreferenceScreen*, which contains *Preferences* to:
+- Change the theme
+- Change the username
+- Change the phone number
+- Change the city
+- Send bug report
+- Go to the user agreement
+- Show the current application version
+
+The first one changes the application theme. When user chooses new color theme, the application closes after user leaves **SettingsActivity**.
+
+The next three are used to change user data, sending *StringRequest* with the changed data. *Note*: when user wants to change city, it can't be done, while user has active orders (when state < 3). The same thing for the phone number changing. Also, when user changes the phone number to the taken one, he/she gets notified, that the phone number is already taken.
+
+'Bug report' *Preference* redirects user to the Gmail app or notifies user that the Gmail app is not installed. 
+
+![Gmail Redirect](https://i.postimg.cc/dVwcBYww/Screenshot-20211003-131948.png)
+
+'User agreement' *Preference* opens user agreement sample in browser (I'm sorry, I don't have my own user agreement)
+
+The last one needs no introduction.
+
+### AuthorizationActivity
+
+**AuthorizationActivity** is the simple activity to login user. It has 2 *EditText*, *Button* and *TextView*. If the user entered login data correctly, *StringRequest* will return all user data and he/she will be redirected to the **MainActivity** and their logged in state will be saved in SharedPreferences. Otherwise, *StringRequest* will return error and user will be notified that login data is incorrect.
+
+###### Note: password restoration is not available at this moment. It will be implemented in future updates (maybe)
+
+![AuthActivity](https://i.postimg.cc/fLr0cCdQ/Screenshot-20211003-132922.png)
+
+**User** class:
+
+**param_name** | **param_type**
+:---: | :---:
+id | int
+name | String
+phone | String
+city | String
+
+The *TextView* below the login button redirects user to the **RegistrationActivity**
+
+## RegistrationActivity
+
+This activity contains only *ViewPager* with a custom *FragmentPager* adapter (it can be swiped only programatically) and *FAB* to swipe *ViewPager* to the next item. There are 3 *Fragments* in the *FragmentPager*.
+
+### GreetingFragment and InfoFragment
+
+Nothing special. The first one is just the screen with the greeting (particles were used there). The second one is the screen with the enticing slogans. Just decorations.
+
+### RegFragment
+
