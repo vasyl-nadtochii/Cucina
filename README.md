@@ -94,7 +94,7 @@ cafeID | int
 state | int
 id | int
 
-\***orderList** ArrayList uses OrderDish class:
+\***orderList** ArrayList uses **OrderDish** class:
 
 **param_name** | **param_type**
 :---: | :---:
@@ -156,7 +156,7 @@ Then, the **CafeActivity** starts.
 
 All main functional is realized in **OrderPageFragment** and **UserMenusFragment**.
 
-**OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into categories, so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager*: item to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
+**OrderPageFragment** contains *ListView*, which in turn contains *ViewPager* in its each item. All dishes are divided into categories, so each *ListView* item represents each category, and each *ViewPager* item represents each dish. There are 3 buttons in *ViewPager* item: to add 1 dish, to remove 1 dish, to see the information about the dish. Also, there are 2 *TextViews* with the amount of ordered dish and dishes' price.
 
 **OrderPageFragment** also used in **OrderFragment** in **OrderActivity**, if it's launched from **CafeActvity**. Its functional is the same, excepting the moment, that it doesn't use **OrderFragment** *ArrayList\<OrderDish\>* and directy adds dishes to the **OrderActivity** *Order* order.
 
