@@ -174,3 +174,5 @@ else {
 ```
 
 **UserMenusFragment** is used to add dishes from User menus to the order, to change or delete User menus. When **OrderFragment** is called from **OrderActivity**, 'Add menu' *FAB* is disabled.
+
+It contains only one *RecyclerView*. 
